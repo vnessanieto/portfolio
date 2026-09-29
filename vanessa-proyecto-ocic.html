@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vanessa Nieto — OCIC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #f0f2f7;
+    --ink: #0c0c0c;
+    --muted: #666666;
+    --pill: #0c0c0c;
+    --pill-text: #f0f2f7;
+  }
+
+  *{ box-sizing: border-box; }
+
+  /* ---- responsive safety net ---- */
+  html{ -webkit-text-size-adjust: 100%; }
+  img, video, svg{ max-width: 100%; height: auto; display: block; }
+
+  html, body{
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', -apple-system, sans-serif;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+
+  a{ color: inherit; text-decoration: none; }
+
+  .page{ min-height: 100vh; padding: clamp(1.25rem, 3vw, 2rem) clamp(1.25rem, 4.5vw, 3rem) clamp(4rem, 9vw, 8.75rem); }
+
+  /* ---- top bar ---- */
+  .topbar{
+    display: flex; justify-content: flex-end; align-items: center;
+    font-size: 13px; letter-spacing: 0.04em; margin-bottom: clamp(2rem, 6vw, 4rem);
+    position: relative; z-index: 25;
+  }
+  .topbar nav{ position: relative; display: flex; align-items: center; gap: 4px; }
+  .nav-hover{
+    position: absolute; top: 0; height: 30px; border-radius: 6px;
+    background: rgba(12,12,12,0.07); opacity: 0; pointer-events: none;
+    transition: left 0.3s ease, width 0.3s ease, opacity 0.2s ease; z-index: 0;
+  }
+  .nav-active-bar{
+    position: absolute; bottom: -6px; height: 2px; background: var(--ink);
+    transition: left 0.3s ease, width 0.3s ease; z-index: 1;
+  }
+  .topbar nav a.tab{
+    position: relative; z-index: 2;
+    font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em;
+    padding: 7px 12px; border-radius: 6px;
+    color: rgba(12,12,12,0.6);
+    transition: color 0.3s ease;
+  }
+  .topbar nav a.tab.is-active{ color: var(--ink); }
+  .topbar nav a:focus-visible{ outline: 2px solid var(--ink); outline-offset: 4px; }
+  .topbar nav a.pill{ background: var(--pill); color: var(--pill-text); padding: 10px 18px; margin-left: 12px; border-radius: 0; }
+
+  @media (prefers-reduced-motion: reduce){
+    .nav-hover, .nav-active-bar, .topbar nav a.tab{ transition: none; }
+  }
+
+  /* ---- mobile nav (hamburger) ---- */
+  .nav-toggle{
+    display: none;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    z-index: 30;
+  }
+  .nav-toggle-bar{
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--ink);
+    border-radius: 2px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+  .nav-toggle:focus-visible{ outline: 2px solid var(--ink); outline-offset: 4px; }
+  .nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(1){ transform: translateY(7px) rotate(45deg); }
+  .nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(2){ opacity: 0; }
+  .nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(3){ transform: translateY(-7px) rotate(-45deg); }
+
+  .mobile-nav{
+    display: none;
+  }
+
+  body.nav-open{ overflow: hidden; }
+
+  @media (width <= 768px){
+    #mainNav{ display: none; }
+    .nav-toggle{ display: flex; }
+    .mobile-nav{
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      background: var(--bg);
+      padding: 96px 24px 48px;
+      gap: 4px;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .mobile-nav.open{ opacity: 1; visibility: visible; pointer-events: auto; }
+    .mobile-nav-link{
+      display: flex;
+      align-items: center;
+      min-height: 44px;
+      padding: 14px 4px;
+      font-size: clamp(1.25rem, 6vw, 1.75rem);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      border-bottom: 1px solid rgba(12,12,12,0.08);
+      color: var(--ink);
+    }
+    .mobile-nav-link:focus-visible{ outline: 2px solid var(--ink); outline-offset: -2px; }
+    .mobile-nav-link.is-active{ color: rgba(12,12,12,0.45); }
+    .mobile-nav-link.mobile-nav-pill{
+      margin-top: 20px;
+      justify-content: center;
+      background: var(--pill);
+      color: var(--pill-text);
+      border-radius: 4px;
+      border-bottom: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .nav-toggle-bar, .mobile-nav{ transition: none; }
+  }
+
+  /* ---- floating table of contents ---- */
+  .toc{
+    position: fixed;
+    top: 140px;
+    right: 48px;
+    width: 168px;
+    background: #e4e6ec;
+    padding: 16px;
+    font-size: 12px;
+    text-align: left;
+    z-index: 20;
+  }
+  .toc-header{
+    display: flex; justify-content: space-between; align-items: center;
+    text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted);
+    font-weight: 500; margin-bottom: 10px;
+  }
+  .toc-header button{
+    background: none; border: none; cursor: pointer;
+    font-size: 14px; color: var(--muted); line-height: 1; padding: 2px 4px;
+  }
+  .toc-header button:focus-visible{ outline: 2px solid var(--ink); }
+  .toc-list{ display: flex; flex-direction: column; align-items: flex-start; gap: 9px; }
+  .toc-list a{ display: block; width: 100%; text-align: left; color: var(--muted); font-weight: 400; }
+  .toc-list a.active{ color: var(--ink); font-weight: 600; }
+  .toc.collapsed .toc-list{ display: none; }
+
+  @media (width <= 1024px){
+    .toc{ display: none; }
+  }
+
+  /* ---- content column ---- */
+  .project-content{ width: 62%; max-width: 720px; margin: 0 auto; }
+  .stage-inner{ max-width: 1400px; margin: 0 auto; }
+
+  .eyebrow{
+    font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--muted); margin: 0 0 14px;
+  }
+
+  h1{
+    margin: 0 0 24px;
+    font-weight: 800;
+    font-size: clamp(2.5rem, 5vw, 4.25rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .subtitle{
+    font-style: italic;
+    font-size: 1.125rem;
+    color: var(--muted);
+    margin: 0 0 32px;
+  }
+
+  .meta-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: clamp(1rem, 3vw, 1.25rem) clamp(1rem, 3vw, 1.5rem);
+    padding: clamp(1.25rem, 3vw, 1.75rem) 0;
+    border-top: 1px solid #d6d9e0;
+    border-bottom: 1px solid #d6d9e0;
+    margin-bottom: clamp(2rem, 6vw, 3.5rem);
+  }
+  .meta-label{
+    display: block; font-size: 0.6875rem; text-transform: uppercase;
+    letter-spacing: 0.05em; color: var(--muted); margin-bottom: 6px;
+  }
+  .meta-value{ display: block; font-size: 0.875rem; color: var(--ink); line-height: 1.4; }
+
+  section{ margin-bottom: clamp(2.5rem, 6vw, 3.25rem); scroll-margin-top: 100px; }
+  section h2{
+    font-size: 0.8125rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--muted); margin: 0 0 18px;
+  }
+  section p{ font-size: 1rem; line-height: 1.7; color: var(--ink); margin: 0 0 18px; }
+  section p:last-child{ margin-bottom: 0; }
+
+  /* ---- imágenes: portada e inline ---- */
+  .cover-image, .inline-image{
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: clamp(2rem, 6vw, 3.5rem);
+  }
+  section .inline-image{ margin: 28px 0; }
+
+  .cover-swatch, .inline-swatch, .tile{
+    width: 100%; height: 100%;
+    display: flex; align-items: flex-end; padding: 14px;
+    font-size: 11px; color: rgba(255,255,255,0.85); font-weight: 500;
+  }
+  .cover-swatch{ background: linear-gradient(135deg,#1c2531 0%,#3a4a63 45%,#b8860b 100%); }
+  .inline-swatch{ background: linear-gradient(135deg,#4a5c3a,#2c3a22); aspect-ratio: 16/9; }
+  .inline-image{ aspect-ratio: 16/9; }
+
+  .tile{ border-radius: 4px; overflow: hidden; padding: 10px; font-size: 10px; }
+  .swatch-o1{ background: linear-gradient(135deg,#3a4a63,#1c2531); }
+  .swatch-o2{ background: linear-gradient(135deg,#d9a441,#b8860b); color: rgba(0,0,0,0.6); }
+  .swatch-o3{ background: linear-gradient(135deg,#5c6b45,#2c3a22); }
+  .swatch-o4{ background: linear-gradient(135deg,#7c6a4a,#493c2c); }
+  .swatch-o5{ background: linear-gradient(135deg,#5c6b73,#33404a); }
+  .swatch-o6{ background: #c9ccd4; color: rgba(0,0,0,0.55); }
+
+  .component-caption{
+    font-size: 0.8125rem; color: var(--muted); margin: 14px 0 clamp(2rem, 6vw, 3rem); max-width: 560px;
+  }
+
+  /* ---- Decisiones: proceso de construcción del logo (secuencia conectada) ---- */
+  .process-strip{
+    display: flex; align-items: center;
+    gap: 0; margin: 40px 0 0;
+    overflow-x: auto; padding-bottom: 6px;
+    scrollbar-width: none;
+  }
+  .process-strip::-webkit-scrollbar{ display: none; }
+  .process-step{ flex: 0 0 auto; }
+  .process-step .tile{ width: 128px; aspect-ratio: 3/4; }
+  .process-connector{
+    flex: 0 0 28px; height: 1px; background: rgba(12,12,12,0.2);
+    margin: 0 4px; position: relative;
+  }
+  .process-connector::after{
+    content: ''; position: absolute; right: -1px; top: -2.5px;
+    width: 5px; height: 5px; border-radius: 50%; background: var(--muted);
+  }
+
+  /* ---- Decisiones: sistema de identidad (composición superpuesta) ---- */
+  .identity-stack{
+    position: relative; width: 100%;
+    aspect-ratio: 16 / 7.5;
+    margin: 40px 0 0;
+  }
+  .identity-stack .tile{
+    position: absolute; box-shadow: 0 14px 28px rgba(12,12,12,0.16);
+  }
+  .identity-stack .tile.main{ left: 0; top: 0; width: 60%; height: 100%; z-index: 1; box-shadow: none; }
+  .identity-stack .tile.accent-a{ right: 8%; top: 0; width: 26%; height: 50%; z-index: 2; }
+  .identity-stack .tile.accent-b{ right: 0; bottom: 0; width: 30%; height: 54%; z-index: 3; }
+
+  /* ---- Resultado: feed de redes sociales ---- */
+  .feed-grid{
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 3px; margin: 40px 0 0;
+  }
+  .feed-grid .tile{
+    aspect-ratio: 1/1; padding: 8px;
+    transition: transform 0.3s ease;
+  }
+  .feed-grid .tile:hover{ transform: scale(1.035); z-index: 1; }
+
+  /* ---- Resultado: informes / infografías / eventos (grid editorial asimétrico) ---- */
+  .editorial-grid{ display: flex; gap: 14px; margin: 40px 0 0; }
+  .editorial-grid .tile{ transition: transform 0.3s ease; }
+  .editorial-grid .tile:hover{ transform: translateY(-4px); }
+  .editorial-grid .col-big{ flex: 1.4; }
+  .editorial-grid .col-big .tile{ width: 100%; height: 100%; aspect-ratio: 4/5; }
+  .editorial-grid .col-stack{ flex: 1; display: flex; flex-direction: column; gap: 14px; }
+  .editorial-grid .col-stack .tile{ flex: 1; aspect-ratio: 16/10; }
+
+  /* ---- Resultado: presentaciones (stack estático con leve abanico al pasar el cursor) ---- */
+  .deck-stack{ position: relative; width: 240px; aspect-ratio: 3/4; margin: 40px auto 0; }
+  .deck-stack .tile{
+    position: absolute; inset: 0; box-shadow: 0 16px 28px rgba(12,12,12,0.18);
+    transition: transform 0.35s ease;
+  }
+  .deck-stack .tile:nth-child(1){ transform: rotate(-7deg) translateY(6px); z-index: 1; }
+  .deck-stack .tile:nth-child(2){ transform: rotate(0deg); z-index: 2; }
+  .deck-stack .tile:nth-child(3){ transform: rotate(7deg) translateY(6px); z-index: 1; }
+  .deck-stack:hover .tile:nth-child(1){ transform: rotate(-15deg) translate(-26px, 10px); }
+  .deck-stack:hover .tile:nth-child(3){ transform: rotate(15deg) translate(26px, 10px); }
+
+  @media (prefers-reduced-motion: reduce){
+    .feed-grid .tile, .editorial-grid .tile, .deck-stack .tile{ transition: none; }
+    .deck-stack:hover .tile:nth-child(1){ transform: rotate(-7deg) translateY(6px); }
+    .deck-stack:hover .tile:nth-child(3){ transform: rotate(7deg) translateY(6px); }
+  }
+
+  /* ---- espacio para video / animación ---- */
+  .media-block{
+    width: 100%; aspect-ratio: 16/9; border-radius: 4px; overflow: hidden;
+    position: relative; background: linear-gradient(135deg,#1c2531,#3a4a63);
+    display: flex; align-items: center; justify-content: center;
+    margin: 40px 0 0;
+  }
+  .play-button{
+    width: 60px; height: 60px; border-radius: 50%;
+    background: rgba(255,255,255,0.12); border: 1.5px solid rgba(255,255,255,0.75);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .media-caption{ position: absolute; bottom: 14px; left: 14px; font-size: 11px; color: rgba(255,255,255,0.85); font-weight: 500; }
+
+  @media (width <= 768px){
+    nav{ gap: 16px; font-size: 11px; }
+    .project-content{ width: 100%; max-width: none; margin-left: 0; }
+    .meta-grid{ grid-template-columns: 1fr 1fr; }
+    h1{ font-size: clamp(2.125rem, 11vw, 2.75rem); }
+
+    .process-step .tile{ width: 96px; }
+
+    .identity-stack{ aspect-ratio: auto; height: auto; }
+    .identity-stack .tile{ position: static; width: 100% !important; height: auto !important; aspect-ratio: 4/3; box-shadow: none; margin-bottom: 10px; }
+
+    .editorial-grid{ flex-direction: column; }
+    .editorial-grid .col-big .tile{ aspect-ratio: 16/10; }
+
+    .deck-stack{ width: 180px; }
+  }
+
+  /* ---- shared arrow, used on Case Study, header socials and footer links ---- */
+  .link-arrow{
+    display: inline-block;
+    transition: transform 0.25s ease;
+  }
+  a:hover .link-arrow,
+  a:focus-visible .link-arrow{
+    transform: translate(3px, -3px);
+  }
+
+  /* ---- shared underline, same components as above ---- */
+  .link-text{ position: relative; }
+  .link-text::after{
+    content: '';
+    position: absolute;
+    left: 0; bottom: -2px;
+    width: 100%; height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+  }
+  a:hover .link-text::after,
+  a:focus-visible .link-text::after{
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  /* ---- footer (igual que en Inicio) ---- */
+  .site-footer{
+    padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1.25rem, 4.5vw, 3rem) clamp(3rem, 8vw, 6rem);
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .footer-panel{
+    background: #5750a8;
+    border-radius: 0;
+    padding: clamp(2rem, 6vw, 3.5rem) clamp(1.5rem, 6vw, 4rem);
+    color: var(--bg);
+  }
+  .footer-title{
+    margin: 0 0 clamp(2rem, 6vw, 3.5rem);
+    font-weight: 600;
+    font-size: clamp(4rem, 12vw, 12.5rem);
+    line-height: 0.94;
+    letter-spacing: -0.02em;
+    text-align: center;
+  }
+  #footerNameWrap{
+    display: block;
+    width: 100%;
+  }
+  .letter{
+    display: inline-block;
+    font-weight: 400;
+    transition: font-weight 0.3s ease;
+  }
+  .letter.dist-0{ font-weight: 800; }
+  .letter.dist-1{ font-weight: 700; }
+  .letter.dist-2{ font-weight: 500; }
+  .footer-links{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .footer-link{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    width: fit-content;
+    color: var(--bg);
+    font-weight: 700;
+    font-size: clamp(1.125rem, 2.5vw, 1.25rem);
+    text-decoration: none;
+  }
+  .footer-link:focus-visible{
+    outline: 2px solid var(--bg);
+    outline-offset: 4px;
+  }
+  .footer-music{ margin-bottom: 64px; }
+  .footer-italic{
+    margin: 0 0 8px;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.0625rem;
+    color: rgba(240,242,247,0.72);
+  }
+  .footer-credit{
+    margin: 0;
+    font-weight: 400;
+    font-size: 0.8125rem;
+    color: rgba(240,242,247,0.6);
+  }
+
+  @media (width <= 768px){
+    .footer-title{ text-align: right; font-size: clamp(2.5rem, 14vw, 4.5rem); }
+    .footer-link{ min-height: 44px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .letter{ transition: none; }
+    .link-arrow{ transition: none; }
+  }
+
+  /* ---- botón Atrás (fin de caso de estudio, antes del footer) ---- */
+  .back-nav{ max-width:1400px; margin:0 auto; padding: 0 clamp(1.25rem, 4.5vw, 3rem) clamp(1.5rem, 4vw, 2.5rem); }
+  .back-link{ display:inline-flex; align-items:center; gap:6px; color:var(--ink); font-weight:700; font-size:15px; text-decoration:none; background:none; border:none; cursor:pointer; font-family:inherit; }
+  .back-icon{ display:inline-flex; transition: transform 0.25s ease; }
+  .back-link:hover .back-icon, .back-link:focus-visible .back-icon{ transform: translateX(-3px); }
+  .back-link:focus-visible{ outline:2px solid var(--ink); outline-offset:4px; border-radius:4px; }
+  @media (width <= 768px){ .back-link{ min-height:44px; } }
+  @media (prefers-reduced-motion: reduce){ .back-icon{ transition:none; } }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="stage-inner">
+
+    <div class="topbar">
+      <nav id="mainNav">
+        <span class="nav-hover" id="navHover"></span>
+        <span class="nav-active-bar" id="navActiveBar"></span>
+        <a href="index.html" class="tab" data-page="index">Inicio</a>
+        <a href="vanessa-sobre-mi.html" class="tab" data-page="sobre-mi">Sobre mí</a>
+        <a href="index.html#proyectos" class="tab" data-page="proyectos">Proyectos</a>
+        <a href="index.html#contacto" class="pill">Hablemos</a>
+      </nav>
+      <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="mobileNav" aria-label="Abrir menú">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+    </div>
+
+    <div class="mobile-nav" id="mobileNav">
+      <a href="index.html" class="mobile-nav-link" data-page="index">Inicio</a>
+      <a href="vanessa-sobre-mi.html" class="mobile-nav-link" data-page="sobre-mi">Sobre mí</a>
+      <a href="index.html#proyectos" class="mobile-nav-link" data-page="proyectos">Proyectos</a>
+      <a href="index.html#contacto" class="mobile-nav-link mobile-nav-pill" data-page="contacto">Hablemos</a>
+    </div>
+
+    <aside class="toc" id="toc">
+      <div class="toc-header">
+        <span>Contenidos</span>
+        <button id="tocToggle" aria-label="Colapsar índice">−</button>
+      </div>
+      <nav class="toc-list">
+        <a href="#problema">Problema</a>
+        <a href="#contexto">Contexto</a>
+        <a href="#investigacion">Investigación</a>
+        <a href="#decisiones">Decisiones</a>
+        <a href="#resultado">Resultado</a>
+        <a href="#reflexiones">Reflexiones</a>
+      </nav>
+    </aside>
+
+    <div class="project-content">
+
+      <p class="eyebrow">Observatorio Colombiano de la Industria del Cannabis</p>
+      <h1>OCIC</h1>
+      <p class="subtitle">Diseñar comunicación para un sector económico emergente</p>
+
+      <div class="meta-grid">
+        <div><span class="meta-label">Rol</span><span class="meta-value">Coordinadora Gráfica</span></div>
+        <div><span class="meta-label">Duración</span><span class="meta-value">Desde 2019</span></div>
+        <div>
+          <span class="meta-label">Stakeholders</span>
+          <span class="meta-value">Jaime Arteaga y Asociados</span>
+          <span class="meta-value">Entidades gubernamentales</span>
+          <span class="meta-value">Academia</span>
+          <span class="meta-value">Sector privado</span>
+        </div>
+      </div>
+
+      <div class="cover-image">
+        <div class="cover-swatch"><span>portada_ocic.jpg</span></div>
+      </div>
+
+      <section id="problema">
+        <h2>Problema</h2>
+        <p>El OCIC necesitaba construir una comunicación capaz de presentar la industria colombiana del cannabis desde una perspectiva económica y empresarial, en un momento de crecimiento de la industria a partir de la regulación del cannabis con fines medicinales y científicos.</p>
+        <p>El reto estaba en traducir información muy técnica, alejada radicalmente de las tendencias gráficas asociadas al consumo recreativo, sobre regulación, producción y oportunidades de negocio en contenidos claros y atractivos para una audiencia que incluía actores del sector privado, instituciones, academia y otros participantes de esta industria emergente.</p>
+      </section>
+
+      <section id="contexto">
+        <h2>Contexto</h2>
+        <p>El Observatorio Colombiano de la Industria del Cannabis (OCIC) es una iniciativa de Arteaga Latam que conecta titulares de licencias de cannabis en Colombia, instituciones de gobierno y academia, con el objetivo de impulsar el desarrollo económico del sector a través de datos e información compartida.</p>
+        <p>Fui coordinadora gráfica del proyecto desde sus inicios. Lideré la identidad de marca y la comunicación visual, principalmente en redes sociales, además de campañas, diseño editorial para informes, identidad gráfica para video y materiales para eventos.</p>
+        <p>Durante el proyecto también acompañé activamente la conversación pública alrededor de la regulación del cannabis de uso adulto en Colombia, generando contenidos durante los días de discusión en el Congreso y acompañando la participación de Juan Carlos Losada en ese proceso.</p>
+      </section>
+
+      <section id="investigacion">
+        <h2>Investigación</h2>
+        <p>Las líderes del proyecto eran expertas en agronegocios y mantenían conversaciones directas con pequeños agricultores y empresarios del sector. Mi trabajo consistió en aprender de ese conocimiento, seguir su dirección sobre el rumbo del proyecto y complementarlo con referencias de medios especializados en cannabis.</p>
+        <p>Buena parte del trabajo consistió en traducir información técnica y económica en presentaciones, infografías y contenidos digitales que pudieran ser comprendidos rápidamente por públicos diversos.</p>
+        <p>La audiencia estaba definida desde el inicio, por lo que el desafío no era descubrir para quién estábamos diseñando, sino entender qué información necesitaba cada público y cómo hacerla accesible sin perder precisión.</p>
+      </section>
+
+      <section id="decisiones">
+        <h2>Decisiones</h2>
+        <p>Una de las decisiones centrales fue definir cómo debía verse una organización que hablaba de cannabis desde su dimensión económica.</p>
+        <p>La identidad debía alejarse de los códigos visuales asociados al consumo recreativo, pero también evitar una estética exclusivamente clínica. Buscamos construir una expresión que pudiera hablar de negocios, regulación, producción y desarrollo económico sin perder el carácter contemporáneo de una industria en crecimiento.</p>
+        <p>De esta decisión surgió el concepto "Abriendo Caminos", que orientó la línea gráfica del proyecto.</p>
+
+        <div class="identity-stack">
+          <div class="tile main swatch-o1"><span>identidad_ocic.jpg</span></div>
+          <div class="tile accent-a swatch-o2"><span>paleta_ocic.jpg</span></div>
+          <div class="tile accent-b swatch-o6"><span>tipografia_ocic.jpg</span></div>
+        </div>
+        <p class="component-caption">Sistema de identidad — logotipo, paleta y tipografía construidos a partir del concepto "Abriendo Caminos".</p>
+
+        <p>También tuve libertad para proponer nuevas formas de comunicación para redes sociales. A partir de los temas que trabajábamos, propuse piezas y formatos que permitieran ampliar la conversación más allá de la publicación de datos, explorando diferentes maneras de presentar la información y mantener activo el contenido del observatorio.</p>
+        <p>Junto al equipo audiovisual desarrollamos además una línea de animación que combinaba recursos 2D y 3D para presentar información económica y contenidos del sector de una manera más dinámica.</p>
+
+        <div class="process-strip">
+          <div class="process-step"><div class="tile swatch-o4"><span>logo_proceso_01.jpg</span></div></div>
+          <div class="process-connector"></div>
+          <div class="process-step"><div class="tile swatch-o5"><span>logo_proceso_02.jpg</span></div></div>
+          <div class="process-connector"></div>
+          <div class="process-step"><div class="tile swatch-o3"><span>logo_proceso_03.jpg</span></div></div>
+          <div class="process-connector"></div>
+          <div class="process-step"><div class="tile swatch-o2"><span>logo_proceso_04.jpg</span></div></div>
+          <div class="process-connector"></div>
+          <div class="process-step"><div class="tile swatch-o1"><span>logo_proceso_05.jpg</span></div></div>
+        </div>
+        <p class="component-caption">Proceso de construcción del logotipo, de las primeras exploraciones a la marca final.</p>
+
+        <p>Los tiempos de producción del proyecto eran cortos y buena parte del contenido involucraba información técnica y económica. Esto nos llevó a revisar constantemente cuánto recurso visual necesitaba realmente cada pieza.</p>
+        <p>En lugar de sumar elementos para representar la complejidad de la información, fuimos consolidando un sistema más simple: textos claros, fondos limpios y una jerarquía visual marcada.</p>
+        <p>La información debía seguir siendo la protagonista, mientras que los recursos gráficos ayudaban a organizarla y hacerla más fácil de recorrer.</p>
+      </section>
+
+      <section id="resultado">
+        <h2>Resultado</h2>
+        <p>Durante el proyecto desarrollé y consolidé la identidad visual del OCIC y su sistema de comunicación, aplicándolo a campañas digitales, contenidos para redes sociales, informes, infografías, materiales para eventos y piezas audiovisuales.</p>
+
+        <div class="feed-grid">
+          <div class="tile swatch-o1"><span>feed_01.jpg</span></div>
+          <div class="tile swatch-o2"><span>feed_02.jpg</span></div>
+          <div class="tile swatch-o3"><span>feed_03.jpg</span></div>
+          <div class="tile swatch-o4"><span>feed_04.jpg</span></div>
+          <div class="tile swatch-o6"><span>feed_05.jpg</span></div>
+          <div class="tile swatch-o5"><span>feed_06.jpg</span></div>
+          <div class="tile swatch-o2"><span>feed_07.jpg</span></div>
+          <div class="tile swatch-o1"><span>feed_08.jpg</span></div>
+          <div class="tile swatch-o3"><span>feed_09.jpg</span></div>
+        </div>
+        <p class="component-caption">Selección del feed de redes sociales del observatorio.</p>
+
+        <p>La identidad permitió construir una presencia visual consistente para el observatorio a medida que aumentaba la cantidad y diversidad de información que producía.</p>
+
+        <div class="editorial-grid">
+          <div class="col-big"><div class="tile swatch-o5"><span>informe_ocic.jpg</span></div></div>
+          <div class="col-stack">
+            <div class="tile swatch-o2"><span>infografia_ocic.jpg</span></div>
+            <div class="tile swatch-o4"><span>evento_ocic.jpg</span></div>
+          </div>
+        </div>
+        <p class="component-caption">Diseño editorial para informes, infografías y materiales para eventos.</p>
+
+        <div class="deck-stack">
+          <div class="tile swatch-o1"><span>presentacion_01.jpg</span></div>
+          <div class="tile swatch-o6"><span>presentacion_02.jpg</span></div>
+          <div class="tile swatch-o2"><span>presentacion_03.jpg</span></div>
+        </div>
+        <p class="component-caption" style="text-align:center;">Presentaciones para traducir información técnica y económica a públicos diversos.</p>
+
+        <p>El trabajo también acompañó momentos relevantes de la conversación pública sobre la industria, como las discusiones en el Congreso alrededor de la regulación del cannabis de uso adulto.</p>
+
+        <div class="media-block">
+          <div class="play-button">
+            <svg width="20" height="22" viewBox="0 0 20 22" fill="none">
+              <path d="M1 1.5L18.5 11L1 20.5V1.5Z" stroke="white" stroke-width="1.6" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="media-caption">animacion_2d3d.mp4</span>
+        </div>
+        <p class="component-caption">Línea de animación 2D/3D desarrollada junto al equipo audiovisual.</p>
+      </section>
+
+      <section id="reflexiones">
+        <h2>Reflexiones</h2>
+        <p>OCIC fue uno de los proyectos en los que tuve mayor autonomía dentro de mi trabajo en Arteaga Latam. Esa libertad me permitió tomar iniciativa, proponer piezas y formatos para redes sociales y participar activamente en la construcción de la comunicación, más allá de responder a solicitudes puntuales.</p>
+        <p>También fue un proyecto en el que aprendí mucho del trabajo en equipo. Trabajé de cerca con un equipo especializado en agronegocios y con el equipo audiovisual, aprendiendo a escuchar otras perspectivas, incorporar conocimiento que no era propio de mi disciplina y construir las piezas a partir de conversaciones y decisiones compartidas.</p>
+        <p>Más que un proyecto en el que tuve que descubrir cómo comunicar el tema del cannabis, desde el inicio tuvimos claro que estábamos hablando de una industria y de una oportunidad económica. El reto estaba en encontrar las mejores formas de comunicar esa información y construir una identidad que estuviera a la altura de un sector que todavía estaba definiendo su lugar en Colombia.</p>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<div class="back-nav">
+  <a href="index.html" class="back-link">
+    <svg class="back-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+    <span class="link-text">Atrás</span>
+  </a>
+</div>
+
+<footer class="site-footer" id="contacto">
+  <div class="footer-panel">
+    <div class="name-wrap" id="footerNameWrap">
+      <h2 class="footer-title" id="footerTitleText">&#161;Hablemos!</h2>
+    </div>
+
+    <div class="footer-links" id="footerLinks">
+      <a href="mailto:vanessanieto@gmail.com" class="footer-link"><span class="link-text">vanessanieto@gmail.com</span> <span class="link-arrow">&#8599;</span></a>
+      <a href="#" class="footer-link" target="_blank" rel="noopener"><span class="link-text">LinkedIn</span> <span class="link-arrow">&#8599;</span></a>
+    </div>
+
+    <div class="footer-music" id="footerMusic">
+      <p class="footer-italic">La m&#250;sica es una gran forma de conocer as&#237; que:</p>
+      <a href="#" class="footer-link" target="_blank" rel="noopener"><span class="link-text">Mi Spotify</span> <span class="link-arrow">&#8599;</span></a>
+    </div>
+
+    <p class="footer-credit">Dise&#241;ado y construido con mucho amor y overthinking.</p>
+  </div>
+</footer>
+
+<script>
+  const toc = document.getElementById('toc');
+  const tocToggle = document.getElementById('tocToggle');
+  tocToggle.addEventListener('click', () => {
+    const collapsed = toc.classList.toggle('collapsed');
+    tocToggle.textContent = collapsed ? '+' : '−';
+    tocToggle.setAttribute('aria-label', collapsed ? 'Expandir índice' : 'Colapsar índice');
+  });
+
+  const links = document.querySelectorAll('.toc-list a');
+  const sections = [...document.querySelectorAll('section[id]')];
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      const link = document.querySelector(`.toc-list a[href="#${entry.target.id}"]`);
+      if (!link) return;
+      if (entry.isIntersecting){
+        links.forEach((l) => l.classList.remove('active'));
+        link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-40% 0px -50% 0px' });
+  sections.forEach((s) => observer.observe(s));
+
+  (function(){
+    var nav = document.getElementById('mainNav');
+    var hoverEl = document.getElementById('navHover');
+    var activeBar = document.getElementById('navActiveBar');
+    var tabs = nav.querySelectorAll('a.tab');
+    var CURRENT_PAGE = 'proyectos';
+
+    function moveTo(source, target){
+      if (!source || !target) return;
+      target.style.left = source.offsetLeft + 'px';
+      target.style.width = source.offsetWidth + 'px';
+    }
+
+    var activeTab = null;
+    tabs.forEach(function(tab){
+      if (tab.dataset.page === CURRENT_PAGE){
+        tab.classList.add('is-active');
+        activeTab = tab;
+      }
+      tab.addEventListener('mouseenter', function(){
+        hoverEl.style.opacity = '1';
+        moveTo(tab, hoverEl);
+      });
+    });
+    nav.addEventListener('mouseleave', function(){ hoverEl.style.opacity = '0'; });
+
+    function placeActiveBar(){ if (activeTab) moveTo(activeTab, activeBar); }
+    placeActiveBar();
+    window.addEventListener('load', placeActiveBar);
+    window.addEventListener('resize', placeActiveBar);
+
+    document.querySelectorAll('.mobile-nav-link').forEach(function(link){
+      if (link.dataset.page === CURRENT_PAGE) link.classList.add('is-active');
+    });
+  })();
+
+  // ---------- Mobile nav: hamburger toggle (accesible, sin depender de hover) ----------
+  (function(){
+    var toggle = document.getElementById('navToggle');
+    var panel = document.getElementById('mobileNav');
+    if (!toggle || !panel) return;
+
+    function closeMenu(){
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Abrir menú');
+      panel.classList.remove('open');
+      document.body.classList.remove('nav-open');
+    }
+    function openMenu(){
+      toggle.setAttribute('aria-expanded', 'true');
+      toggle.setAttribute('aria-label', 'Cerrar menú');
+      panel.classList.add('open');
+      document.body.classList.add('nav-open');
+    }
+
+    toggle.addEventListener('click', function(){
+      var isOpen = toggle.getAttribute('aria-expanded') === 'true';
+      if (isOpen) closeMenu(); else openMenu();
+    });
+
+    panel.querySelectorAll('a').forEach(function(link){
+      link.addEventListener('click', closeMenu);
+    });
+
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape') closeMenu();
+    });
+
+    window.addEventListener('resize', function(){
+      if (window.innerWidth > 768) closeMenu();
+    });
+  })();
+</script>
+
+<script>
+  // ---------- Footer: bubble text + alineacion con la columna de contenido ----------
+  (function(){
+    var prefersReducedFooter = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function makeBubbleLine(line){
+      var text = line.textContent;
+      line.textContent = '';
+      [].forEach.call(text, function(ch){
+        var span = document.createElement('span');
+        span.className = 'letter';
+        span.textContent = ch === ' ' ? '\u00A0' : ch;
+        line.appendChild(span);
+      });
+
+      if (prefersReducedFooter) return;
+
+      var letters = [].slice.call(line.querySelectorAll('.letter'));
+      letters.forEach(function(letter, idx){
+        letter.addEventListener('mouseenter', function(){
+          letters.forEach(function(other, j){
+            var dist = Math.abs(idx - j);
+            other.classList.remove('dist-0', 'dist-1', 'dist-2');
+            if (dist === 0) other.classList.add('dist-0');
+            else if (dist === 1) other.classList.add('dist-1');
+            else if (dist === 2) other.classList.add('dist-2');
+          });
+        });
+      });
+      line.addEventListener('mouseleave', function(){
+        letters.forEach(function(l){ l.classList.remove('dist-0', 'dist-1', 'dist-2'); });
+      });
+    }
+
+    var footerTitleText = document.getElementById('footerTitleText');
+    if (footerTitleText) makeBubbleLine(footerTitleText);
+
+    function alignFooterLinks(){
+      var footerLinks = document.getElementById('footerLinks');
+      var footerMusic = document.getElementById('footerMusic');
+      var contentCol = document.querySelector('.project-content');
+      var panel = document.querySelector('.footer-panel');
+      if (!footerLinks || !footerMusic || !contentCol || !panel) return;
+
+      if (window.innerWidth <= 768){
+        footerLinks.style.marginLeft = '';
+        footerMusic.style.marginLeft = '';
+        return;
+      }
+
+      var contentRect = contentCol.getBoundingClientRect();
+      var panelRect = panel.getBoundingClientRect();
+      var panelPadLeft = parseFloat(getComputedStyle(panel).paddingLeft);
+      var contentStart = panelRect.left + panelPadLeft;
+      var offset = Math.max(0, contentRect.left - contentStart);
+
+      footerLinks.style.marginLeft = offset + 'px';
+      footerMusic.style.marginLeft = offset + 'px';
+    }
+
+    window.addEventListener('load', alignFooterLinks);
+    window.addEventListener('resize', alignFooterLinks);
+    alignFooterLinks();
+  })();
+</script>
+
+</body>
+</html>
