@@ -356,13 +356,10 @@
   }
 
   @media (width <= 768px){
-    .discover-item{ width: 76px; height: 100px; }
-    .discover-item[data-shape="square"]{ width: 76px; height: 76px; }
-    .discover-item[data-shape="landscape"]{ width: 96px; height: 70px; }
-    /* en mobile, solo 2 anclas chicas arriba/abajo para no competir con el nombre */
-    .discover-item--3, .discover-item--4{ display: none; }
-    .discover-item--1{ top: 3%; right: 4%; }
-    .discover-item--2{ bottom: 4%; left: 4%; right: auto; }
+    /* en mobile no hay espacio/contexto suficiente para que las imágenes
+       flotantes se perciban como descubribles: se ocultan por completo y
+       se conserva solo el sistema de cursor-trail original (desktop) */
+    .discover-field{ display: none; }
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -461,7 +458,7 @@
       font-weight: 500;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      color: var(--ink-soft);
+      color: #016644;
     }
     .scroll-arrow{
       display: inline-block;
@@ -679,7 +676,21 @@
   }
 
   @media (width <= 768px){
-    .footer-title{ font-size: clamp(3.25rem, 19vw, 5.5rem); }
+    /* en mobile el título sobredimensionado no tiene espacio para quedar en
+       una sola línea sin recortarse: se centra y se permite el wrap para
+       que siempre se lea completo; por eso el drift horizontal (pensado
+       para una sola línea ancha) se desactiva aquí */
+    .footer-panel{ overflow: visible; }
+    .footer-title{
+      font-size: clamp(2.5rem, 13vw, 4rem);
+      white-space: normal;
+      text-align: center;
+    }
+    #footerNameWrap{
+      display: block;
+      width: 100%;
+    }
+    .site-footer.in-view #footerNameWrap{ animation: none; transform: none; }
     .footer-link{ min-height: 44px; }
     .case-study-link{ min-height: 44px; }
   }
@@ -1084,6 +1095,9 @@
   (function(){
     const discoverField = document.getElementById('discoverField');
     if (!discoverField || !trailPool.length) return;
+    // en mobile no hay contexto suficiente para estas imágenes flotantes:
+    // ni se generan (ver también el display:none en el media query <= 768px)
+    if (window.innerWidth <= 768) return;
 
     const ANCHOR_COUNT = 4; // los 4 anclajes editoriales definidos en CSS (.discover-item--1..4)
     const sourceShuffled = trailPool.slice().sort(() => Math.random() - 0.5);
