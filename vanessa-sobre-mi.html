@@ -9,11 +9,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg: #f0f2f7;
-    --ink: #0c0c0c;
-    --muted: #666666;
-    --pill: #0c0c0c;
-    --pill-text: #f0f2f7;
+    --bg: #016644;
+    --ink: #ffffff;
+    --muted: rgba(255,255,255,0.68);
+    --title: #daffa2;
+    --pill: #daffa2;
+    --pill-text: #016644;
+    --accent: #daffa2;
   }
 
   *{ box-sizing: border-box; }
@@ -54,12 +56,12 @@
 
   .nav-hover{
     position: absolute; top: 0; height: 30px; border-radius: 6px;
-    background: rgba(12,12,12,0.07); opacity: 0; pointer-events: none;
+    background: rgba(255,255,255,0.14); opacity: 0; pointer-events: none;
     transition: left 0.3s ease, width 0.3s ease, opacity 0.2s ease; z-index: 0;
   }
 
   .nav-active-bar{
-    position: absolute; bottom: -6px; height: 2px; background: var(--ink);
+    position: absolute; bottom: -6px; height: 2px; background: var(--title);
     transition: left 0.3s ease, width 0.3s ease; z-index: 1;
   }
 
@@ -67,24 +69,33 @@
     position: relative; z-index: 2;
     font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em;
     padding: 7px 12px; border-radius: 6px;
-    color: rgba(12,12,12,0.6);
+    color: rgba(255,255,255,0.65);
     transition: color 0.3s ease;
   }
 
-  nav a.tab.is-active{ color: var(--ink); font-weight: 700; }
+  nav a.tab.is-active{ color: var(--title); font-weight: 700; }
 
   nav a:focus-visible{ outline: 2px solid var(--ink); outline-offset: 4px; }
 
   nav a.pill{
-    background: var(--pill);
-    color: var(--pill-text);
-    padding: 10px 18px;
+    background: transparent;
+    color: var(--title);
+    font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em;
+    padding: 7px 16px;
     margin-left: 12px;
-    border-radius: 0;
+    border-radius: 2px;
+    border: 1px solid rgba(218,255,162,0.45);
+    transition: border-color 0.3s ease, background 0.3s ease;
+  }
+
+  nav a.pill:hover,
+  nav a.pill:focus-visible{
+    background: rgba(218,255,162,0.1);
+    border-color: rgba(218,255,162,0.8);
   }
 
   @media (prefers-reduced-motion: reduce){
-    .nav-hover, .nav-active-bar, nav a.tab{ transition: none; }
+    .nav-hover, .nav-active-bar, nav a.tab, nav a.pill{ transition: none; }
   }
 
   /* ---- mobile nav (hamburger) ---- */
@@ -147,11 +158,11 @@
       font-size: clamp(1.25rem, 6vw, 1.75rem);
       font-weight: 600;
       letter-spacing: -0.01em;
-      border-bottom: 1px solid rgba(12,12,12,0.08);
+      border-bottom: 1px solid rgba(255,255,255,0.18);
       color: var(--ink);
     }
     .mobile-nav-link:focus-visible{ outline: 2px solid var(--ink); outline-offset: -2px; }
-    .mobile-nav-link.is-active{ color: rgba(12,12,12,0.45); }
+    .mobile-nav-link.is-active{ color: rgba(255,255,255,0.5); }
     .mobile-nav-link.mobile-nav-pill{
       margin-top: 20px;
       justify-content: center;
@@ -171,7 +182,7 @@
   /* ---- intro: foto + texto ---- */
   .about-row{
     display: flex;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 48px;
     max-width: 1400px;
     margin: 0 auto;
@@ -180,7 +191,6 @@
   .about-photo{
     width: 34%;
     max-width: 420px;
-    aspect-ratio: 4 / 5;
     flex-shrink: 0;
     border-radius: 4px;
     overflow: hidden;
@@ -188,7 +198,10 @@
     border: none;
     outline: none;
     background: transparent;
+    transition: transform 0.3s ease;
   }
+
+  .about-photo:hover{ transform: scale(1.035); }
 
   .about-photo img{
     width: 100%;
@@ -199,6 +212,10 @@
     outline: none;
   }
 
+  @media (prefers-reduced-motion: reduce){
+    .about-photo{ transition: none; }
+  }
+
   .about-text{
     width: 62%;
     max-width: 780px;
@@ -206,11 +223,20 @@
   }
 
   .about-text h1{
-    margin: 0 0 28px;
+    margin: 0 0 14px;
     font-weight: 600;
     font-size: clamp(2rem, 3.4vw, 3rem);
     line-height: 1.15;
     letter-spacing: -0.01em;
+    color: var(--title);
+  }
+
+  .about-text p.about-subtitle{
+    margin: 0 0 28px;
+    font-size: 1.0625rem;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--title);
   }
 
   .about-text p{
@@ -269,26 +295,39 @@
     flex: 1;
   }
 
+  /* ---- fila punto + rol + línea + año ----
+     Grid con una sola variable (--row-line) que define a la vez el alto de
+     la fila 1 y el line-height del rol: punto, línea y año se centran con
+     align-items:center dentro de esa misma franja, así que su eje vertical
+     y su centro óptico coinciden siempre por construcción, no por ajustes
+     manuales por fila. El texto del rol puede ocupar 1 o 2 líneas (y llevar
+     un cert-sub debajo) porque ocupa las filas 1 y 2 del grid; eso nunca
+     mueve el punto/línea/año, que viven solo en la fila 1. */
   .exp-row{
-    display: flex;
-    align-items: baseline;
-    flex-wrap: nowrap;
-    gap: 12px;
+    --row-line: 1.5rem;
+    display: grid;
+    grid-template-columns: 5px auto 1fr auto;
+    grid-template-rows: var(--row-line) auto;
+    column-gap: 12px;
+    align-items: center;
   }
 
   .exp-row .bullet{
+    grid-row: 1;
+    grid-column: 1;
     width: 5px;
     height: 5px;
-    flex: 0 0 auto;
     background: var(--muted);
-    transform: translateY(-3px);
   }
 
   .exp-row .role{
-    flex: 0 1 auto;
+    grid-row: 1 / span 2;
+    grid-column: 2;
+    align-self: start;
     min-width: 0;
     white-space: nowrap;
     font-size: 1rem;
+    line-height: var(--row-line);
     color: var(--ink);
     font-weight: 600;
   }
@@ -300,22 +339,21 @@
   }
 
   .exp-row .leader{
-    flex: 1 1 auto;
-    border-bottom: 1px solid rgba(12,12,12,0.15);
-    transform: translateY(-4px);
+    grid-row: 1;
+    grid-column: 3;
+    border-bottom: 1px solid rgba(255,255,255,0.22);
     min-width: 24px;
   }
 
   .exp-row .year{
-    flex: 0 0 auto;
-    margin-left: auto;
+    grid-row: 1;
+    grid-column: 4;
     white-space: nowrap;
     font-size: 0.875rem;
     color: var(--muted);
     font-variant-numeric: tabular-nums;
   }
 
-  .exp-row.cert-row{ align-items: flex-start; }
   .exp-row.cert-row .role{ white-space: normal; }
 
   .exp-row.no-date .leader,
@@ -337,22 +375,138 @@
     .list-rows{ width: 68%; }
   }
 
+  .eyebrow{ display: none; }
+
   @media (width <= 768px){
     nav{ gap: 12px; }
 
-    .about-row{ flex-direction: column; gap: 28px; }
-    .about-photo{ width: min(60%, 280px); max-width: none; }
-    .about-text{ width: 100%; max-width: none; margin-left: 0; }
+    /* ---- diagramación tipo "ysabella": foto grande y protagonista, etiquetas
+       en mayúsculas pequeñas con punto de acento, bloques con mucho aire ---- */
 
-    .about-lists{ gap: clamp(2rem, 8vw, 2.75rem); }
-    .list-row{ flex-direction: column; gap: 14px; }
-    .list-label{ flex: 0 0 auto; width: 100%; }
-    .list-rows{ width: 100%; max-width: none; margin-left: 0; gap: 16px; }
-    .exp-row{ flex-wrap: wrap; }
+    .about-row{ flex-direction: column; gap: 32px; }
+    .about-photo{ width: min(78%, 360px); max-width: none; aspect-ratio: 4 / 5; margin: 0 auto; }
+    .about-text{ width: 100%; max-width: none; margin-left: 0; }
+    .about-text p.about-subtitle{ font-size: 0.9375rem; margin: 0 0 20px; }
+
+    .eyebrow{
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+    .eyebrow::before{
+      content: '';
+      width: 6px; height: 6px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .about-text h1{ font-size: clamp(1.75rem, 8vw, 2.5rem); }
+
+    .about-lists{ gap: clamp(3rem, 13vw, 4.25rem); }
+    .list-row{ flex-direction: column; gap: 16px; }
+    .list-label{
+      flex: 0 0 auto;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+    .list-label::before{
+      content: '';
+      width: 6px; height: 6px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+    .list-rows{ width: 100%; max-width: none; margin-left: 0; gap: 20px; }
+    .exp-row{
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+    .exp-row .bullet{ display: none; }
+    .exp-row .role{ white-space: normal; font-size: 1.0625rem; line-height: 1.4; }
     .exp-row .leader{ display: none; }
+    .exp-row .year{
+      margin-left: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 0.6875rem;
+      font-weight: 500;
+      color: var(--muted);
+    }
+    .cert-sub{ font-size: 0.8125rem; }
 
     .list-row.list-row--compact{ max-width: none; margin: 0; }
     .list-row.list-row--compact .list-rows{ width: 100%; }
+  }
+
+  /* ---- footer ---- */
+  .about-footer{
+    max-width: 1400px;
+    margin: clamp(3rem, 8vw, 5rem) auto 0;
+    padding-top: clamp(1.5rem, 4vw, 2.5rem);
+    border-top: 1px solid rgba(255,255,255,0.18);
+    display: flex;
+    gap: 28px;
+  }
+  .footer-link{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ink);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    text-decoration: none;
+  }
+  .footer-link .link-arrow{
+    display: inline-block;
+    transition: transform 0.25s ease;
+  }
+  .footer-link:hover .link-arrow,
+  .footer-link:focus-visible .link-arrow{
+    transform: translate(3px, -3px);
+  }
+  .footer-link:focus-visible{ outline: 2px solid var(--ink); outline-offset: 4px; }
+  .footer-link .link-text{ position: relative; }
+  .footer-link .link-text::after{
+    content: '';
+    position: absolute;
+    left: 0; bottom: -2px;
+    width: 100%; height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+  }
+  .footer-link:hover .link-text::after,
+  .footer-link:focus-visible .link-text::after{
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  @media (width <= 768px){
+    .about-footer{ flex-direction: column; gap: 16px; }
+    .footer-link{ min-height: 44px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .footer-link .link-arrow, .footer-link .link-text::after{ transition: none; }
   }
 </style>
 </head>
@@ -390,7 +544,9 @@
     </div>
 
     <div class="about-text">
-      <h1>Diseñadora gráfica +<br>diseñadora UX/UI</h1>
+      <p class="eyebrow">Sobre mí</p>
+      <h1>Diseñadora gráfica + UX/UI</h1>
+      <p class="about-subtitle">Experiencia en comunicación visual, proyectos sociales y equipos multidisciplinarios.</p>
 
       <p>Soy de Mérida, Venezuela, y hace 8 años encontré en Medellín mi casa. Migrar no solo significó cambiar de ciudad sino que moldeó profundamente mi manera de relacionarme, mi sensibilidad hacia los demás y la forma en que entiendo mi trabajo.</p>
 
@@ -498,6 +654,11 @@
       </div>
     </div>
 
+  </div>
+
+  <div class="about-footer">
+    <a href="https://www.linkedin.com/in/vnessanieto/" class="footer-link" target="_blank" rel="noopener"><span class="link-text">LinkedIn</span> <span class="link-arrow">↗</span></a>
+    <a href="#" class="footer-link" target="_blank" rel="noopener"><span class="link-text">Mi Spotify</span> <span class="link-arrow">↗</span></a>
   </div>
 
 </div>

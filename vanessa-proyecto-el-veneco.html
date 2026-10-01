@@ -423,22 +423,43 @@
     margin: 0 auto;
   }
   .footer-panel{
-    background: #5750a8;
+    /* paleta verde ya definida en el proyecto (misma que Sobre mí) */
+    --footer-bg: #016644;
+    --footer-title: #daffa2;
+    --footer-ink: #ffffff;
+    --footer-muted: rgba(255,255,255,0.68);
+    background: var(--footer-bg);
     border-radius: 0;
     padding: clamp(2rem, 6vw, 3.5rem) clamp(1.5rem, 6vw, 4rem);
-    color: var(--bg);
+    color: var(--footer-ink);
+    /* contiene el título sobredimensionado: nunca ensancha <body> */
+    overflow: hidden;
   }
   .footer-title{
     margin: 0 0 clamp(2rem, 6vw, 3.5rem);
     font-weight: 600;
-    font-size: clamp(4rem, 12vw, 12.5rem);
+    font-size: clamp(6rem, 17vw, 15rem);
     line-height: 0.94;
     letter-spacing: -0.02em;
-    text-align: center;
+    text-align: left;
+    white-space: nowrap;
+    color: var(--footer-title);
   }
+  /* se dimensiona a su contenido real (más ancho que el panel a propósito,
+     por eso el panel necesita overflow:hidden) para que el translateX lo
+     desplace como una sola pieza gráfica */
   #footerNameWrap{
-    display: block;
-    width: 100%;
+    display: inline-block;
+    width: max-content;
+    will-change: transform;
+  }
+  @keyframes footerTitleDrift{
+    0%, 100% { transform: translateX(-2.2vw); }
+    50% { transform: translateX(2.2vw); }
+  }
+  /* arranca solo cuando el footer entra en viewport (ver JS) */
+  .site-footer.in-view #footerNameWrap{
+    animation: footerTitleDrift 22s ease-in-out infinite;
   }
   .letter{
     display: inline-block;
@@ -459,13 +480,13 @@
     align-items: center;
     gap: 6px;
     width: fit-content;
-    color: var(--bg);
+    color: var(--footer-ink);
     font-weight: 700;
     font-size: clamp(1.125rem, 2.5vw, 1.25rem);
     text-decoration: none;
   }
   .footer-link:focus-visible{
-    outline: 2px solid var(--bg);
+    outline: 2px solid var(--footer-ink);
     outline-offset: 4px;
   }
   .footer-music{ margin-bottom: 64px; }
@@ -474,23 +495,24 @@
     font-style: italic;
     font-weight: 400;
     font-size: 1.0625rem;
-    color: rgba(240,242,247,0.72);
+    color: var(--footer-muted);
   }
   .footer-credit{
     margin: 0;
     font-weight: 400;
     font-size: 0.8125rem;
-    color: rgba(240,242,247,0.6);
+    color: var(--footer-muted);
   }
 
   @media (width <= 768px){
-    .footer-title{ text-align: right; font-size: clamp(2.5rem, 14vw, 4.5rem); }
+    .footer-title{ font-size: clamp(3.25rem, 19vw, 5.5rem); }
     .footer-link{ min-height: 44px; }
   }
 
   @media (prefers-reduced-motion: reduce){
     .letter{ transition: none; }
     .link-arrow{ transition: none; }
+    .site-footer.in-view #footerNameWrap{ animation: none; transform: none; }
   }
 
   /* ---- botón Atrás (fin de caso de estudio, antes del footer) ---- */
@@ -665,13 +687,13 @@
     </div>
 
     <div class="footer-links" id="footerLinks">
-      <a href="mailto:vanessanieto@gmail.com" class="footer-link"><span class="link-text">vanessanieto@gmail.com</span> <span class="link-arrow">&#8599;</span></a>
-      <a href="#" class="footer-link" target="_blank" rel="noopener"><span class="link-text">LinkedIn</span> <span class="link-arrow">&#8599;</span></a>
+      <a href="mailto:vanessanieton@gmail.com" class="footer-link"><span class="link-text">vanessanieton@gmail.com</span> <span class="link-arrow">&#8599;</span></a>
+      <a href="https://www.linkedin.com/in/vnessanieto/" class="footer-link" target="_blank" rel="noopener"><span class="link-text">LinkedIn</span> <span class="link-arrow">&#8599;</span></a>
     </div>
 
     <div class="footer-music" id="footerMusic">
-      <p class="footer-italic">La m&#250;sica es una gran forma de conocer as&#237; que:</p>
-      <a href="#" class="footer-link" target="_blank" rel="noopener"><span class="link-text">Mi Spotify</span> <span class="link-arrow">&#8599;</span></a>
+      <p class="footer-italic">La m&#250;sica es una gran forma de conocernos:</p>
+      <a href="https://open.spotify.com/user/vnessanieto" class="footer-link" target="_blank" rel="noopener"><span class="link-text">Mi Spotify</span> <span class="link-arrow">&#8599;</span></a>
     </div>
 
     <p class="footer-credit">Dise&#241;ado y construido con mucho amor y overthinking.</p>
@@ -913,6 +935,24 @@
     window.addEventListener('load', alignFooterLinks);
     window.addEventListener('resize', alignFooterLinks);
     alignFooterLinks();
+
+    // ---------- El título del footer empieza a moverse solo al entrar en viewport ----------
+    var footerEl = document.getElementById('contacto');
+    if (footerEl && !prefersReducedFooter){
+      if (!('IntersectionObserver' in window)){
+        footerEl.classList.add('in-view');
+      } else {
+        var footerIo = new IntersectionObserver(function(entries){
+          entries.forEach(function(entry){
+            if (entry.isIntersecting){
+              footerEl.classList.add('in-view');
+              footerIo.disconnect();
+            }
+          });
+        }, { threshold: 0.2 });
+        footerIo.observe(footerEl);
+      }
+    }
   })();
 </script>
 
