@@ -217,11 +217,21 @@
     letter-spacing: 0.05em; color: var(--muted); margin-bottom: 6px;
   }
   .meta-value{ display: block; font-size: 0.875rem; color: var(--ink); line-height: 1.4; }
+  .meta-ig-link{
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: opacity 0.2s ease;
+  }
+  .meta-ig-link:hover{ text-decoration: underline; }
+  .meta-ig-link svg{ flex: 0 0 auto; }
 
   section{ margin-bottom: clamp(2.5rem, 6vw, 3.25rem); scroll-margin-top: 100px; }
   section h2{
     font-size: 0.8125rem; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.06em; color: var(--muted); margin: 0 0 18px;
+    letter-spacing: 0.06em; color: var(--muted); margin: 0 0 10px;
+  }
+  .section-subtitle{
+    font-size: clamp(1.125rem, 1.6vw, 1.25rem); font-weight: 700; line-height: 1.35;
+    letter-spacing: -0.01em; color: var(--ink); margin: 0 0 14px;
   }
   section p{ font-size: 1rem; line-height: 1.7; color: var(--ink); margin: 0 0 18px; }
   section p:last-child{ margin-bottom: 0; }
@@ -256,6 +266,10 @@
   .component-caption{
     font-size: 0.8125rem; color: var(--muted); margin: 14px 0 clamp(2rem, 6vw, 3rem); max-width: 560px;
   }
+
+  /* ---- imágenes reales dentro de una sección (después del texto) ---- */
+  .story-image{ margin: 40px 0 0; }
+  .story-image img{ width: 100%; height: auto; border-radius: 4px; }
 
   /* ---- Decisiones: proceso de construcción del logo (secuencia conectada) ---- */
   .process-strip{
@@ -299,6 +313,11 @@
     transition: transform 0.3s ease;
   }
   .feed-grid .tile:hover{ transform: scale(1.035); z-index: 1; }
+  .feed-grid img{
+    width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 4px;
+    position: relative; transition: transform 0.3s ease;
+  }
+  .feed-grid img:hover{ transform: scale(1.035); z-index: 1; }
 
   /* ---- Resultado: informes / infografías / eventos (grid editorial asimétrico) ---- */
   .editorial-grid{ display: flex; gap: 14px; margin: 40px 0 0; }
@@ -322,7 +341,7 @@
   .deck-stack:hover .tile:nth-child(3){ transform: rotate(15deg) translate(26px, 10px); }
 
   @media (prefers-reduced-motion: reduce){
-    .feed-grid .tile, .editorial-grid .tile, .deck-stack .tile{ transition: none; }
+    .feed-grid .tile, .feed-grid img, .editorial-grid .tile, .deck-stack .tile{ transition: none; }
     .deck-stack:hover .tile:nth-child(1){ transform: rotate(-7deg) translateY(6px); }
     .deck-stack:hover .tile:nth-child(3){ transform: rotate(7deg) translateY(6px); }
   }
@@ -393,22 +412,43 @@
     margin: 0 auto;
   }
   .footer-panel{
-    background: #5750a8;
+    /* paleta verde ya definida en el proyecto (misma que Sobre mí) */
+    --footer-bg: #016644;
+    --footer-title: #daffa2;
+    --footer-ink: #ffffff;
+    --footer-muted: rgba(255,255,255,0.68);
+    background: var(--footer-bg);
     border-radius: 0;
     padding: clamp(2rem, 6vw, 3.5rem) clamp(1.5rem, 6vw, 4rem);
-    color: var(--bg);
+    color: var(--footer-ink);
+    /* contiene el título sobredimensionado: nunca ensancha <body> */
+    overflow: hidden;
   }
   .footer-title{
     margin: 0 0 clamp(2rem, 6vw, 3.5rem);
     font-weight: 600;
-    font-size: clamp(4rem, 12vw, 12.5rem);
+    font-size: clamp(6rem, 17vw, 15rem);
     line-height: 0.94;
     letter-spacing: -0.02em;
-    text-align: center;
+    text-align: left;
+    white-space: nowrap;
+    color: var(--footer-title);
   }
+  /* se dimensiona a su contenido real (más ancho que el panel a propósito,
+     por eso el panel necesita overflow:hidden) para que el translateX lo
+     desplace como una sola pieza gráfica */
   #footerNameWrap{
-    display: block;
-    width: 100%;
+    display: inline-block;
+    width: max-content;
+    will-change: transform;
+  }
+  @keyframes footerTitleDrift{
+    0%, 100% { transform: translateX(-2.2vw); }
+    50% { transform: translateX(2.2vw); }
+  }
+  /* arranca solo cuando el footer entra en viewport (ver JS) */
+  .site-footer.in-view #footerNameWrap{
+    animation: footerTitleDrift 22s ease-in-out infinite;
   }
   .letter{
     display: inline-block;
@@ -429,13 +469,13 @@
     align-items: center;
     gap: 6px;
     width: fit-content;
-    color: var(--bg);
+    color: var(--footer-ink);
     font-weight: 700;
     font-size: clamp(1.125rem, 2.5vw, 1.25rem);
     text-decoration: none;
   }
   .footer-link:focus-visible{
-    outline: 2px solid var(--bg);
+    outline: 2px solid var(--footer-ink);
     outline-offset: 4px;
   }
   .footer-music{ margin-bottom: 64px; }
@@ -444,23 +484,24 @@
     font-style: italic;
     font-weight: 400;
     font-size: 1.0625rem;
-    color: rgba(240,242,247,0.72);
+    color: var(--footer-muted);
   }
   .footer-credit{
     margin: 0;
     font-weight: 400;
     font-size: 0.8125rem;
-    color: rgba(240,242,247,0.6);
+    color: var(--footer-muted);
   }
 
   @media (width <= 768px){
-    .footer-title{ text-align: right; font-size: clamp(2.5rem, 14vw, 4.5rem); }
+    .footer-title{ font-size: clamp(3.25rem, 19vw, 5.5rem); }
     .footer-link{ min-height: 44px; }
   }
 
   @media (prefers-reduced-motion: reduce){
     .letter{ transition: none; }
     .link-arrow{ transition: none; }
+    .site-footer.in-view #footerNameWrap{ animation: none; transform: none; }
   }
 
   /* ---- botón Atrás (fin de caso de estudio, antes del footer) ---- */
@@ -520,59 +561,83 @@
 
       <p class="eyebrow">Observatorio Colombiano de la Industria del Cannabis</p>
       <h1>OCIC</h1>
-      <p class="subtitle">Diseñar comunicación para un sector económico emergente</p>
+      <p class="subtitle">De los estereotipos del cannabis a una comunicación especializada</p>
 
       <div class="meta-grid">
-        <div><span class="meta-label">Rol</span><span class="meta-value">Coordinadora Gráfica</span></div>
-        <div><span class="meta-label">Duración</span><span class="meta-value">Desde 2019</span></div>
+        <div><span class="meta-label">Cliente</span><span class="meta-value">Arteaga Latam</span></div>
+        <div><span class="meta-label">Rol</span><span class="meta-value">Coordinadora gráfica</span></div>
         <div>
-          <span class="meta-label">Stakeholders</span>
-          <span class="meta-value">Jaime Arteaga y Asociados</span>
-          <span class="meta-value">Entidades gubernamentales</span>
-          <span class="meta-value">Academia</span>
-          <span class="meta-value">Sector privado</span>
+          <span class="meta-label">Aporte</span>
+          <span class="meta-value">Identidad de marca</span>
+          <span class="meta-value">Dirección de arte</span>
         </div>
-      </div>
-
-      <div class="cover-image">
-        <div class="cover-swatch"><span>portada_ocic.jpg</span></div>
+        <div>
+          <span class="meta-label">LinkedIn</span>
+          <a class="meta-value meta-ig-link" href="https://www.linkedin.com/showcase/observatorio-colombiano-de-la-industria-del-cannabis/" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"></path>
+            </svg>
+            OCIC
+          </a>
+        </div>
       </div>
 
       <section id="problema">
         <h2>Problema</h2>
-        <p>El OCIC necesitaba construir una comunicación capaz de presentar la industria colombiana del cannabis desde una perspectiva económica y empresarial, en un momento de crecimiento de la industria a partir de la regulación del cannabis con fines medicinales y científicos.</p>
-        <p>El reto estaba en traducir información muy técnica, alejada radicalmente de las tendencias gráficas asociadas al consumo recreativo, sobre regulación, producción y oportunidades de negocio en contenidos claros y atractivos para una audiencia que incluía actores del sector privado, instituciones, academia y otros participantes de esta industria emergente.</p>
+        <h3 class="section-subtitle">Comunicar una industria más allá de los estereotipos del cannabis</h3>
+        <p>El OCIC buscaba posicionar la industria colombiana del cannabis desde su dimensión económica, científica y empresarial. La comunicación debía llegar a públicos muy distintos: inversionistas del sector medicinal, especialistas en exportación y aduanas, médicos, entidades de gobierno y personas interesadas en el tema.</p>
+        <p><strong>Necesitábamos diferenciarnos de la comunicación asociada al cannabis recreativo y demostrar que el observatorio trabajaba con información, análisis y conocimiento especializado.</strong></p>
+        <p>La identidad debía, por tanto, alejarse de los códigos visuales del consumo sin perder la relación con el sector.</p>
+
+        <figure class="story-image">
+          <img src="ocic_bocetos.jpg" width="1695" height="928" alt="Cuaderno abierto con bocetos a lápiz del logotipo del OCIC: hojas de cannabis, la sigla OCIC, el nombre completo del observatorio y exploraciones de símbolos.">
+        </figure>
+        <p class="component-caption">Bocetos iniciales: exploraciones de símbolo y tipografía para el observatorio.</p>
+
+        <figure class="story-image">
+          <img src="ocic_propuestas_logo.png" width="1091" height="597" alt="Cinco propuestas de logotipo del OCIC; la seleccionada es un símbolo geométrico verde junto al nombre Observatorio Colombiano de la Industria del Cannabis.">
+        </figure>
+        <p class="component-caption">Propuestas de logotipo y versión seleccionada.</p>
       </section>
 
       <section id="contexto">
         <h2>Contexto</h2>
-        <p>El Observatorio Colombiano de la Industria del Cannabis (OCIC) es una iniciativa de Arteaga Latam que conecta titulares de licencias de cannabis en Colombia, instituciones de gobierno y academia, con el objetivo de impulsar el desarrollo económico del sector a través de datos e información compartida.</p>
-        <p>Fui coordinadora gráfica del proyecto desde sus inicios. Lideré la identidad de marca y la comunicación visual, principalmente en redes sociales, además de campañas, diseño editorial para informes, identidad gráfica para video y materiales para eventos.</p>
-        <p>Durante el proyecto también acompañé activamente la conversación pública alrededor de la regulación del cannabis de uso adulto en Colombia, generando contenidos durante los días de discusión en el Congreso y acompañando la participación de Juan Carlos Losada en ese proceso.</p>
+        <h3 class="section-subtitle">Un sector que estaba ampliando rápidamente sus posibilidades</h3>
+        <p>El OCIC nació en 2022, en un momento en que la industria colombiana del cannabis comenzaba a expandirse más allá del cultivo medicinal, hacia la investigación, producción, exportación y desarrollo empresarial. Al mismo tiempo, el debate sobre la regulación del uso adulto llevaba el cannabis a una conversación pública mucho más amplia.</p>
+        <p>Fui coordinadora gráfica desde sus inicios, trabajando directamente con las especialistas que lideraban el proyecto y desarrollando la identidad y comunicación visual para redes, informes, campañas, eventos y piezas audiovisuales.</p>
       </section>
 
       <section id="investigacion">
         <h2>Investigación</h2>
         <p>Las líderes del proyecto eran expertas en agronegocios y mantenían conversaciones directas con pequeños agricultores y empresarios del sector. Mi trabajo consistió en aprender de ese conocimiento, seguir su dirección sobre el rumbo del proyecto y complementarlo con referencias de medios especializados en cannabis.</p>
         <p>Buena parte del trabajo consistió en traducir información técnica y económica en presentaciones, infografías y contenidos digitales que pudieran ser comprendidos rápidamente por públicos diversos.</p>
-        <p>La audiencia estaba definida desde el inicio, por lo que el desafío no era descubrir para quién estábamos diseñando, sino entender qué información necesitaba cada público y cómo hacerla accesible sin perder precisión.</p>
+
+        <div class="feed-grid feed-grid-photos">
+          <img src="ocic_redes_01.jpg" width="900" height="900" alt="Pieza para redes: «Perspectivas & necesidades de los mercados internacionales para productos de cannabis medicinal», con barras de datos formadas por un cultivo de cannabis bajo cielo azul." loading="lazy">
+          <img src="ocic_redes_02.jpg" width="900" height="900" alt="Pieza para redes: «¿Cómo pueden beneficiarse las empresas al utilizar las Sociedades de Comercialización Internacional para sus actividades de exportación?», sobre una vista aérea de un barco de contenedores y un campo verde." loading="lazy">
+          <img src="ocic_redes_03.jpg" width="900" height="900" alt="Pieza para redes: «10 años de cannabis legal en Uruguay», con el Palacio Legislativo, recortes de prensa y una pancarta de 2013, en azul y amarillo." loading="lazy">
+          <img src="ocic_redes_04.jpg" width="900" height="900" alt="Pieza de evento: charla «Perspectiva internacional de la evolución del cannabis medicinal» con el speaker Jesse Stanley, el 3 de noviembre a las 9:30 a. m. vía Zoom." loading="lazy">
+          <img src="ocic_redes_05.jpg" width="900" height="900" alt="Pieza para redes con un mapa de Colombia: el uso de productos medicinales o cosméticos a base de cannabis se informó más en Bogotá, Antioquia y el Eje Cafetero." loading="lazy">
+          <img src="ocic_redes_06.jpg" width="900" height="900" alt="Pieza para redes: «Estrategias disponibles en la regulación aduanera colombiana para promover el comercio internacional: zonas francas», con un contenedor amarillo abierto en un campo." loading="lazy">
+        </div>
+        <p class="component-caption">Piezas diseñadas para las redes sociales del observatorio.</p>
       </section>
 
       <section id="decisiones">
         <h2>Decisiones</h2>
-        <p>Una de las decisiones centrales fue definir cómo debía verse una organización que hablaba de cannabis desde su dimensión económica.</p>
-        <p>La identidad debía alejarse de los códigos visuales asociados al consumo recreativo, pero también evitar una estética exclusivamente clínica. Buscamos construir una expresión que pudiera hablar de negocios, regulación, producción y desarrollo económico sin perder el carácter contemporáneo de una industria en crecimiento.</p>
-        <p>De esta decisión surgió el concepto "Abriendo Caminos", que orientó la línea gráfica del proyecto.</p>
+        <h3 class="section-subtitle">Diferenciar al observatorio de la comunicación recreativa</h3>
+        <p>Una de las decisiones centrales fue establecer una distancia clara frente a los códigos visuales asociados al cannabis recreativo.</p>
+        <p>No se trataba de ocultar la relación con el cannabis, sino de comunicar que el observatorio estaba abordando el sector desde otro lugar: análisis, regulación, producción, comercio y oportunidades económicas.</p>
+        <p>Esto llevó a construir un lenguaje visual más institucional y contemporáneo, capaz de adaptarse a información muy diferente sin depender de la representación literal de la planta o del consumo.</p>
 
         <div class="identity-stack">
           <div class="tile main swatch-o1"><span>identidad_ocic.jpg</span></div>
           <div class="tile accent-a swatch-o2"><span>paleta_ocic.jpg</span></div>
           <div class="tile accent-b swatch-o6"><span>tipografia_ocic.jpg</span></div>
         </div>
-        <p class="component-caption">Sistema de identidad — logotipo, paleta y tipografía construidos a partir del concepto "Abriendo Caminos".</p>
+        <p class="component-caption">Sistema de identidad — logotipo, paleta y tipografía alineados con un lenguaje más institucional y contemporáneo.</p>
 
-        <p>También tuve libertad para proponer nuevas formas de comunicación para redes sociales. A partir de los temas que trabajábamos, propuse piezas y formatos que permitieran ampliar la conversación más allá de la publicación de datos, explorando diferentes maneras de presentar la información y mantener activo el contenido del observatorio.</p>
-        <p>Junto al equipo audiovisual desarrollamos además una línea de animación que combinaba recursos 2D y 3D para presentar información económica y contenidos del sector de una manera más dinámica.</p>
+        <p>También tuve libertad para proponer nuevos formatos de comunicación para redes sociales, además de las piezas informativas habituales. Junto al equipo audiovisual desarrollamos piezas de animación 2D y 3D junto con videos para presentar información económica de una manera más dinámica.</p>
 
         <div class="process-strip">
           <div class="process-step"><div class="tile swatch-o4"><span>logo_proceso_01.jpg</span></div></div>
@@ -586,15 +651,11 @@
           <div class="process-step"><div class="tile swatch-o1"><span>logo_proceso_05.jpg</span></div></div>
         </div>
         <p class="component-caption">Proceso de construcción del logotipo, de las primeras exploraciones a la marca final.</p>
-
-        <p>Los tiempos de producción del proyecto eran cortos y buena parte del contenido involucraba información técnica y económica. Esto nos llevó a revisar constantemente cuánto recurso visual necesitaba realmente cada pieza.</p>
-        <p>En lugar de sumar elementos para representar la complejidad de la información, fuimos consolidando un sistema más simple: textos claros, fondos limpios y una jerarquía visual marcada.</p>
-        <p>La información debía seguir siendo la protagonista, mientras que los recursos gráficos ayudaban a organizarla y hacerla más fácil de recorrer.</p>
       </section>
 
       <section id="resultado">
         <h2>Resultado</h2>
-        <p>Durante el proyecto desarrollé y consolidé la identidad visual del OCIC y su sistema de comunicación, aplicándolo a campañas digitales, contenidos para redes sociales, informes, infografías, materiales para eventos y piezas audiovisuales.</p>
+        <p>En lugar de hacer que cada contenido tuviera una solución gráfica completamente nueva, fuimos consolidando un sistema basado en jerarquías claras, fondos limpios y recursos visuales que ayudaran a organizar la información. La identidad y el sistema visual se mantuvieron durante años y se aplicaron a redes sociales, campañas, informes, infografías, eventos y piezas audiovisuales.</p>
 
         <div class="feed-grid">
           <div class="tile swatch-o1"><span>feed_01.jpg</span></div>
@@ -609,7 +670,7 @@
         </div>
         <p class="component-caption">Selección del feed de redes sociales del observatorio.</p>
 
-        <p>La identidad permitió construir una presencia visual consistente para el observatorio a medida que aumentaba la cantidad y diversidad de información que producía.</p>
+        <p>A medida que creció la cantidad de contenidos, el cliente continuó solicitando nuevas piezas y otras personas pudieron producirlas utilizando el sistema existente.</p>
 
         <div class="editorial-grid">
           <div class="col-big"><div class="tile swatch-o5"><span>informe_ocic.jpg</span></div></div>
@@ -627,7 +688,7 @@
         </div>
         <p class="component-caption" style="text-align:center;">Presentaciones para traducir información técnica y económica a públicos diversos.</p>
 
-        <p>El trabajo también acompañó momentos relevantes de la conversación pública sobre la industria, como las discusiones en el Congreso alrededor de la regulación del cannabis de uso adulto.</p>
+        <p>El trabajo también permitió llevar la identidad a distintos contextos, desde publicaciones digitales hasta eventos y materiales institucionales.</p>
 
         <div class="media-block">
           <div class="play-button">
@@ -642,9 +703,9 @@
 
       <section id="reflexiones">
         <h2>Reflexiones</h2>
-        <p>OCIC fue uno de los proyectos en los que tuve mayor autonomía dentro de mi trabajo en Arteaga Latam. Esa libertad me permitió tomar iniciativa, proponer piezas y formatos para redes sociales y participar activamente en la construcción de la comunicación, más allá de responder a solicitudes puntuales.</p>
-        <p>También fue un proyecto en el que aprendí mucho del trabajo en equipo. Trabajé de cerca con un equipo especializado en agronegocios y con el equipo audiovisual, aprendiendo a escuchar otras perspectivas, incorporar conocimiento que no era propio de mi disciplina y construir las piezas a partir de conversaciones y decisiones compartidas.</p>
-        <p>Más que un proyecto en el que tuve que descubrir cómo comunicar el tema del cannabis, desde el inicio tuvimos claro que estábamos hablando de una industria y de una oportunidad económica. El reto estaba en encontrar las mejores formas de comunicar esa información y construir una identidad que estuviera a la altura de un sector que todavía estaba definiendo su lugar en Colombia.</p>
+        <h3 class="section-subtitle">Diseñar también fue entender un nuevo sector</h3>
+        <p>OCIC fue uno de los proyectos en los que tuve mayor autonomía dentro de Arteaga Latam. Fui construyendo mi comprensión del problema junto al equipo a medida que conocía el sector y sus necesidades de comunicación.</p>
+        <p>También fue un proyecto en el que aprendí mucho del trabajo en equipo. Trabajé de cerca con un equipo especializado en agronegocios, aprendiendo a escuchar otras perspectivas, incorporar conocimiento que no era propio de mi disciplina y convertir ese conocimiento en un sistema visual que pudiera crecer con el proyecto.</p>
       </section>
 
     </div>
@@ -665,13 +726,13 @@
     </div>
 
     <div class="footer-links" id="footerLinks">
-      <a href="mailto:vanessanieto@gmail.com" class="footer-link"><span class="link-text">vanessanieto@gmail.com</span> <span class="link-arrow">&#8599;</span></a>
-      <a href="#" class="footer-link" target="_blank" rel="noopener"><span class="link-text">LinkedIn</span> <span class="link-arrow">&#8599;</span></a>
+      <a href="mailto:vanessanieton@gmail.com" class="footer-link"><span class="link-text">vanessanieton@gmail.com</span> <span class="link-arrow">&#8599;</span></a>
+      <a href="https://www.linkedin.com/in/vnessanieto/" class="footer-link" target="_blank" rel="noopener"><span class="link-text">LinkedIn</span> <span class="link-arrow">&#8599;</span></a>
     </div>
 
     <div class="footer-music" id="footerMusic">
-      <p class="footer-italic">La m&#250;sica es una gran forma de conocer as&#237; que:</p>
-      <a href="#" class="footer-link" target="_blank" rel="noopener"><span class="link-text">Mi Spotify</span> <span class="link-arrow">&#8599;</span></a>
+      <p class="footer-italic">La m&#250;sica es una gran forma de conocernos:</p>
+      <a href="https://open.spotify.com/user/vnessanieto" class="footer-link" target="_blank" rel="noopener"><span class="link-text">Mi Spotify</span> <span class="link-arrow">&#8599;</span></a>
     </div>
 
     <p class="footer-credit">Dise&#241;ado y construido con mucho amor y overthinking.</p>
@@ -838,6 +899,24 @@
     window.addEventListener('load', alignFooterLinks);
     window.addEventListener('resize', alignFooterLinks);
     alignFooterLinks();
+
+    // ---------- El título del footer empieza a moverse solo al entrar en viewport ----------
+    var footerEl = document.getElementById('contacto');
+    if (footerEl && !prefersReducedFooter){
+      if (!('IntersectionObserver' in window)){
+        footerEl.classList.add('in-view');
+      } else {
+        var footerIo = new IntersectionObserver(function(entries){
+          entries.forEach(function(entry){
+            if (entry.isIntersecting){
+              footerEl.classList.add('in-view');
+              footerIo.disconnect();
+            }
+          });
+        }, { threshold: 0.2 });
+        footerIo.observe(footerEl);
+      }
+    }
   })();
 </script>
 
