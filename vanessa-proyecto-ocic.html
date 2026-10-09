@@ -340,6 +340,55 @@
   .deck-stack:hover .tile:nth-child(1){ transform: rotate(-15deg) translate(-26px, 10px); }
   .deck-stack:hover .tile:nth-child(3){ transform: rotate(15deg) translate(26px, 10px); }
 
+  /* ---- Investigación: carrusel "squeeze" (una pieza abierta + tiras que se comprimen) ---- */
+  .squeeze{ container-type: inline-size; margin: 40px 0 0; }
+  /* respaldo sin JS / sin container queries: rejilla simple */
+  .squeeze .sq-items{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
+  .squeeze .sq-item{ margin: 0; }
+  .squeeze .sq-item img{ width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 4px; }
+  .squeeze .sq-item figcaption{ display: none; }
+  .squeeze.is-ready .sq-items{ display: none; }
+
+  .sq-ui{
+    --sq-h: clamp(120px, 40cqi, 400px);
+    --sq-hero: var(--sq-h);
+    --sq-slat: 8px; --sq-gap: 16px; --sq-slat-gap: 8px; --sq-radius: 6px;
+    --sq-ms: 1000ms; --sq-ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --sq-room: calc(100cqi - var(--sq-hero) - var(--sq-n) * var(--sq-slat-gap) - 3 * var(--sq-gap) - var(--sq-n) * var(--sq-slat));
+    display: flex; flex-direction: column; width: 100%;
+  }
+  .sq-controls{ display: flex; justify-content: flex-end; gap: 8px; margin-bottom: 16px; }
+  .sq-arrow{
+    width: 36px; height: 36px; display: grid; place-items: center; padding: 0;
+    border: 0; border-radius: 6px; background: #016644; color: #fff; cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+  .sq-arrow:hover{ opacity: 0.85; }
+  .sq-arrow:focus-visible, .sq-card:focus-visible{ outline: 2px solid #016644; outline-offset: 2px; }
+  .sq-viewport{ width: 100%; overflow: hidden; height: var(--sq-h); touch-action: pan-y; }
+  .sq-strip{ display: flex; height: 100%; width: max-content; transition: transform var(--sq-ms) var(--sq-ease); }
+  .sq-strip.still, .sq-strip.still .sq-card{ transition: none !important; }
+  .sq-card{
+    position: relative; isolation: isolate; flex-shrink: 0; height: 100%;
+    padding: 0; border: 0; background: #dfe3ec; overflow: hidden; cursor: pointer;
+    transition: width var(--sq-ms) var(--sq-ease), margin-left var(--sq-ms) var(--sq-ease);
+  }
+  .sq-card .sq-pic{
+    position: absolute; top: 0; bottom: 0; left: 50%; transform: translateX(-50%);
+    height: 100%; width: var(--sq-hero); min-width: 100%; max-width: none;
+    object-fit: cover; border-radius: 0; user-select: none;
+  }
+  .sq-panel{ display: grid; margin-top: 24px; }
+  .sq-cap{
+    grid-area: 1 / 1; opacity: 0; visibility: hidden;
+    transition: opacity var(--sq-ms) var(--sq-ease), visibility var(--sq-ms);
+  }
+  .sq-cap.is-shown{ opacity: 1; visibility: visible; }
+  .sq-cap-text{ max-width: 46rem; font-size: 15px; line-height: 1.6; text-wrap: balance; }
+  @container (min-width: 32rem){ .sq-cap-text{ font-size: 17px; } }
+  .sq-cap-title{ color: var(--ink); }
+  .sq-cap-desc{ color: var(--muted); }
+
   @media (prefers-reduced-motion: reduce){
     .feed-grid .tile, .feed-grid img, .editorial-grid .tile, .deck-stack .tile{ transition: none; }
     .deck-stack:hover .tile:nth-child(1){ transform: rotate(-7deg) translateY(6px); }
@@ -612,15 +661,34 @@
         <p>Las líderes del proyecto eran expertas en agronegocios y mantenían conversaciones directas con pequeños agricultores y empresarios del sector. Mi trabajo consistió en aprender de ese conocimiento, seguir su dirección sobre el rumbo del proyecto y complementarlo con referencias de medios especializados en cannabis.</p>
         <p>Buena parte del trabajo consistió en traducir información técnica y económica en presentaciones, infografías y contenidos digitales que pudieran ser comprendidos rápidamente por públicos diversos.</p>
 
-        <div class="feed-grid feed-grid-photos">
-          <img src="ocic_redes_01.jpg" width="900" height="900" alt="Pieza para redes: «Perspectivas & necesidades de los mercados internacionales para productos de cannabis medicinal», con barras de datos formadas por un cultivo de cannabis bajo cielo azul." loading="lazy">
-          <img src="ocic_redes_02.jpg" width="900" height="900" alt="Pieza para redes: «¿Cómo pueden beneficiarse las empresas al utilizar las Sociedades de Comercialización Internacional para sus actividades de exportación?», sobre una vista aérea de un barco de contenedores y un campo verde." loading="lazy">
-          <img src="ocic_redes_03.jpg" width="900" height="900" alt="Pieza para redes: «10 años de cannabis legal en Uruguay», con el Palacio Legislativo, recortes de prensa y una pancarta de 2013, en azul y amarillo." loading="lazy">
-          <img src="ocic_redes_04.jpg" width="900" height="900" alt="Pieza de evento: charla «Perspectiva internacional de la evolución del cannabis medicinal» con el speaker Jesse Stanley, el 3 de noviembre a las 9:30 a. m. vía Zoom." loading="lazy">
-          <img src="ocic_redes_05.jpg" width="900" height="900" alt="Pieza para redes con un mapa de Colombia: el uso de productos medicinales o cosméticos a base de cannabis se informó más en Bogotá, Antioquia y el Eje Cafetero." loading="lazy">
-          <img src="ocic_redes_06.jpg" width="900" height="900" alt="Pieza para redes: «Estrategias disponibles en la regulación aduanera colombiana para promover el comercio internacional: zonas francas», con un contenedor amarillo abierto en un campo." loading="lazy">
+        <div class="squeeze" data-squeeze aria-label="Piezas diseñadas para las redes sociales del observatorio">
+          <div class="sq-items">
+            <figure class="sq-item">
+              <img class="sq-pic" src="ocic_redes_01.jpg" width="900" height="900" alt="Pieza para redes: «Perspectivas & necesidades de los mercados internacionales para productos de cannabis medicinal», con barras de datos formadas por un cultivo de cannabis bajo cielo azul.">
+              <figcaption><span class="sq-title">Perspectivas de los mercados internacionales.</span><span class="sq-desc">Qué necesitan los compradores de cannabis medicinal, contado con barras de datos que salen de un cultivo.</span></figcaption>
+            </figure>
+            <figure class="sq-item">
+              <img class="sq-pic" src="ocic_redes_02.jpg" width="900" height="900" alt="Pieza para redes: «¿Cómo pueden beneficiarse las empresas al utilizar las Sociedades de Comercialización Internacional para sus actividades de exportación?», sobre una vista aérea de un barco de contenedores y un campo verde.">
+              <figcaption><span class="sq-title">Sociedades de Comercialización Internacional.</span><span class="sq-desc">Cómo pueden beneficiarse las empresas al usarlas para exportar.</span></figcaption>
+            </figure>
+            <figure class="sq-item">
+              <img class="sq-pic" src="ocic_redes_03.jpg" width="900" height="900" alt="Pieza para redes: «10 años de cannabis legal en Uruguay», con el Palacio Legislativo, recortes de prensa y una pancarta de 2013, en azul y amarillo.">
+              <figcaption><span class="sq-title">10 años de cannabis legal en Uruguay.</span><span class="sq-desc">Un repaso con el Palacio Legislativo y recortes de prensa, en azul y amarillo.</span></figcaption>
+            </figure>
+            <figure class="sq-item">
+              <img class="sq-pic" src="ocic_redes_04.jpg" width="900" height="900" alt="Pieza de evento: charla «Perspectiva internacional de la evolución del cannabis medicinal» con el speaker Jesse Stanley, el 3 de noviembre a las 9:30 a. m. vía Zoom.">
+              <figcaption><span class="sq-title">Charla con Jesse Stanley.</span><span class="sq-desc">Pieza de evento para la charla sobre la evolución internacional del cannabis medicinal, vía Zoom.</span></figcaption>
+            </figure>
+            <figure class="sq-item">
+              <img class="sq-pic" src="ocic_redes_05.jpg" width="900" height="900" alt="Pieza para redes con un mapa de Colombia: el uso de productos medicinales o cosméticos a base de cannabis se informó más en Bogotá, Antioquia y el Eje Cafetero.">
+              <figcaption><span class="sq-title">El uso del cannabis en Colombia.</span><span class="sq-desc">Un mapa con las zonas donde más se informó el uso de productos medicinales o cosméticos: Bogotá, Antioquia y el Eje Cafetero.</span></figcaption>
+            </figure>
+            <figure class="sq-item">
+              <img class="sq-pic" src="ocic_redes_06.jpg" width="900" height="900" alt="Pieza para redes: «Estrategias disponibles en la regulación aduanera colombiana para promover el comercio internacional: zonas francas», con un contenedor amarillo abierto en un campo.">
+              <figcaption><span class="sq-title">Zonas francas.</span><span class="sq-desc">Estrategias de la regulación aduanera colombiana para promover el comercio internacional.</span></figcaption>
+            </figure>
+          </div>
         </div>
-        <p class="component-caption">Piezas diseñadas para las redes sociales del observatorio.</p>
       </section>
 
       <section id="decisiones">
@@ -918,6 +986,285 @@
       }
     }
   })();
+</script>
+
+<script>
+
+  // ---------- Investigación: carrusel de piezas para redes ----------
+  // Versión en JS puro del "squeeze carousel": una pieza abierta y, a su derecha,
+  // tiras que se van comprimiendo. Al abrir una tira la fila se desliza y el texto de abajo cambia.
+  (function(){
+    const root = document.querySelector('[data-squeeze]');
+    if (!root) return;
+    // sin container queries se queda la rejilla de respaldo que ya está en el HTML
+    if (!(window.CSS && CSS.supports && CSS.supports('width', '1cqi'))) return;
+
+    const items = [...root.querySelectorAll('.sq-item')];
+    const count = items.length;
+    if (!count) return;
+
+    // reparto del espacio entre las 4 columnas (suman 1); la columna con el cursor gana espacio
+    const SHARES    = [-0.06, 0.61, 0.30, 0.15];
+    const STRETCHED = [0,     0.71, 0.40, 0.25];
+    const SQUEEZED  = [-0.12, 0.59, 0.28, 0.13];
+
+    const DURATION = 1000;
+    const reducedQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const getMs = () => (reducedQuery.matches ? 0 : DURATION);
+
+    const slats = Math.min(3, Math.max(1, count - 4));  // menos piezas, cola más corta
+    const visible = 4 + slats;
+    const wrap = (i) => ((i % count) + count) % count;
+
+    const data = items.map((item) => {
+      const title = item.querySelector('.sq-title');
+      const desc = item.querySelector('.sq-desc');
+      return {
+        pic: item.querySelector('.sq-pic'),
+        title: title ? title.textContent.trim() : '',
+        desc: desc ? desc.textContent.trim() : ''
+      };
+    });
+
+    /* ---------- estructura ---------- */
+    const uid = 'sq' + Math.random().toString(36).slice(2, 8);
+    const label = root.getAttribute('aria-label') || 'Galería';
+
+    const ui = document.createElement('div');
+    ui.className = 'sq-ui';
+    ui.style.setProperty('--sq-n', slats);
+
+    const ARROW_BACK = 'M9.6 2.6 5.1 7.1h9.1v1.8H5.1l4.5 4.5-1.2 1.2-6-6L1.8 8l.6-.6 6-6 1.2 1.2Z';
+    const ARROW_NEXT = 'M6.4 2.6l4.5 4.5H1.8v1.8h9.1l-4.5 4.5 1.2 1.2 6-6 .6-.6-.6-.6-6-6-1.2 1.2Z';
+    function makeArrow(text, path, by){
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'sq-arrow';
+      b.setAttribute('aria-label', text);
+      b.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="' + path + '"/></svg>';
+      b.addEventListener('click', () => step(by));
+      return b;
+    }
+
+    if (count > 1){
+      const controls = document.createElement('div');
+      controls.className = 'sq-controls';
+      controls.appendChild(makeArrow('Anterior', ARROW_BACK, -1));
+      controls.appendChild(makeArrow('Siguiente', ARROW_NEXT, 1));
+      ui.appendChild(controls);
+    }
+
+    const viewport = document.createElement('div');
+    viewport.className = 'sq-viewport';
+    const strip = document.createElement('div');
+    strip.className = 'sq-strip';
+    strip.setAttribute('role', 'tablist');
+    strip.setAttribute('aria-orientation', 'horizontal');
+    strip.setAttribute('aria-label', label);
+    viewport.appendChild(strip);
+    ui.appendChild(viewport);
+
+    const panel = document.createElement('div');
+    panel.className = 'sq-panel';
+    panel.id = uid + '-panel';
+    panel.setAttribute('role', 'tabpanel');
+    panel.setAttribute('aria-live', 'polite');
+    const caps = data.map((d) => {
+      const cap = document.createElement('div');
+      cap.className = 'sq-cap';
+      cap.setAttribute('aria-hidden', 'true');
+      const text = document.createElement('div');
+      text.className = 'sq-cap-text';
+      const t = document.createElement('span');
+      t.className = 'sq-cap-title';
+      t.textContent = d.title;
+      text.appendChild(t);
+      if (d.desc){
+        const s = document.createElement('span');
+        s.className = 'sq-cap-desc';
+        s.textContent = ' ' + d.desc;
+        text.appendChild(s);
+      }
+      cap.appendChild(text);
+      panel.appendChild(cap);
+      return cap;
+    });
+    ui.appendChild(panel);
+
+    /* ---------- estado ---------- */
+    // La fila es una tira que se desliza, no un anillo que gira. Cada tarjeta ocupa una
+    // columna = su lugar en la tira + `column`. La pieza abierta es la de la columna 0,
+    // o sea la que está en el lugar -column. Las que salen por la izquierda son tiras (col < 0).
+    let cards = [];
+    let column = 0;
+    let hover = -1;
+    let timer = null;
+    let seed = 0;
+
+    function makeCard(slide){
+      const el = document.createElement('button');
+      el.type = 'button';
+      el.className = 'sq-card';
+      el.setAttribute('role', 'tab');
+      el.id = uid + '-tab-' + (seed++);
+      el.setAttribute('aria-controls', panel.id);
+      el.setAttribute('aria-label', data[slide].title || ('Pieza ' + (slide + 1)));
+      if (data[slide].pic){
+        const pic = data[slide].pic.cloneNode(true);
+        if (pic.tagName === 'IMG'){ pic.draggable = false; pic.decoding = 'async'; }
+        el.appendChild(pic);
+      }
+      const card = { el: el, slide: slide, col: 0 };
+      el.addEventListener('click', () => {
+        if (swiped){ swiped = false; return; }
+        if (card.col > 0) step(card.col);
+      });
+      return card;
+    }
+    function appendCard(slide){
+      const c = makeCard(slide);
+      cards.push(c);
+      strip.appendChild(c.el);
+    }
+    function prependCard(slide){
+      const c = makeCard(slide);
+      cards.unshift(c);
+      strip.insertBefore(c.el, strip.firstChild);
+    }
+
+    /* ---------- geometría (todo en CSS, nada se mide) ---------- */
+    function shareOf(col){
+      const growing = hover >= 0 && hover <= 3 && !reducedQuery.matches;
+      if (!growing) return SHARES[col];
+      return hover === col ? STRETCHED[col] : SQUEEZED[col];
+    }
+    function widthOf(col){
+      if (col < 0 || col > 3) return 'var(--sq-slat)';
+      if (col === 0) return 'calc(var(--sq-hero) + var(--sq-room) * ' + shareOf(0) + ')';
+      return 'calc(var(--sq-room) * ' + shareOf(col) + ')';
+    }
+
+    function layout(){
+      strip.style.transform = 'translateX(calc(' + column + ' * (var(--sq-slat) + var(--sq-gap))))';
+      cards.forEach((c, place) => {
+        const col = place + column;
+        const w = widthOf(col);
+        const front = col === 0;
+        c.col = col;
+        c.el.style.width = w;
+        c.el.style.marginLeft = place === 0 ? '0' : (col < 4 ? 'var(--sq-gap)' : 'var(--sq-slat-gap)');
+        c.el.style.borderRadius = 'min(var(--sq-radius), calc((' + w + ') / 2))';
+        c.el.classList.toggle('is-front', front);
+        c.el.setAttribute('aria-selected', front ? 'true' : 'false');
+        c.el.tabIndex = front ? 0 : -1;
+      });
+      const open = cards[-column] ? cards[-column].slide : 0;
+      caps.forEach((cap, i) => {
+        cap.classList.toggle('is-shown', i === open);
+        cap.setAttribute('aria-hidden', i === open ? 'false' : 'true');
+      });
+    }
+
+    function setStill(on){ strip.classList.toggle('still', on); }
+
+    /* ---------- movimiento ---------- */
+    // Tras animar, la tira queda más larga de lo necesario: se recorta a las tarjetas
+    // visibles y los números vuelven a cero. Es la misma imagen, así que nada debe animarse.
+    function settle(){
+      const openPlace = -column;
+      const hadFocus = strip.contains(document.activeElement);
+      const keep = cards.slice(openPlace, openPlace + visible);
+      cards.forEach((c) => { if (keep.indexOf(c) === -1) c.el.remove(); });
+      cards = keep;
+      column = 0;
+      setStill(true);
+      layout();
+      void strip.offsetWidth;
+      setStill(false);
+      if (hadFocus && cards[0]) cards[0].el.focus({ preventScroll: true });
+    }
+
+    function step(by){
+      if (count < 2 || !by) return;
+      clearTimeout(timer);
+
+      let target = -column + by;  // lugar que pasará a ser la pieza abierta
+      if (by > 0){
+        // la tarjeta que entra se une a la cola a tamaño completo antes de que nada se mueva
+        const need = target + visible - cards.length;
+        for (let k = 0; k < need; k++) appendCard(wrap(cards[cards.length - 1].slide + 1));
+      } else if (target < 0){
+        // para ir atrás la tira crece por delante: se corre a la izquierda lo mismo, sin animar,
+        // y luego se deja volver a su sitio con la transición
+        const k = -target;
+        for (let j = 0; j < k; j++) prependCard(wrap(cards[0].slide - 1));
+        setStill(true);
+        column = -(-column + k);
+        layout();
+        void strip.offsetWidth;
+        setStill(false);
+        target += k;  // queda en 0
+      }
+      column = -target;
+      layout();
+      timer = setTimeout(settle, getMs() + 20);
+    }
+
+    /* ---------- entradas ---------- */
+    strip.addEventListener('keydown', (e) => {
+      const by = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (!by) return;
+      e.preventDefault();
+      step(by);
+    });
+
+    // la columna bajo el cursor se ensancha (solo con mouse, no al tocar)
+    strip.addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      const el = e.target.closest ? e.target.closest('.sq-card') : null;
+      const card = el && cards.find((c) => c.el === el);
+      if (!card || card.col === hover) return;
+      hover = card.col;
+      layout();
+    });
+    ui.addEventListener('mouseleave', () => {
+      if (hover === -1) return;
+      hover = -1;
+      layout();
+    });
+
+    // deslizar con el dedo (o arrastrar) cambia de pieza
+    let startX = 0, startY = 0, tracking = false, swiped = false;
+    viewport.addEventListener('pointerdown', (e) => {
+      tracking = true; swiped = false;
+      startX = e.clientX; startY = e.clientY;
+    });
+    viewport.addEventListener('pointerup', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5){
+        swiped = true;
+        step(dx < 0 ? 1 : -1);
+      }
+    });
+    viewport.addEventListener('pointercancel', () => { tracking = false; });
+
+    function applyMotion(){
+      ui.style.setProperty('--sq-ms', getMs() + 'ms');
+      if (reducedQuery.matches) hover = -1;
+      layout();
+    }
+    if (reducedQuery.addEventListener) reducedQuery.addEventListener('change', applyMotion);
+
+    /* ---------- arranque ---------- */
+    for (let p = 0; p < visible; p++) appendCard(wrap(p));
+    root.appendChild(ui);
+    applyMotion();
+    root.classList.add('is-ready');
+  })();
+
 </script>
 
 </body>
