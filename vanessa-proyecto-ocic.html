@@ -12,6 +12,7 @@
     --bg: #f0f2f7;
     --ink: #0c0c0c;
     --muted: #666666;
+    --caption: rgba(12, 12, 12, 0.75); /* gris 75 % para las leyendas */
     --pill: #0c0c0c;
     --pill-text: #f0f2f7;
   }
@@ -264,7 +265,7 @@
   .swatch-o6{ background: #c9ccd4; color: rgba(0,0,0,0.55); }
 
   .component-caption{
-    font-size: 0.8125rem; color: var(--muted); margin: 14px 0 clamp(2rem, 6vw, 3rem); max-width: 560px;
+    font-size: 0.8125rem; color: var(--caption); margin: 14px 0 clamp(2rem, 6vw, 3rem); max-width: 560px;
   }
 
   /* ---- imágenes reales dentro de una sección (después del texto) ---- */
@@ -350,7 +351,7 @@
     .mockup-grid{ grid-template-columns: 1fr; }
   }
 
-  /* ---- Investigación: carrusel "squeeze" (una pieza abierta + tiras que se comprimen) ---- */
+  /* ---- Investigación: carrusel "squeeze" (cada pieza se muestra con su propia proporción) ---- */
   .squeeze{ container-type: inline-size; margin: 40px 0 0; }
   /* respaldo sin JS / sin container queries: rejilla simple */
   .squeeze .sq-items{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
@@ -360,12 +361,13 @@
   .squeeze.is-ready .sq-items{ display: none; }
 
   .sq-ui{
-    --sq-h: clamp(120px, 40cqi, 400px);
-    --sq-hero: calc(var(--sq-h) * 4 / 3);
+    --sq-h: clamp(110px, 36cqi, 380px);
     --sq-slat: 8px; --sq-gap: 16px; --sq-slat-gap: 8px; --sq-radius: 6px;
     --sq-ms: 1000ms; --sq-ease: cubic-bezier(0.16, 1, 0.3, 1);
-    --sq-room: calc(100cqi - var(--sq-hero) - var(--sq-n) * var(--sq-slat-gap) - 3 * var(--sq-gap) - var(--sq-n) * var(--sq-slat));
     display: flex; flex-direction: column; width: 100%;
+  }
+  @container (max-width: 34rem){
+    .sq-ui{ --sq-gap: 10px; --sq-slat: 6px; --sq-slat-gap: 6px; }
   }
   .sq-controls{ display: flex; justify-content: flex-end; gap: 8px; margin-bottom: 16px; }
   .sq-arrow{
@@ -383,9 +385,11 @@
     padding: 0; border: 0; background: #dfe3ec; overflow: hidden; cursor: pointer;
     transition: width var(--sq-ms) var(--sq-ease), margin-left var(--sq-ms) var(--sq-ease);
   }
+  /* la imagen se dibuja siempre a su tamaño natural (alto del carrusel x su proporción) y centrada:
+     la tarjeta solo cambia cuánto de ella se ve */
   .sq-card .sq-pic{
     position: absolute; top: 0; bottom: 0; left: 50%; transform: translateX(-50%);
-    height: 100%; width: var(--sq-hero); min-width: 100%; max-width: none;
+    height: 100%; width: calc(var(--sq-h) * var(--ar, 1)); min-width: 0; max-width: none;
     object-fit: cover; border-radius: 0; user-select: none;
   }
   .sq-panel{ display: grid; margin-top: 24px; }
@@ -394,10 +398,9 @@
     transition: opacity var(--sq-ms) var(--sq-ease), visibility var(--sq-ms);
   }
   .sq-cap.is-shown{ opacity: 1; visibility: visible; }
-  .sq-cap-text{ max-width: 46rem; font-size: 15px; line-height: 1.6; text-wrap: balance; }
-  @container (min-width: 32rem){ .sq-cap-text{ font-size: 17px; } }
-  .sq-cap-title{ color: var(--ink); }
-  .sq-cap-desc{ color: var(--muted); }
+  .sq-cap-text{ max-width: 46rem; font-size: 13px; line-height: 1.6; text-wrap: balance; color: var(--caption); }
+  @container (min-width: 32rem){ .sq-cap-text{ font-size: 14px; } }
+  
 
   @media (prefers-reduced-motion: reduce){
     .feed-grid .tile, .feed-grid img, .editorial-grid .tile, .deck-stack .tile{ transition: none; }
@@ -671,39 +674,29 @@
         <p>Las líderes del proyecto eran expertas en agronegocios y mantenían conversaciones directas con pequeños agricultores y empresarios del sector. Mi trabajo consistió en aprender de ese conocimiento, seguir su dirección sobre el rumbo del proyecto y complementarlo con referencias de medios especializados en cannabis.</p>
         <p>Buena parte del trabajo consistió en traducir información técnica y económica en presentaciones, infografías y contenidos digitales que pudieran ser comprendidos rápidamente por públicos diversos.</p>
 
+        <div class="feed-grid feed-grid-photos">
+          <img src="ocic_feed_01.jpg" width="1200" height="1200" alt="Pieza «Perspectivas & necesidades de los mercados internacionales para productos de cannabis medicinal», con barras de datos formadas por un cultivo de cannabis bajo cielo azul." loading="lazy">
+          <img src="ocic_feed_02.jpg" width="1200" height="1200" alt="Pieza «10 años de cannabis legal en Uruguay», con el Palacio Legislativo, recortes de prensa y una pancarta de 2013, en azul y amarillo." loading="lazy">
+          <img src="ocic_feed_03.jpg" width="1200" height="1200" alt="Pieza con un mapa de Colombia: el uso de productos medicinales o cosméticos a base de cannabis se informó más en Bogotá, Antioquia y el Eje Cafetero." loading="lazy">
+          <img src="ocic_feed_04.jpg" width="1200" height="1201" alt="Pieza de evento: charla «Perspectiva internacional de la evolución del cannabis medicinal» con el speaker Jesse Stanley, el 3 de noviembre a las 9:30 a. m. vía Zoom." loading="lazy">
+          <img src="ocic_feed_05.jpg" width="1200" height="1200" alt="Pieza «Estrategias disponibles en la regulación aduanera colombiana para promover el comercio internacional: zonas francas», con un contenedor amarillo abierto en un campo." loading="lazy">
+          <img src="ocic_feed_06.jpg" width="1200" height="1200" alt="Pieza «¿Cómo pueden beneficiarse las empresas al utilizar las Sociedades de Comercialización Internacional para sus actividades de exportación?», sobre una vista aérea de un barco de contenedores y un campo verde." loading="lazy">
+        </div>
+        <p class="component-caption">Piezas diseñadas para las redes sociales del observatorio.</p>
+
         <div class="squeeze" data-squeeze aria-label="Piezas y registros del observatorio">
           <div class="sq-items">
             <figure class="sq-item">
-              <img class="sq-pic" src="ocic_redes_01.jpg" width="900" height="900" alt="Pieza para redes: «Perspectivas & necesidades de los mercados internacionales para productos de cannabis medicinal», con barras de datos formadas por un cultivo de cannabis bajo cielo azul.">
-              <figcaption><span class="sq-title">Perspectivas de los mercados internacionales.</span><span class="sq-desc">Qué necesitan los compradores de cannabis medicinal, contado con barras de datos que salen de un cultivo.</span></figcaption>
-            </figure>
-            <figure class="sq-item">
-              <img class="sq-pic" src="ocic_redes_02.jpg" width="900" height="900" alt="Pieza para redes: «¿Cómo pueden beneficiarse las empresas al utilizar las Sociedades de Comercialización Internacional para sus actividades de exportación?», sobre una vista aérea de un barco de contenedores y un campo verde.">
-              <figcaption><span class="sq-title">Sociedades de Comercialización Internacional.</span><span class="sq-desc">Cómo pueden beneficiarse las empresas al usarlas para exportar.</span></figcaption>
-            </figure>
-            <figure class="sq-item">
-              <img class="sq-pic" src="ocic_redes_03.jpg" width="900" height="900" alt="Pieza para redes: «10 años de cannabis legal en Uruguay», con el Palacio Legislativo, recortes de prensa y una pancarta de 2013, en azul y amarillo.">
-              <figcaption><span class="sq-title">10 años de cannabis legal en Uruguay.</span><span class="sq-desc">Un repaso con el Palacio Legislativo y recortes de prensa, en azul y amarillo.</span></figcaption>
-            </figure>
-            <figure class="sq-item">
-              <img class="sq-pic" src="ocic_redes_04.jpg" width="900" height="900" alt="Pieza de evento: charla «Perspectiva internacional de la evolución del cannabis medicinal» con el speaker Jesse Stanley, el 3 de noviembre a las 9:30 a. m. vía Zoom.">
-              <figcaption><span class="sq-title">Charla con Jesse Stanley.</span><span class="sq-desc">Pieza de evento para la charla sobre la evolución internacional del cannabis medicinal, vía Zoom.</span></figcaption>
-            </figure>
-            <figure class="sq-item">
-              <img class="sq-pic" src="ocic_redes_05.jpg" width="900" height="900" alt="Pieza para redes con un mapa de Colombia: el uso de productos medicinales o cosméticos a base de cannabis se informó más en Bogotá, Antioquia y el Eje Cafetero.">
-              <figcaption><span class="sq-title">El uso del cannabis en Colombia.</span><span class="sq-desc">Un mapa con las zonas donde más se informó el uso de productos medicinales o cosméticos: Bogotá, Antioquia y el Eje Cafetero.</span></figcaption>
-            </figure>
-            <figure class="sq-item">
-              <img class="sq-pic" src="ocic_redes_06.jpg" width="900" height="900" alt="Pieza para redes: «Estrategias disponibles en la regulación aduanera colombiana para promover el comercio internacional: zonas francas», con un contenedor amarillo abierto en un campo.">
-              <figcaption><span class="sq-title">Zonas francas.</span><span class="sq-desc">Estrategias de la regulación aduanera colombiana para promover el comercio internacional.</span></figcaption>
-            </figure>
-            <figure class="sq-item">
-              <img class="sq-pic" src="ocic_redes_07.jpg" width="1600" height="900" alt="Portada «Ruta de internacionalización del cannabis medicinal»: un contenedor verde abierto con una persona en un cultivo bajo invernadero, cajas sobre un pallet y logos de la Cámara de Comercio de Bogotá y del observatorio." style="object-position: 0% 50%">
+              <img class="sq-pic" src="ocic_redes_07.jpg" width="1600" height="900" alt="Portada «Ruta de internacionalización del cannabis medicinal»: un contenedor verde abierto con una persona en un cultivo bajo invernadero, cajas sobre un pallet y logos de la Cámara de Comercio de Bogotá y del observatorio.">
               <figcaption><span class="sq-title">Ruta de Internacionalización del Cannabis Medicinal.</span><span class="sq-desc">Portada de la iniciativa que lidera la Cámara de Comercio de Bogotá junto al observatorio: un contenedor abierto que deja ver el cultivo.</span></figcaption>
             </figure>
             <figure class="sq-item">
               <img class="sq-pic" src="ocic_redes_08.gif" width="1100" height="579" alt="Animación de la pantalla de Adobe Illustrator mientras se arma la portada, con el fondo de contenedores apilados en blanco y negro.">
-              <figcaption><span class="sq-title">Armado de la portada.</span><span class="sq-desc">Captura de Illustrator con el fondo de contenedores en blanco y negro sobre el que se construyó la pieza anterior.</span></figcaption>
+              <figcaption><span class="sq-title">Armado de la portada.</span><span class="sq-desc">El proceso en Illustrator, sobre el fondo de contenedores en blanco y negro, hasta llegar a la pieza anterior.</span></figcaption>
+            </figure>
+            <figure class="sq-item">
+              <img class="sq-pic" src="ocic_redes_12.jpg" width="1600" height="1066" alt="Fotografía de cinco participantes sentados en sillas frente a una pared clara, conversando durante el panel.">
+              <figcaption><span class="sq-title">Conversación entre los invitados.</span><span class="sq-desc">Registro fotográfico del panel, con cinco participantes sentados en fila.</span></figcaption>
             </figure>
             <figure class="sq-item">
               <img class="sq-pic" src="ocic_redes_09.jpg" width="1200" height="1287" alt="Invitación «Ruta de internacionalización del cannabis medicinal»: una caja de cartón abierta con plantas de cannabis sobre un calendario, el 3 de noviembre a las 9:30 a. m. vía Zoom.">
@@ -718,8 +711,8 @@
               <figcaption><span class="sq-title">Bogotá exporta, Colombia avanza.</span><span class="sq-desc">Invitación para socializar los resultados de la Ruta hacia siete países estratégicos, en verde sobre un pallet con cajas.</span></figcaption>
             </figure>
             <figure class="sq-item">
-              <img class="sq-pic" src="ocic_redes_12.jpg" width="1600" height="1066" alt="Fotografía de cinco participantes sentados en sillas frente a una pared clara, conversando durante el panel.">
-              <figcaption><span class="sq-title">Conversación entre los invitados.</span><span class="sq-desc">Registro fotográfico del panel, con cinco participantes sentados en fila.</span></figcaption>
+              <img class="sq-pic" src="ocic_redes_13.jpg" width="1456" height="1023" alt="Portada «Cannabis: Abriendo caminos para la internacionalización», con una vista aérea de un barco de contenedores sobre un campo verde y los logos de la Cámara de Comercio de Bogotá y del observatorio.">
+              <figcaption><span class="sq-title">Abriendo caminos para la internacionalización.</span><span class="sq-desc">Portada con el barco de contenedores sobre el cultivo y la palabra «Cannabis» en contorno.</span></figcaption>
             </figure>
           </div>
         </div>
@@ -745,19 +738,6 @@
       <section id="resultado">
         <h2>Resultado</h2>
         <p>En lugar de hacer que cada contenido tuviera una solución gráfica completamente nueva, fuimos consolidando un sistema basado en jerarquías claras, fondos limpios y recursos visuales que ayudaran a organizar la información. La identidad y el sistema visual se mantuvieron durante años y se aplicaron a redes sociales, campañas, informes, infografías, eventos y piezas audiovisuales.</p>
-
-        <div class="feed-grid feed-grid-photos">
-          <img src="ocic_redes_07.jpg" width="1600" height="900" alt="Portada «Ruta de internacionalización del cannabis medicinal»: contenedor verde abierto con un cultivo adentro y los logos de la Cámara de Comercio de Bogotá y del observatorio." loading="lazy" style="object-position: 0% 50%">
-          <img src="ocic_redes_01.jpg" width="900" height="900" alt="Pieza «Perspectivas & necesidades de los mercados internacionales para productos de cannabis medicinal», con barras de datos formadas por un cultivo." loading="lazy">
-          <img src="ocic_redes_03.jpg" width="900" height="900" alt="Pieza «10 años de cannabis legal en Uruguay», con el Palacio Legislativo y recortes de prensa, en azul y amarillo." loading="lazy">
-          <img src="ocic_redes_11.jpg" width="1200" height="1200" alt="Pieza «Bogotá exporta, Colombia avanza»: fondo verde con cajas sobre un pallet y los datos del evento." loading="lazy">
-          <img src="ocic_redes_05.jpg" width="900" height="900" alt="Pieza con un mapa de Colombia: el uso de productos medicinales o cosméticos a base de cannabis se informó más en Bogotá, Antioquia y el Eje Cafetero." loading="lazy">
-          <img src="ocic_redes_02.jpg" width="900" height="900" alt="Pieza sobre las Sociedades de Comercialización Internacional, con un barco de contenedores visto desde arriba." loading="lazy">
-          <img src="ocic_redes_09.jpg" width="1200" height="1287" alt="Invitación «Ruta de internacionalización del cannabis medicinal»: una caja abierta con cultivo sobre un calendario, 3 de noviembre, 9:30 a. m., vía Zoom." loading="lazy">
-          <img src="ocic_redes_06.jpg" width="900" height="900" alt="Pieza sobre estrategias de la regulación aduanera colombiana: zonas francas, con un contenedor amarillo abierto en un campo." loading="lazy">
-          <img src="ocic_redes_04.jpg" width="900" height="900" alt="Pieza de evento: charla «Perspectiva internacional de la evolución del cannabis medicinal» con Jesse Stanley, el 3 de noviembre a las 9:30 a. m. vía Zoom." loading="lazy">
-        </div>
-        <p class="component-caption">Selección del feed de redes sociales del observatorio.</p>
 
         <p>A medida que creció la cantidad de contenidos, el cliente continuó solicitando nuevas piezas y otras personas pudieron producirlas utilizando el sistema existente.</p>
 
@@ -994,8 +974,7 @@
 </script>
 
 <script>
-
-  // ---------- Investigación: carrusel de piezas para redes ----------
+// ---------- Investigación: carrusel de piezas para redes ----------
   // Versión en JS puro del "squeeze carousel": una pieza abierta y, a su derecha,
   // tiras que se van comprimiendo. Al abrir una tira la fila se desliza y el texto de abajo cambia.
   (function(){
@@ -1009,9 +988,9 @@
     if (!count) return;
 
     // reparto del espacio entre las 4 columnas (suman 1); la columna con el cursor gana espacio
-    const SHARES    = [-0.06, 0.61, 0.30, 0.15];
-    const STRETCHED = [0,     0.71, 0.40, 0.25];
-    const SQUEEZED  = [-0.12, 0.59, 0.28, 0.13];
+    const SHARES    = [0, 0.55, 0.30, 0.15];
+    const STRETCHED = [0, 0.65, 0.37, 0.28];
+    const SQUEEZED  = [0, 0.50, 0.22, 0.13];
 
     const DURATION = 1000;
     const reducedQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -1024,8 +1003,13 @@
     const data = items.map((item) => {
       const title = item.querySelector('.sq-title');
       const desc = item.querySelector('.sq-desc');
+      const pic = item.querySelector('.sq-pic');
+      // proporción real de cada pieza (ancho / alto): la pieza abierta se muestra completa, sin recortar
+      const pw = pic ? (parseFloat(pic.getAttribute('width')) || 1) : 1;
+      const ph = pic ? (parseFloat(pic.getAttribute('height')) || 1) : 1;
       return {
-        pic: item.querySelector('.sq-pic'),
+        ar: pw / ph,
+        pic: pic,
         title: title ? title.textContent.trim() : '',
         desc: desc ? desc.textContent.trim() : ''
       };
@@ -1119,7 +1103,8 @@
         if (pic.tagName === 'IMG'){ pic.draggable = false; pic.decoding = 'async'; }
         el.appendChild(pic);
       }
-      const card = { el: el, slide: slide, col: 0 };
+      el.style.setProperty('--ar', data[slide].ar.toFixed(4));
+      const card = { el: el, slide: slide, col: 0, ar: data[slide].ar };
       el.addEventListener('click', () => {
         if (swiped){ swiped = false; return; }
         if (card.col > 0) step(card.col);
@@ -1139,21 +1124,26 @@
 
     /* ---------- geometría (todo en CSS, nada se mide) ---------- */
     function shareOf(col){
-      const growing = hover >= 0 && hover <= 3 && !reducedQuery.matches;
+      const growing = hover >= 1 && hover <= 3 && !reducedQuery.matches;
       if (!growing) return SHARES[col];
       return hover === col ? STRETCHED[col] : SQUEEZED[col];
     }
-    function widthOf(col){
+    function widthOf(col, c){
       if (col < 0 || col > 3) return 'var(--sq-slat)';
-      if (col === 0) return 'calc(var(--sq-hero) + var(--sq-room) * ' + shareOf(0) + ')';
+      // la pieza abierta mide exactamente alto x proporción: ni se recorta ni se deforma
+      if (col === 0) return 'calc(var(--sq-h) * ' + c.ar.toFixed(4) + ')';
       return 'calc(var(--sq-room) * ' + shareOf(col) + ')';
     }
 
     function layout(){
+      // el espacio que queda para las otras columnas depende de qué tan ancha es la pieza abierta
+      const openCard = cards[-column];
+      const openAr = openCard ? openCard.ar : 1;
+      ui.style.setProperty('--sq-room', 'max(0px, calc(100cqi - var(--sq-h) * ' + openAr.toFixed(4) + ' - var(--sq-n) * var(--sq-slat-gap) - 3 * var(--sq-gap) - var(--sq-n) * var(--sq-slat)))');
       strip.style.transform = 'translateX(calc(' + column + ' * (var(--sq-slat) + var(--sq-gap))))';
       cards.forEach((c, place) => {
         const col = place + column;
-        const w = widthOf(col);
+        const w = widthOf(col, c);
         const front = col === 0;
         c.col = col;
         c.el.style.width = w;
@@ -1269,6 +1259,7 @@
     applyMotion();
     root.classList.add('is-ready');
   })();
+
 
 </script>
 
