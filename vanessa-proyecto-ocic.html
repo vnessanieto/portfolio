@@ -340,6 +340,16 @@
   .deck-stack:hover .tile:nth-child(1){ transform: rotate(-15deg) translate(-26px, 10px); }
   .deck-stack:hover .tile:nth-child(3){ transform: rotate(15deg) translate(26px, 10px); }
 
+  /* ---- Decisiones: piezas aplicadas (folleto, sitio web, boletín) ---- */
+  .mockup-grid{
+    display: grid; grid-template-columns: 982fr 841fr; gap: 14px; margin: 40px 0 0;
+  }
+  .mockup-grid .wide{ grid-column: 1 / -1; }
+  .mockup-grid img{ width: 100%; height: auto; border-radius: 4px; }
+  @media (max-width: 480px){
+    .mockup-grid{ grid-template-columns: 1fr; }
+  }
+
   /* ---- Investigación: carrusel "squeeze" (una pieza abierta + tiras que se comprimen) ---- */
   .squeeze{ container-type: inline-size; margin: 40px 0 0; }
   /* respaldo sin JS / sin container queries: rejilla simple */
@@ -351,7 +361,7 @@
 
   .sq-ui{
     --sq-h: clamp(120px, 40cqi, 400px);
-    --sq-hero: var(--sq-h);
+    --sq-hero: calc(var(--sq-h) * 4 / 3);
     --sq-slat: 8px; --sq-gap: 16px; --sq-slat-gap: 8px; --sq-radius: 6px;
     --sq-ms: 1000ms; --sq-ease: cubic-bezier(0.16, 1, 0.3, 1);
     --sq-room: calc(100cqi - var(--sq-hero) - var(--sq-n) * var(--sq-slat-gap) - 3 * var(--sq-gap) - var(--sq-n) * var(--sq-slat));
@@ -661,7 +671,7 @@
         <p>Las líderes del proyecto eran expertas en agronegocios y mantenían conversaciones directas con pequeños agricultores y empresarios del sector. Mi trabajo consistió en aprender de ese conocimiento, seguir su dirección sobre el rumbo del proyecto y complementarlo con referencias de medios especializados en cannabis.</p>
         <p>Buena parte del trabajo consistió en traducir información técnica y económica en presentaciones, infografías y contenidos digitales que pudieran ser comprendidos rápidamente por públicos diversos.</p>
 
-        <div class="squeeze" data-squeeze aria-label="Piezas diseñadas para las redes sociales del observatorio">
+        <div class="squeeze" data-squeeze aria-label="Piezas y registros del observatorio">
           <div class="sq-items">
             <figure class="sq-item">
               <img class="sq-pic" src="ocic_redes_01.jpg" width="900" height="900" alt="Pieza para redes: «Perspectivas & necesidades de los mercados internacionales para productos de cannabis medicinal», con barras de datos formadas por un cultivo de cannabis bajo cielo azul.">
@@ -687,6 +697,30 @@
               <img class="sq-pic" src="ocic_redes_06.jpg" width="900" height="900" alt="Pieza para redes: «Estrategias disponibles en la regulación aduanera colombiana para promover el comercio internacional: zonas francas», con un contenedor amarillo abierto en un campo.">
               <figcaption><span class="sq-title">Zonas francas.</span><span class="sq-desc">Estrategias de la regulación aduanera colombiana para promover el comercio internacional.</span></figcaption>
             </figure>
+            <figure class="sq-item">
+              <img class="sq-pic" src="ocic_redes_07.jpg" width="1600" height="900" alt="Portada «Ruta de internacionalización del cannabis medicinal»: un contenedor verde abierto con una persona en un cultivo bajo invernadero, cajas sobre un pallet y logos de la Cámara de Comercio de Bogotá y del observatorio." style="object-position: 0% 50%">
+              <figcaption><span class="sq-title">Ruta de Internacionalización del Cannabis Medicinal.</span><span class="sq-desc">Portada de la iniciativa que lidera la Cámara de Comercio de Bogotá junto al observatorio: un contenedor abierto que deja ver el cultivo.</span></figcaption>
+            </figure>
+            <figure class="sq-item">
+              <img class="sq-pic" src="ocic_redes_08.gif" width="1100" height="579" alt="Animación de la pantalla de Adobe Illustrator mientras se arma la portada, con el fondo de contenedores apilados en blanco y negro.">
+              <figcaption><span class="sq-title">Armado de la portada.</span><span class="sq-desc">Captura de Illustrator con el fondo de contenedores en blanco y negro sobre el que se construyó la pieza anterior.</span></figcaption>
+            </figure>
+            <figure class="sq-item">
+              <img class="sq-pic" src="ocic_redes_09.jpg" width="1200" height="1287" alt="Invitación «Ruta de internacionalización del cannabis medicinal»: una caja de cartón abierta con plantas de cannabis sobre un calendario, el 3 de noviembre a las 9:30 a. m. vía Zoom.">
+              <figcaption><span class="sq-title">Invitación a la socialización de resultados.</span><span class="sq-desc">Una caja abierta con el cultivo adentro, sobre un calendario, con la fecha, la hora y la transmisión por Zoom.</span></figcaption>
+            </figure>
+            <figure class="sq-item">
+              <img class="sq-pic" src="ocic_redes_10.jpg" width="1181" height="768" alt="Fotografía del evento: tres panelistas sentados frente a un auditorio, con un atril de la Cámara de Comercio de Bogotá y un banner del observatorio.">
+              <figcaption><span class="sq-title">El evento en la Cámara de Comercio.</span><span class="sq-desc">Registro fotográfico de la conversación con el público en sala.</span></figcaption>
+            </figure>
+            <figure class="sq-item">
+              <img class="sq-pic" src="ocic_redes_11.jpg" width="1200" height="1200" alt="Pieza «Bogotá exporta, Colombia avanza»: fondo verde con cajas sobre un pallet, y los datos del evento: 3 de noviembre, 9:30 a. m., vía Zoom.">
+              <figcaption><span class="sq-title">Bogotá exporta, Colombia avanza.</span><span class="sq-desc">Invitación para socializar los resultados de la Ruta hacia siete países estratégicos, en verde sobre un pallet con cajas.</span></figcaption>
+            </figure>
+            <figure class="sq-item">
+              <img class="sq-pic" src="ocic_redes_12.jpg" width="1600" height="1066" alt="Fotografía de cinco participantes sentados en sillas frente a una pared clara, conversando durante el panel.">
+              <figcaption><span class="sq-title">Conversación entre los invitados.</span><span class="sq-desc">Registro fotográfico del panel, con cinco participantes sentados en fila.</span></figcaption>
+            </figure>
           </div>
         </div>
       </section>
@@ -698,63 +732,34 @@
         <p>No se trataba de ocultar la relación con el cannabis, sino de comunicar que el observatorio estaba abordando el sector desde otro lugar: análisis, regulación, producción, comercio y oportunidades económicas.</p>
         <p>Esto llevó a construir un lenguaje visual más institucional y contemporáneo, capaz de adaptarse a información muy diferente sin depender de la representación literal de la planta o del consumo.</p>
 
-        <div class="identity-stack">
-          <div class="tile main swatch-o1"><span>identidad_ocic.jpg</span></div>
-          <div class="tile accent-a swatch-o2"><span>paleta_ocic.jpg</span></div>
-          <div class="tile accent-b swatch-o6"><span>tipografia_ocic.jpg</span></div>
-        </div>
-        <p class="component-caption">Sistema de identidad — logotipo, paleta y tipografía alineados con un lenguaje más institucional y contemporáneo.</p>
-
         <p>También tuve libertad para proponer nuevos formatos de comunicación para redes sociales, además de las piezas informativas habituales. Junto al equipo audiovisual desarrollamos piezas de animación 2D y 3D junto con videos para presentar información económica de una manera más dinámica.</p>
 
-        <div class="process-strip">
-          <div class="process-step"><div class="tile swatch-o4"><span>logo_proceso_01.jpg</span></div></div>
-          <div class="process-connector"></div>
-          <div class="process-step"><div class="tile swatch-o5"><span>logo_proceso_02.jpg</span></div></div>
-          <div class="process-connector"></div>
-          <div class="process-step"><div class="tile swatch-o3"><span>logo_proceso_03.jpg</span></div></div>
-          <div class="process-connector"></div>
-          <div class="process-step"><div class="tile swatch-o2"><span>logo_proceso_04.jpg</span></div></div>
-          <div class="process-connector"></div>
-          <div class="process-step"><div class="tile swatch-o1"><span>logo_proceso_05.jpg</span></div></div>
+        <div class="mockup-grid">
+          <img class="wide" src="ocic_editorial_01.jpg" width="2000" height="1089" alt="Folleto institucional del observatorio abierto sobre un fondo verde, junto a una portada cuadrada con una planta de cannabis y el lema «Fortalecemos la industria del cannabis, promoviendo conversaciones informadas».">
+          <img src="ocic_editorial_02.jpg" width="982" height="901" alt="Una persona frente a un portátil que muestra el sitio web de JA&amp;A, con el lema «Fortalecemos la industria, promoviendo conversaciones informadas» y la sección «Sobre nosotros».">
+          <img src="ocic_editorial_03.jpg" width="841" height="901" alt="Boletín digital del observatorio: a la izquierda una pieza con un médico y el dato del 73,4 % sobre el uso medicinal de la flor seca; a la derecha la sección «Cannabis picks» y el «Tweet destacado».">
         </div>
-        <p class="component-caption">Proceso de construcción del logotipo, de las primeras exploraciones a la marca final.</p>
+        <p class="component-caption">Folleto institucional, sitio web y boletín del observatorio.</p>
       </section>
 
       <section id="resultado">
         <h2>Resultado</h2>
         <p>En lugar de hacer que cada contenido tuviera una solución gráfica completamente nueva, fuimos consolidando un sistema basado en jerarquías claras, fondos limpios y recursos visuales que ayudaran a organizar la información. La identidad y el sistema visual se mantuvieron durante años y se aplicaron a redes sociales, campañas, informes, infografías, eventos y piezas audiovisuales.</p>
 
-        <div class="feed-grid">
-          <div class="tile swatch-o1"><span>feed_01.jpg</span></div>
-          <div class="tile swatch-o2"><span>feed_02.jpg</span></div>
-          <div class="tile swatch-o3"><span>feed_03.jpg</span></div>
-          <div class="tile swatch-o4"><span>feed_04.jpg</span></div>
-          <div class="tile swatch-o6"><span>feed_05.jpg</span></div>
-          <div class="tile swatch-o5"><span>feed_06.jpg</span></div>
-          <div class="tile swatch-o2"><span>feed_07.jpg</span></div>
-          <div class="tile swatch-o1"><span>feed_08.jpg</span></div>
-          <div class="tile swatch-o3"><span>feed_09.jpg</span></div>
+        <div class="feed-grid feed-grid-photos">
+          <img src="ocic_redes_07.jpg" width="1600" height="900" alt="Portada «Ruta de internacionalización del cannabis medicinal»: contenedor verde abierto con un cultivo adentro y los logos de la Cámara de Comercio de Bogotá y del observatorio." loading="lazy" style="object-position: 0% 50%">
+          <img src="ocic_redes_01.jpg" width="900" height="900" alt="Pieza «Perspectivas & necesidades de los mercados internacionales para productos de cannabis medicinal», con barras de datos formadas por un cultivo." loading="lazy">
+          <img src="ocic_redes_03.jpg" width="900" height="900" alt="Pieza «10 años de cannabis legal en Uruguay», con el Palacio Legislativo y recortes de prensa, en azul y amarillo." loading="lazy">
+          <img src="ocic_redes_11.jpg" width="1200" height="1200" alt="Pieza «Bogotá exporta, Colombia avanza»: fondo verde con cajas sobre un pallet y los datos del evento." loading="lazy">
+          <img src="ocic_redes_05.jpg" width="900" height="900" alt="Pieza con un mapa de Colombia: el uso de productos medicinales o cosméticos a base de cannabis se informó más en Bogotá, Antioquia y el Eje Cafetero." loading="lazy">
+          <img src="ocic_redes_02.jpg" width="900" height="900" alt="Pieza sobre las Sociedades de Comercialización Internacional, con un barco de contenedores visto desde arriba." loading="lazy">
+          <img src="ocic_redes_09.jpg" width="1200" height="1287" alt="Invitación «Ruta de internacionalización del cannabis medicinal»: una caja abierta con cultivo sobre un calendario, 3 de noviembre, 9:30 a. m., vía Zoom." loading="lazy">
+          <img src="ocic_redes_06.jpg" width="900" height="900" alt="Pieza sobre estrategias de la regulación aduanera colombiana: zonas francas, con un contenedor amarillo abierto en un campo." loading="lazy">
+          <img src="ocic_redes_04.jpg" width="900" height="900" alt="Pieza de evento: charla «Perspectiva internacional de la evolución del cannabis medicinal» con Jesse Stanley, el 3 de noviembre a las 9:30 a. m. vía Zoom." loading="lazy">
         </div>
         <p class="component-caption">Selección del feed de redes sociales del observatorio.</p>
 
         <p>A medida que creció la cantidad de contenidos, el cliente continuó solicitando nuevas piezas y otras personas pudieron producirlas utilizando el sistema existente.</p>
-
-        <div class="editorial-grid">
-          <div class="col-big"><div class="tile swatch-o5"><span>informe_ocic.jpg</span></div></div>
-          <div class="col-stack">
-            <div class="tile swatch-o2"><span>infografia_ocic.jpg</span></div>
-            <div class="tile swatch-o4"><span>evento_ocic.jpg</span></div>
-          </div>
-        </div>
-        <p class="component-caption">Diseño editorial para informes, infografías y materiales para eventos.</p>
-
-        <div class="deck-stack">
-          <div class="tile swatch-o1"><span>presentacion_01.jpg</span></div>
-          <div class="tile swatch-o6"><span>presentacion_02.jpg</span></div>
-          <div class="tile swatch-o2"><span>presentacion_03.jpg</span></div>
-        </div>
-        <p class="component-caption" style="text-align:center;">Presentaciones para traducir información técnica y económica a públicos diversos.</p>
 
         <p>El trabajo también permitió llevar la identidad a distintos contextos, desde publicaciones digitales hasta eventos y materiales institucionales.</p>
 
