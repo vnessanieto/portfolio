@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vanessa Nieto — Tierra Dorada</title>
+<link rel="alternate" hreflang="es" href="https://vanessanieto.com/vanessa-proyecto-tierra-dorada.html">
+<link rel="alternate" hreflang="en" href="https://vanessanieto.com/en/project-tierra-dorada.html">
+<link rel="alternate" hreflang="x-default" href="https://vanessanieto.com/vanessa-proyecto-tierra-dorada.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #f0f2f7;
+    --ink: #0c0c0c;
+    --muted: #666666;
+    --pill: #0c0c0c;
+    --pill-text: #f0f2f7;
+  }
+  *{ box-sizing: border-box; }
+
+  /* ---- responsive safety net ---- */
+  html{ -webkit-text-size-adjust: 100%; }
+  img, video, svg{ max-width: 100%; height: auto; display: block; }
+
+  html, body{
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', -apple-system, sans-serif;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+  a{ color: inherit; text-decoration: none; }
+  .page{ min-height: 100vh; padding: clamp(1.25rem, 3vw, 2rem) clamp(1.25rem, 4.5vw, 3rem) clamp(4rem, 9vw, 8.75rem); }
+
+  /* ---- top bar (idéntico a El Veneco) ---- */
+  .topbar{
+    display: flex; justify-content: flex-end; align-items: center;
+    font-size: 13px; letter-spacing: 0.04em; margin-bottom: clamp(2rem, 6vw, 4rem);
+    position: relative; z-index: 25;
+  }
+  .topbar nav{ position: relative; display: flex; align-items: center; gap: 4px; }
+  .nav-hover{
+    position: absolute; top: 0; height: 30px; border-radius: 6px;
+    background: rgba(12,12,12,0.07); opacity: 0; pointer-events: none;
+    transition: left 0.3s ease, width 0.3s ease, opacity 0.2s ease; z-index: 0;
+  }
+  .nav-active-bar{
+    position: absolute; bottom: -6px; height: 2px; background: var(--ink);
+    transition: left 0.3s ease, width 0.3s ease; z-index: 1;
+  }
+  .topbar nav a.tab{
+    position: relative; z-index: 2;
+    font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em;
+    padding: 7px 12px; border-radius: 6px;
+    color: rgba(12,12,12,0.6);
+    transition: color 0.3s ease;
+  }
+  .topbar nav a.tab.is-active{ color: var(--ink); }
+  .topbar nav a:focus-visible{ outline: 2px solid var(--ink); outline-offset: 4px; }
+  .topbar nav a.pill{ background: var(--pill); color: var(--pill-text); padding: 10px 18px; margin-left: 12px; border-radius: 0; }
+
+  @media (prefers-reduced-motion: reduce){
+    .nav-hover, .nav-active-bar, .topbar nav a.tab{ transition: none; }
+  }
+
+  /* ---- mobile nav (hamburger) ---- */
+  .nav-toggle{
+    display: none;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    z-index: 30;
+  }
+  .nav-toggle-bar{
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--ink);
+    border-radius: 2px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+  .nav-toggle:focus-visible{ outline: 2px solid var(--ink); outline-offset: 4px; }
+  .nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(1){ transform: translateY(7px) rotate(45deg); }
+  .nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(2){ opacity: 0; }
+  .nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(3){ transform: translateY(-7px) rotate(-45deg); }
+
+  .mobile-nav{
+    display: none;
+  }
+
+  body.nav-open{ overflow: hidden; }
+
+  @media (width <= 768px){
+    #mainNav{ display: none; }
+    .nav-toggle{ display: flex; }
+    .mobile-nav{
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      background: var(--bg);
+      padding: 96px 24px 48px;
+      gap: 4px;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .mobile-nav.open{ opacity: 1; visibility: visible; pointer-events: auto; }
+    .mobile-nav-link{
+      display: flex;
+      align-items: center;
+      min-height: 44px;
+      padding: 14px 4px;
+      font-size: clamp(1.25rem, 6vw, 1.75rem);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      border-bottom: 1px solid rgba(12,12,12,0.08);
+      color: var(--ink);
+    }
+    .mobile-nav-link:focus-visible{ outline: 2px solid var(--ink); outline-offset: -2px; }
+    .mobile-nav-link.is-active{ color: rgba(12,12,12,0.45); }
+    .mobile-nav-link.mobile-nav-pill{
+      margin-top: 20px;
+      justify-content: center;
+      background: var(--pill);
+      color: var(--pill-text);
+      border-radius: 4px;
+      border-bottom: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .nav-toggle-bar, .mobile-nav{ transition: none; }
+  }
+
+  /* ---- floating table of contents (idéntico a El Veneco) ---- */
+  .toc{
+    position: fixed; top: 140px; right: 48px; width: 168px;
+    background: #e4e6ec; padding: 16px; font-size: 12px; text-align: left; z-index: 20;
+  }
+  .toc-header{
+    display: flex; justify-content: space-between; align-items: center;
+    text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted);
+    font-weight: 500; margin-bottom: 10px;
+  }
+  .toc-header button{ background: none; border: none; cursor: pointer; font-size: 14px; color: var(--muted); line-height: 1; padding: 2px 4px; }
+  .toc-header button:focus-visible{ outline: 2px solid var(--ink); }
+  .toc-list{ display: flex; flex-direction: column; align-items: flex-start; gap: 9px; }
+  .toc-list a{ display: block; width: 100%; text-align: left; color: var(--muted); font-weight: 400; }
+  .toc-list a.active{ color: var(--ink); font-weight: 600; }
+  .toc.collapsed .toc-list{ display: none; }
+  @media (width <= 1024px){ .toc{ display: none; } }
+
+  /* ---- content column: misma alineación que El Veneco ---- */
+  .stage-inner{ max-width: 1400px; margin: 0 auto; }
+  .project-content{ width: 62%; max-width: 720px; margin: 0 auto; }
+
+  h1{
+    margin: 0 0 12px; font-weight: 600; letter-spacing: -0.01em;
+    font-size: clamp(2rem, 3vw, 2.75rem); line-height: 1.1;
+  }
+  .project-title-big{
+    font-weight: 800;
+    font-size: clamp(2.75rem, 5.5vw, 4.75rem);
+    line-height: 1.02;
+  }
+  .subtitle{ font-style: italic; font-size: 1.125rem; color: var(--muted); margin: 0 0 32px; }
+
+  .meta-grid{
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: clamp(1rem, 3vw, 1.25rem) clamp(1rem, 3vw, 1.5rem); padding: clamp(1.25rem, 3vw, 1.75rem) 0;
+    border-top: 1px solid #d6d9e0; border-bottom: 1px solid #d6d9e0;
+    margin-bottom: clamp(2rem, 6vw, 3.5rem);
+  }
+  .meta-label{ display: block; font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 6px; }
+  .meta-value{ display: block; font-size: 0.875rem; color: var(--ink); line-height: 1.4; }
+
+  section{ margin-bottom: clamp(2.5rem, 6vw, 3.25rem); scroll-margin-top: 100px; }
+  section h2{ font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 0 0 10px; }
+  .section-subtitle{ font-size: clamp(1.125rem, 1.6vw, 1.25rem); font-weight: 700; line-height: 1.35; letter-spacing: -0.01em; color: var(--ink); margin: 0 0 14px; }
+  section p{ font-size: 1rem; line-height: 1.7; color: var(--ink); margin: 0 0 18px; }
+  section p:last-child{ margin-bottom: 0; }
+
+  /* ---- imagen solita (mismo patrón que la cover/inline de El Veneco) ---- */
+  .solo-image{ width: 100%; aspect-ratio: 16/9; overflow: hidden; margin: 0 0 clamp(2rem, 6vw, 3.5rem); }
+
+  .result-video{
+    width: 100%;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+    border-radius: 4px;
+    margin: 32px 0 0;
+    background: #000;
+  }
+  .result-video iframe{
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+  .solo-swatch{
+    width: 100%; height: 100%; display: flex; align-items: flex-end; padding: 14px;
+    font-size: 11px; color: rgba(255,255,255,0.85); font-weight: 500;
+  }
+
+  /* ---- las dos fotos estilo Giulia, ahora dentro de la misma columna ---- */
+  .duo-row{ display: flex; flex-wrap: wrap; gap: clamp(0.75rem, 3vw, 1rem); margin: 0 0 clamp(2rem, 6vw, 3.5rem); }
+  .duo-row .solo-image{ margin: 0; flex: 1; aspect-ratio: 3/4; }
+
+  /* ---- galería: tres imágenes estáticas, sin scroll ---- */
+  .gallery-note{ font-size: 0.875rem; color: var(--muted); margin: 0 0 24px; max-width: 560px; }
+  .static-trio{ display: flex; align-items: flex-end; gap: 16px; }
+  .static-trio .tile{
+    display: flex; align-items: flex-end; padding: 10px; border-radius: 3px;
+    font-size: 10px; color: rgba(255,255,255,0.85); font-weight: 500;
+  }
+  .gt-1{ width: 34%; height: 280px; }
+  .gt-2{ width: 38%; height: 210px; }
+  .gt-3{ width: 28%; height: 240px; }
+
+  .swatch-1{ background: linear-gradient(135deg,#d8b4a0,#b98a6d); }
+  .swatch-2{ background: linear-gradient(135deg,#2b3a8f,#7d3fae); }
+  .swatch-3{ background: #e7c141; color: rgba(0,0,0,0.6); }
+  .swatch-4{ background: linear-gradient(135deg,#63b3ff,#2f7fe0); }
+  .swatch-5{ background: linear-gradient(135deg,#4a7c5c,#2c4a37); }
+  .swatch-6{ background: linear-gradient(135deg,#c0546b,#7d3fae); }
+  .swatch-8{ background: linear-gradient(135deg,#e08a3c,#b9542a); }
+  .swatch-9{ background: linear-gradient(135deg,#3a4a6b,#1c2333); }
+
+  /* ---- IG Stories, más grandes, dentro de la columna ---- */
+  .stories-intro{ font-size: 0.875rem; color: var(--muted); margin: 0 0 24px; max-width: 560px; }
+  .stories-row{ display: flex; gap: clamp(0.75rem, 3vw, 1rem); }
+  .story-card{ width: 228px; flex-shrink: 0; }
+  .story-media{
+    position: relative; width: 100%; aspect-ratio: 9/16; border-radius: 10px; overflow: hidden;
+    display: flex; flex-direction: column; justify-content: space-between; padding: 16px;
+    cursor: pointer;
+  }
+  .story-top{ display: flex; align-items: center; gap: 8px; }
+  .story-icon{
+    width: 24px; height: 24px; border-radius: 50%; background: rgba(255,255,255,0.9);
+    color: #1c2333; font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .story-bar{ flex: 1; height: 2px; background: rgba(255,255,255,0.35); border-radius: 2px; overflow: hidden; }
+  .story-bar-fill{ display: block; height: 100%; width: 0; background: #fff; transition: width 3.5s linear; }
+  .story-card:hover .story-bar-fill{ width: 100%; }
+  .story-card:hover .story-media{ filter: brightness(1.08); }
+  .story-text{ font-size: 16px; font-weight: 600; color: #fff; line-height: 1.25; text-shadow: 0 2px 10px rgba(0,0,0,0.25); }
+  .story-caption{ font-size: 11px; color: rgba(255,255,255,0.85); font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 6px; }
+
+  .story-media video{
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; z-index: 0;
+  }
+  .story-top, .story-media > div:last-child{ position: relative; z-index: 1; }
+
+  @media (width <= 768px){
+    .project-content{ width: 100%; max-width: none; margin-left: 0; }
+    .meta-grid{ grid-template-columns: 1fr 1fr; }
+    .duo-row{ flex-direction: column; }
+    .duo-row .solo-image{ aspect-ratio: 16/9; }
+    .static-trio{ flex-direction: column; }
+    .static-trio .tile{ width: 100% !important; }
+    .stories-row{ overflow-x: auto; }
+    .story-card{ width: 170px; }
+    .hgallery-tile{ flex-basis: 150px; width: 150px; }
+  }
+
+  /* ---- Tierra Dorada: collage fotográfico animado ---- */
+  .collage{
+    position: relative;
+    width: 100%;
+    height: clamp(340px, 36vw, 460px);
+    margin: 8px 0 64px;
+    background: var(--bg);
+    overflow: hidden;
+  }
+  .collage-photo{
+    position: absolute;
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: 0 18px 34px rgba(20,20,30,0.16);
+    aspect-ratio: 3 / 4;
+    will-change: transform;
+    animation-duration: 6s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-play-state: paused;
+  }
+  .collage-photo img{
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .collage.playing .collage-photo{ animation-play-state: running; }
+
+  .cp-1{ width: 27%; left: 36%; top: 7%;  z-index: 6; animation-name: drift1; animation-delay: -0.5s; }
+  .cp-2{ width: 22%; left: 6%;  top: 4%;  z-index: 3; animation-name: drift2; animation-delay: -2s; }
+  .cp-3{ width: 24%; left: 64%; top: 2%;  z-index: 4; animation-name: drift3; animation-delay: -3.5s; }
+  .cp-4{ width: 20%; left: 18%; top: 48%; z-index: 2; animation-name: drift4; animation-delay: -1s; }
+  .cp-5{ width: 19%; left: -1%; top: 40%; z-index: 1; animation-name: drift5; animation-delay: -4.5s; }
+  .cp-6{ width: 21%; left: 76%; top: 42%; z-index: 5; animation-name: drift6; animation-delay: -2.7s; }
+
+  @keyframes drift1{
+    0%,100%{ transform: translate(0,0) rotate(0deg); }
+    33%{ transform: translate(-1.5%, 2%) rotate(-2deg); }
+    66%{ transform: translate(1.5%, -1%) rotate(1.5deg); }
+  }
+  @keyframes drift2{
+    0%,100%{ transform: translate(0,0) rotate(-6deg); }
+    33%{ transform: translate(2%, 1.5%) rotate(-3deg); }
+    66%{ transform: translate(-1%, -2%) rotate(-7deg); }
+  }
+  @keyframes drift3{
+    0%,100%{ transform: translate(0,0) rotate(4deg); }
+    33%{ transform: translate(-2%, -1.5%) rotate(6deg); }
+    66%{ transform: translate(1%, 2%) rotate(2deg); }
+  }
+  @keyframes drift4{
+    0%,100%{ transform: translate(0,0) rotate(5deg); }
+    33%{ transform: translate(1.5%, -2%) rotate(2deg); }
+    66%{ transform: translate(-1.5%, 1%) rotate(7deg); }
+  }
+  @keyframes drift5{
+    0%,100%{ transform: translate(0,0) rotate(-4deg); }
+    33%{ transform: translate(2%, 2%) rotate(-1deg); }
+    66%{ transform: translate(-1%, -1.5%) rotate(-6deg); }
+  }
+  @keyframes drift6{
+    0%,100%{ transform: translate(0,0) rotate(-3deg); }
+    33%{ transform: translate(-1.5%, 1.5%) rotate(-6deg); }
+    66%{ transform: translate(2%, -1%) rotate(0deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .collage-photo{ animation: none !important; }
+  }
+
+
+  /* ---- Tierra Dorada: galería horizontal continua ---- */
+  .hgallery{
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    margin: 0 0 56px;
+  }
+  .hgallery-track{
+    display: flex;
+    gap: 12px;
+    will-change: transform;
+  }
+  .hgallery-tile{
+    flex: 0 0 216px;
+    width: 216px;
+    aspect-ratio: 3 / 4;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .hgallery-tile img{
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .hgallery-nav{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(240,242,247,0.92);
+    box-shadow: 0 2px 10px rgba(12,12,12,0.15);
+    color: var(--ink);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    transition: background 0.25s ease, transform 0.25s ease;
+    z-index: 2;
+  }
+  .hgallery-nav:hover{ background: var(--pill); color: var(--pill-text); }
+  .hgallery-nav.prev{ left: 10px; }
+  .hgallery-nav.next{ right: 10px; }
+  .hgallery-nav:focus-visible{ outline: 2px solid var(--ink); outline-offset: 2px; }
+
+  /* ---- shared arrow, used on Case Study, header socials and footer links ---- */
+  .link-arrow{
+    display: inline-block;
+    transition: transform 0.25s ease;
+  }
+  a:hover .link-arrow,
+  a:focus-visible .link-arrow{
+    transform: translate(3px, -3px);
+  }
+
+  /* ---- shared underline, same components as above ---- */
+  .link-text{ position: relative; }
+  .link-text::after{
+    content: '';
+    position: absolute;
+    left: 0; bottom: -2px;
+    width: 100%; height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+  }
+  a:hover .link-text::after,
+  a:focus-visible .link-text::after{
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  /* ---- footer (igual que en Inicio) ---- */
+  .site-footer{
+    padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1.25rem, 4.5vw, 3rem) clamp(3rem, 8vw, 6rem);
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .footer-panel{
+    /* paleta verde ya definida en el proyecto (misma que Sobre mí) */
+    --footer-bg: #016644;
+    --footer-title: #daffa2;
+    --footer-ink: #ffffff;
+    --footer-muted: rgba(255,255,255,0.68);
+    background: var(--footer-bg);
+    border-radius: 0;
+    padding: clamp(2rem, 6vw, 3.5rem) clamp(1.5rem, 6vw, 4rem);
+    color: var(--footer-ink);
+    /* contiene el título sobredimensionado: nunca ensancha <body> */
+    overflow: hidden;
+  }
+  .footer-title{
+    margin: 0 0 clamp(2rem, 6vw, 3.5rem);
+    font-weight: 600;
+    font-size: clamp(6rem, 17vw, 15rem);
+    line-height: 0.94;
+    letter-spacing: -0.02em;
+    text-align: left;
+    white-space: nowrap;
+    color: var(--footer-title);
+  }
+  /* se dimensiona a su contenido real (más ancho que el panel a propósito,
+     por eso el panel necesita overflow:hidden) para que el translateX lo
+     desplace como una sola pieza gráfica */
+  #footerNameWrap{
+    display: inline-block;
+    width: max-content;
+    will-change: transform;
+  }
+  @keyframes footerTitleDrift{
+    0%, 100% { transform: translateX(-2.2vw); }
+    50% { transform: translateX(2.2vw); }
+  }
+  /* arranca solo cuando el footer entra en viewport (ver JS) */
+  .site-footer.in-view #footerNameWrap{
+    animation: footerTitleDrift 22s ease-in-out infinite;
+  }
+  .letter{
+    display: inline-block;
+    font-weight: 400;
+    transition: font-weight 0.3s ease;
+  }
+  .letter.dist-0{ font-weight: 800; }
+  .letter.dist-1{ font-weight: 700; }
+  .letter.dist-2{ font-weight: 500; }
+  .footer-links{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .footer-link{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    width: fit-content;
+    color: var(--footer-ink);
+    font-weight: 700;
+    font-size: clamp(1.125rem, 2.5vw, 1.25rem);
+    text-decoration: none;
+  }
+  .footer-link:focus-visible{
+    outline: 2px solid var(--footer-ink);
+    outline-offset: 4px;
+  }
+  .footer-music{ margin-bottom: 64px; }
+  .footer-italic{
+    margin: 0 0 8px;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.0625rem;
+    color: var(--footer-muted);
+  }
+  .footer-credit{
+    margin: 0;
+    font-weight: 400;
+    font-size: 0.8125rem;
+    color: var(--footer-muted);
+  }
+
+  @media (width <= 768px){
+    .footer-title{ font-size: clamp(3.25rem, 19vw, 5.5rem); }
+    .footer-link{ min-height: 44px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .letter{ transition: none; }
+    .link-arrow{ transition: none; }
+    .site-footer.in-view #footerNameWrap{ animation: none; transform: none; }
+  }
+
+  /* ---- botón Atrás (fin de caso de estudio, antes del footer) ---- */
+  .back-nav{ max-width:1400px; margin:0 auto; padding: 0 clamp(1.25rem, 4.5vw, 3rem) clamp(1.5rem, 4vw, 2.5rem); }
+  .back-link{ display:inline-flex; align-items:center; gap:6px; color:var(--ink); font-weight:700; font-size:15px; text-decoration:none; background:none; border:none; cursor:pointer; font-family:inherit; }
+  .back-icon{ display:inline-flex; transition: transform 0.25s ease; }
+  .back-link:hover .back-icon, .back-link:focus-visible .back-icon{ transform: translateX(-3px); }
+  .back-link:focus-visible{ outline:2px solid var(--ink); outline-offset:4px; border-radius:4px; }
+  @media (width <= 768px){ .back-link{ min-height:44px; } }
+  @media (prefers-reduced-motion: reduce){ .back-icon{ transition:none; } }
+
+  /* ---- selector de idioma (ES / EN) ---- */
+  .lang-switch{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 30px;
+    margin-left: 12px;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+    border: 1.5px solid var(--ink);
+    border-radius: 0;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .lang-switch:hover{ background: var(--ink); color: var(--bg); }
+  .lang-switch:focus-visible{ outline: 2px solid var(--ink); outline-offset: 4px; }
+  @media (width <= 768px){
+    .lang-switch{ min-height: 44px; min-width: 44px; margin-left: 0; margin-right: 4px; }
+  }
+  @media (prefers-reduced-motion: reduce){ .lang-switch{ transition: none; } }
+
+  /* ---- EN: "Let’s talk!" ocupa el mismo ancho que "¡Hablemos!" ---- */
+  .footer-title{ font-size: clamp(7.2rem, 20.3vw, 18rem); }
+  @media (width <= 768px){ .footer-title{ font-size: clamp(3.25rem, 17.5vw, 5.1rem); } } /* en móvil se ve completo, con el "!" */
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="stage-inner">
+
+    <div class="topbar">
+      <nav id="mainNav">
+        <span class="nav-hover" id="navHover"></span>
+        <span class="nav-active-bar" id="navActiveBar"></span>
+        <a href="./" class="tab" data-page="index">Home</a>
+        <a href="about.html" class="tab" data-page="sobre-mi">About me</a>
+        <a href="./#projects" class="tab" data-page="proyectos">Projects</a>
+        <a href="./#contact" class="pill">Let’s talk</a>
+      </nav>
+      <a class="lang-switch" href="../vanessa-proyecto-tierra-dorada.html" hreflang="es" lang="es" aria-label="View this site in Spanish">ES</a>
+      <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="mobileNav" aria-label="Open menu">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+    </div>
+
+    <div class="mobile-nav" id="mobileNav">
+      <a href="./" class="mobile-nav-link" data-page="index">Home</a>
+      <a href="about.html" class="mobile-nav-link" data-page="sobre-mi">About me</a>
+      <a href="./#projects" class="mobile-nav-link" data-page="proyectos">Projects</a>
+      <a href="./#contact" class="mobile-nav-link mobile-nav-pill" data-page="contacto">Let’s talk</a>
+    </div>
+
+    <aside class="toc" id="toc">
+      <div class="toc-header">
+        <span>Contents</span>
+        <button id="tocToggle" aria-label="Collapse contents">−</button>
+      </div>
+      <nav class="toc-list">
+        <a href="#context">Context</a>
+        <a href="#research">Research</a>
+        <a href="#decisions">Decisions</a>
+        <a href="#result">Result</a>
+        <a href="#reflections">Reflections</a>
+      </nav>
+    </aside>
+
+    <div class="project-content">
+
+      <h1 class="project-title-big">Tierra Dorada</h1>
+      <p class="subtitle">Environmental communication built together with young leaders in mining territories.</p>
+
+      <div class="meta-grid">
+        <div><span class="meta-label">Client</span><span class="meta-value">USAID Colombia</span></div>
+        <div><span class="meta-label">Role</span><span class="meta-value">Designer and field communicator</span></div>
+        <div>
+          <span class="meta-label">Contribution</span>
+          <span class="meta-value">Communications training and support in creating artistic products.</span>
+        </div>
+      </div>
+
+      <div class="solo-image">
+        <img src="../tierradorada_01.png" alt="Official graphic piece of the Tierra Dorada campaign, in partnership with USAID" style="width:100%;height:100%;object-fit:cover;display:block;">
+      </div>
+
+      <section id="introduction">
+        <h2>Introduction</h2>
+        <h3 class="section-subtitle">Communication and teaching tools for community leaders</h3>
+        <p>Tierra Dorada was an alliance between Chemonics, Arteaga Latam and CORCRESER aimed at reducing the environmental impact of informal mining practices in the Serranía de San Lucas, the Bajo Cauca in Antioquia and the San Juan subregion of Chocó. I joined the project when the visual identity was already well advanced, becoming part of the communications team. My work focused on designing and structuring training workshops, giving local leaders conceptual and creative tools so that they themselves could communicate the environmental challenges in their municipalities.</p>
+      </section>
+
+      <section id="stories">
+        <div class="stories-row">
+          <div class="story-card">
+            <div class="story-media">
+              <video src="../tierradorada_02.mp4" autoplay muted loop playsinline></video>
+              <div class="story-top">
+                <span class="story-icon">VN</span>
+                <span class="story-bar"><span class="story-bar-fill"></span></span>
+              </div>
+              <div>
+                <div class="story-text">Río adentro</div>
+                <div class="story-caption">Sur de Bolívar</div>
+              </div>
+            </div>
+          </div>
+          <div class="story-card">
+            <div class="story-media">
+              <video src="../tierradorada_03.mp4" autoplay muted loop playsinline></video>
+              <div class="story-top">
+                <span class="story-icon">VN</span>
+                <span class="story-bar"><span class="story-bar-fill"></span></span>
+              </div>
+              <div>
+                <div class="story-text">Se goza igual</div>
+                <div class="story-caption">Chocó</div>
+              </div>
+            </div>
+          </div>
+          <div class="story-card">
+            <div class="story-media">
+              <video src="../tierradorada_04.mp4" autoplay muted loop playsinline></video>
+              <div class="story-top">
+                <span class="story-icon">VN</span>
+                <span class="story-bar"><span class="story-bar-fill"></span></span>
+              </div>
+              <div>
+                <div class="story-text">Barequeo de oro</div>
+                <div class="story-caption">Bajo Cauca</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="context">
+        <h2>Context</h2>
+        <h3 class="section-subtitle">Complex territories and diverse local languages</h3>
+        <p>The intervention took place in remote rural areas marked by informal mining and complex security dynamics. We worked directly with young leaders, artists, musicians and local cultural collectives. Because of the strong cultural diversity between communities, the workshops couldn’t follow a rigid format and had to adapt to the languages, rhythms and forms of expression of each municipality.</p>
+      </section>
+
+
+      <div class="collage" id="tdCollage" role="img" aria-label="Photo collage of the fieldwork in Tierra Dorada">
+        <div class="collage-photo cp-1"><img src="../tierradorada_05.jpg" alt=""></div>
+        <div class="collage-photo cp-2"><img src="../tierradorada_06.jpg" alt=""></div>
+        <div class="collage-photo cp-3"><img src="../tierradorada_07.jpg" alt=""></div>
+        <div class="collage-photo cp-4"><img src="../tierradorada_08.jpg" alt=""></div>
+        <div class="collage-photo cp-5"><img src="../tierradorada_09.jpg" alt=""></div>
+        <div class="collage-photo cp-6"><img src="../tierradorada_10.jpg" alt=""></div>
+      </div>
+
+      <section id="research">
+        <h2>Research</h2>
+        <h3 class="section-subtitle">Immersion in the territory and direct listening with young leaders</h3>
+        <p>The research was based on face-to-face fieldwork with art collectives and youth leaders in the municipalities where we worked. Through interviews, observation and active-listening exercises, we mapped their everyday forms of expression and their usual community channels before defining the teaching methodology for each workshop.</p>
+      </section>
+
+
+      <div class="hgallery" id="tdHgallery">
+        <button class="hgallery-nav prev" aria-label="Previous" type="button">&#8249;</button>
+        <div class="hgallery-track" id="hgTrack">
+          <div class="hgallery-tile"><img src="../tierradorada_11.jpg" alt=""></div>
+          <div class="hgallery-tile"><img src="../tierradorada_12.jpg" alt=""></div>
+          <div class="hgallery-tile"><img src="../tierradorada_13.jpg" alt=""></div>
+          <div class="hgallery-tile"><img src="../tierradorada_14.jpg" alt=""></div>
+          <div class="hgallery-tile"><img src="../tierradorada_15.jpg" alt=""></div>
+          <div class="hgallery-tile"><img src="../tierradorada_16.jpg" alt=""></div>
+          <div class="hgallery-tile"><img src="../tierradorada_17.jpg" alt=""></div>
+          <div class="hgallery-tile"><img src="../tierradorada_11.jpg" alt=""></div>
+          <div class="hgallery-tile"><img src="../tierradorada_12.jpg" alt=""></div>
+          <div class="hgallery-tile"><img src="../tierradorada_13.jpg" alt=""></div>
+          <div class="hgallery-tile"><img src="../tierradorada_14.jpg" alt=""></div>
+          <div class="hgallery-tile"><img src="../tierradorada_15.jpg" alt=""></div>
+          <div class="hgallery-tile"><img src="../tierradorada_16.jpg" alt=""></div>
+          <div class="hgallery-tile"><img src="../tierradorada_17.jpg" alt=""></div>
+        </div>
+        <button class="hgallery-nav next" aria-label="Next" type="button">&#8250;</button>
+      </div>
+
+
+      <section id="decisions">
+        <h2>Decisions</h2>
+        <h3 class="section-subtitle">Giving the community tools instead of imposing corporate pieces</h3>
+        <p>The central decision wasn’t visual but strategic: defining the designer’s role in the territory. Instead of producing finished pieces from a desk, the work consisted of training young leaders and giving them conceptual and creative tools so that they could be the ones to communicate their environmental learnings. I acted as a bridge between the consortium’s guidelines and local realities, taking on the role of a teaching facilitator more than a final author, and prioritizing community ownership over strict control of the graphics.</p>
+      </section>
+
+      <div class="solo-image">
+        <img src="../tierradorada_18.jpg" alt="Tierra Dorada team celebration in Chocó" style="width:100%;height:100%;object-fit:cover;display:block;">
+      </div>
+
+      <div class="duo-row">
+        <div class="solo-image">
+          <img src="../tierradorada_19.jpg" alt="Detail of the jaguar mural" style="width:100%;height:100%;object-fit:cover;display:block;">
+        </div>
+        <div class="solo-image">
+          <img src="../tierradorada_20.jpg" alt="Young person painting a portrait on the mural" style="width:100%;height:100%;object-fit:cover;display:block;">
+        </div>
+      </div>
+
+      <section id="result">
+        <h2>Result</h2>
+        <h3 class="section-subtitle">Environmental campaigns co-created and led by local youth</h3>
+        <p>As a result of the workshops, murals, songs, poems and audiovisual pieces were co-created, all focused on caring for water, soil and air in mining enclaves. The young leaders weren’t just attendees; they took an active role as spokespeople and content producers in their municipalities. The strategy ensured that communities built their own environmental mitigation messages using their usual cultural expressions, guaranteeing local legitimacy.</p>
+        <div class="result-video">
+          <iframe src="https://drive.google.com/file/d/1j53i4b-MFfgfHE-E5slAFXmYOTiozUZo/preview" allow="autoplay" allowfullscreen loading="lazy"></iframe>
+        </div>
+      </section>
+
+      <section id="reflections">
+        <h2>Reflections</h2>
+        <h3 class="section-subtitle">Designing with purpose, in service of the human realities of the territory</h3>
+        <p>From my time at Arteaga Latam, what I value most is having worked directly with communities. For me as a designer, the creative process takes on real meaning when it goes beyond the screen and serves organizations with social and environmental impact. Working with these young people was deeply confronting — hearing their stories of leadership in contexts where exercising it can cost your life moved me and taught me about determination. Despite the hostility of their surroundings, there was always joy, inspiration and an absolute commitment to their messages. I came home certain that my craft doesn’t belong only to the digital space, but to the places where design can back the voice of those who are transforming their territory.</p>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<div class="back-nav">
+  <a href="./" class="back-link">
+    <svg class="back-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+    <span class="link-text">Back</span>
+  </a>
+</div>
+
+<footer class="site-footer" id="contact">
+  <div class="footer-panel">
+    <div class="name-wrap" id="footerNameWrap">
+      <h2 class="footer-title" id="footerTitleText">Let&#8217;s talk!</h2>
+    </div>
+
+    <div class="footer-links" id="footerLinks">
+      <a href="mailto:vanessanieton@gmail.com" class="footer-link"><span class="link-text">vanessanieton@gmail.com</span> <span class="link-arrow">&#8599;</span></a>
+      <a href="https://www.linkedin.com/in/vnessanieto/" class="footer-link" target="_blank" rel="noopener"><span class="link-text">LinkedIn</span> <span class="link-arrow">&#8599;</span></a>
+    </div>
+
+    <div class="footer-music" id="footerMusic">
+      <p class="footer-italic">Music is a great way to get to know each other:</p>
+      <a href="https://open.spotify.com/user/vnessanieto" class="footer-link" target="_blank" rel="noopener"><span class="link-text">My Spotify</span> <span class="link-arrow">&#8599;</span></a>
+    </div>
+
+    <p class="footer-credit">Designed and built with lots of love and overthinking.</p>
+  </div>
+</footer>
+
+<script>
+  const toc = document.getElementById('toc');
+  const tocToggle = document.getElementById('tocToggle');
+  tocToggle.addEventListener('click', () => {
+    const collapsed = toc.classList.toggle('collapsed');
+    tocToggle.textContent = collapsed ? '+' : '−';
+    tocToggle.setAttribute('aria-label', collapsed ? 'Expand contents' : 'Collapse contents');
+  });
+
+  const links = document.querySelectorAll('.toc-list a');
+  const sections = [...document.querySelectorAll('section[id]')];
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      const link = document.querySelector(`.toc-list a[href="#${entry.target.id}"]`);
+      if (!link) return;
+      if (entry.isIntersecting){
+        links.forEach((l) => l.classList.remove('active'));
+        link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-40% 0px -50% 0px' });
+  sections.forEach((s) => observer.observe(s));
+
+  // ---------- Nav tabs: hover highlight + active indicator ----------
+  (function(){
+    var nav = document.getElementById('mainNav');
+    var hoverEl = document.getElementById('navHover');
+    var activeBar = document.getElementById('navActiveBar');
+    var tabs = nav.querySelectorAll('a.tab');
+    var CURRENT_PAGE = 'proyectos';
+
+    function moveTo(source, target){
+      if (!source || !target) return;
+      target.style.left = source.offsetLeft + 'px';
+      target.style.width = source.offsetWidth + 'px';
+    }
+
+    var activeTab = null;
+    tabs.forEach(function(tab){
+      if (tab.dataset.page === CURRENT_PAGE){
+        tab.classList.add('is-active');
+        activeTab = tab;
+      }
+      tab.addEventListener('mouseenter', function(){
+        hoverEl.style.opacity = '1';
+        moveTo(tab, hoverEl);
+      });
+    });
+    nav.addEventListener('mouseleave', function(){ hoverEl.style.opacity = '0'; });
+
+    function placeActiveBar(){ if (activeTab) moveTo(activeTab, activeBar); }
+    placeActiveBar();
+    window.addEventListener('load', placeActiveBar);
+    window.addEventListener('resize', placeActiveBar);
+
+    document.querySelectorAll('.mobile-nav-link').forEach(function(link){
+      if (link.dataset.page === CURRENT_PAGE) link.classList.add('is-active');
+    });
+  })();
+
+  // ---------- Mobile nav: hamburger toggle (accesible, sin depender de hover) ----------
+  (function(){
+    var toggle = document.getElementById('navToggle');
+    var panel = document.getElementById('mobileNav');
+    if (!toggle || !panel) return;
+
+    function closeMenu(){
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Open menu');
+      panel.classList.remove('open');
+      document.body.classList.remove('nav-open');
+    }
+    function openMenu(){
+      toggle.setAttribute('aria-expanded', 'true');
+      toggle.setAttribute('aria-label', 'Close menu');
+      panel.classList.add('open');
+      document.body.classList.add('nav-open');
+    }
+
+    toggle.addEventListener('click', function(){
+      var isOpen = toggle.getAttribute('aria-expanded') === 'true';
+      if (isOpen) closeMenu(); else openMenu();
+    });
+
+    panel.querySelectorAll('a').forEach(function(link){
+      link.addEventListener('click', closeMenu);
+    });
+
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape') closeMenu();
+    });
+
+    window.addEventListener('resize', function(){
+      if (window.innerWidth > 768) closeMenu();
+    });
+  })();
+
+  // ---------- Tierra Dorada: collage animado, arranca al entrar en viewport ----------
+  (function(){
+    const collage = document.getElementById('tdCollage');
+    if (!collage) return;
+    const prefersReducedCollage = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedCollage) return;
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) collage.classList.add('playing');
+      });
+    }, { threshold: 0.3 });
+    io.observe(collage);
+  })();
+
+  // ---------- Tierra Dorada: galería horizontal continua (loop infinito) ----------
+  (function(){
+    const gallery = document.getElementById('tdHgallery');
+    const track = document.getElementById('hgTrack');
+    if (!gallery || !track) return;
+    const prefersReducedGal = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const TILE_COUNT = 7;
+    function getStep(){
+      const tile = track.querySelector('.hgallery-tile');
+      const gap = parseFloat(getComputedStyle(track).gap) || 12;
+      return tile.getBoundingClientRect().width + gap;
+    }
+
+    let index = 0;
+    let timer = null;
+
+    function goTo(i, animate){
+      track.style.transition = animate ? 'transform 0.6s ease' : 'none';
+      track.style.transform = `translateX(-${i * getStep()}px)`;
+    }
+
+    function next(){
+      index++;
+      goTo(index, true);
+      if (index === TILE_COUNT){
+        track.addEventListener('transitionend', function reset(){
+          track.removeEventListener('transitionend', reset);
+          index = 0;
+          goTo(index, false);
+        }, { once: true });
+      }
+    }
+
+    function prev(){
+      if (index === 0){
+        index = TILE_COUNT;
+        goTo(index, false);
+        // forzar reflow para que el salto sin transicion se aplique antes de animar
+        track.getBoundingClientRect();
+      }
+      index--;
+      goTo(index, true);
+    }
+
+    function startAuto(){
+      if (prefersReducedGal || timer) return;
+      timer = setInterval(next, 2600);
+    }
+    function stopAuto(){
+      clearInterval(timer);
+      timer = null;
+    }
+
+    gallery.querySelector('.prev').addEventListener('click', () => { stopAuto(); prev(); startAuto(); });
+    gallery.querySelector('.next').addEventListener('click', () => { stopAuto(); next(); startAuto(); });
+    gallery.addEventListener('mouseenter', stopAuto);
+    gallery.addEventListener('mouseleave', startAuto);
+    window.addEventListener('resize', () => goTo(index, false));
+
+    goTo(0, false);
+    if (!prefersReducedGal){
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) startAuto(); else stopAuto();
+        });
+      }, { threshold: 0.3 });
+      io.observe(gallery);
+    }
+  })();
+</script>
+
+<script>
+  // ---------- Footer: bubble text + alineacion con la columna de contenido ----------
+  (function(){
+    var prefersReducedFooter = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function makeBubbleLine(line){
+      var text = line.textContent;
+      line.textContent = '';
+      [].forEach.call(text, function(ch){
+        var span = document.createElement('span');
+        span.className = 'letter';
+        span.textContent = ch === ' ' ? '\u00A0' : ch;
+        line.appendChild(span);
+      });
+
+      if (prefersReducedFooter) return;
+
+      var letters = [].slice.call(line.querySelectorAll('.letter'));
+      letters.forEach(function(letter, idx){
+        letter.addEventListener('mouseenter', function(){
+          letters.forEach(function(other, j){
+            var dist = Math.abs(idx - j);
+            other.classList.remove('dist-0', 'dist-1', 'dist-2');
+            if (dist === 0) other.classList.add('dist-0');
+            else if (dist === 1) other.classList.add('dist-1');
+            else if (dist === 2) other.classList.add('dist-2');
+          });
+        });
+      });
+      line.addEventListener('mouseleave', function(){
+        letters.forEach(function(l){ l.classList.remove('dist-0', 'dist-1', 'dist-2'); });
+      });
+    }
+
+    var footerTitleText = document.getElementById('footerTitleText');
+    if (footerTitleText) makeBubbleLine(footerTitleText);
+
+    function alignFooterLinks(){
+      var footerLinks = document.getElementById('footerLinks');
+      var footerMusic = document.getElementById('footerMusic');
+      var contentCol = document.querySelector('.project-content');
+      var panel = document.querySelector('.footer-panel');
+      if (!footerLinks || !footerMusic || !contentCol || !panel) return;
+
+      if (window.innerWidth <= 768){
+        footerLinks.style.marginLeft = '';
+        footerMusic.style.marginLeft = '';
+        return;
+      }
+
+      var contentRect = contentCol.getBoundingClientRect();
+      var panelRect = panel.getBoundingClientRect();
+      var panelPadLeft = parseFloat(getComputedStyle(panel).paddingLeft);
+      var contentStart = panelRect.left + panelPadLeft;
+      var offset = Math.max(0, contentRect.left - contentStart);
+
+      footerLinks.style.marginLeft = offset + 'px';
+      footerMusic.style.marginLeft = offset + 'px';
+    }
+
+    window.addEventListener('load', alignFooterLinks);
+    window.addEventListener('resize', alignFooterLinks);
+    alignFooterLinks();
+
+    // ---------- El título del footer empieza a moverse solo al entrar en viewport ----------
+    var footerEl = document.getElementById('contact');
+    if (footerEl && !prefersReducedFooter){
+      if (!('IntersectionObserver' in window)){
+        footerEl.classList.add('in-view');
+      } else {
+        var footerIo = new IntersectionObserver(function(entries){
+          entries.forEach(function(entry){
+            if (entry.isIntersecting){
+              footerEl.classList.add('in-view');
+              footerIo.disconnect();
+            }
+          });
+        }, { threshold: 0.2 });
+        footerIo.observe(footerEl);
+      }
+    }
+  })();
+</script>
+
+</body>
+</html>
