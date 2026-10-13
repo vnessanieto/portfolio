@@ -320,11 +320,12 @@
   .sq-controls{ display: flex; justify-content: flex-end; gap: 8px; margin-bottom: 16px; }
   .sq-arrow{
     width: 36px; height: 36px; display: grid; place-items: center; padding: 0;
-    border: 0; border-radius: 6px; background: var(--accent-orange); color: #fff; cursor: pointer;
+    border: 0; border-radius: 6px; background: var(--sq-accent, var(--accent-orange)); color: #fff; cursor: pointer;
     transition: opacity 0.2s ease;
   }
   .sq-arrow:hover{ opacity: 0.85; }
-  .sq-arrow:focus-visible, .sq-card:focus-visible{ outline: 2px solid var(--accent-orange); outline-offset: 2px; }
+  .sq-arrow:focus-visible, .sq-card:focus-visible{ outline: 2px solid var(--sq-accent, var(--accent-orange)); outline-offset: 2px; }
+  .squeeze-purple{ --sq-accent: #401759; }
   .sq-viewport{ width: 100%; overflow: hidden; height: var(--sq-h); touch-action: pan-y; }
   .sq-strip{ display: flex; height: 100%; width: max-content; transition: transform var(--sq-ms) var(--sq-ease); }
   .sq-strip.still, .sq-strip.still .sq-card{ transition: none !important; }
@@ -792,6 +793,42 @@
 
         <p>También aprendí que representar a alguien implica considerar su contexto y seguridad. En el caso de algunas lideresas en riesgo, elegimos ilustraciones en lugar de fotografías para contar sus historias sin exponer sus rostros. Esta experiencia transformó mi forma de entender el diseño y confirmó mi interés por una comunicación con propósito.</p>
 
+        <div class="squeeze squeeze-purple" data-squeeze aria-label="Piezas de fechas conmemorativas">
+          <div class="sq-items">
+            <figure class="sq-item">
+              <img class="sq-pic" src="mujeresdeoro_ciencia_01.jpg" width="1080" height="1080" alt="Pieza «¡Por las mujeres!»: ilustración de una mujer con un megáfono y un puño en alto, envuelta en una cinta lila, sobre fondo morado con formas amarillas.">
+              <figcaption><span class="sq-title">¡Por las mujeres!</span><span class="sq-desc">Piezas para fechas conmemorativas como el 8 de marzo y el Día de la Mujer y la Niña en la Ciencia.</span></figcaption>
+            </figure>
+            <figure class="sq-item">
+              <img class="sq-pic" src="mujeresdeoro_ciencia_02.jpg" width="857" height="895" alt="Ilustración «¡Por las mujeres!» con una mujer de cabello largo y un hombre con barba y cabello rizado que levanta el puño y sostiene un megáfono, unidos por una cinta lila.">
+              <figcaption><span class="sq-title">Ilustración de personajes.</span></figcaption>
+            </figure>
+            <figure class="sq-item">
+              <img class="sq-pic" src="mujeresdeoro_ciencia_03.jpg" width="1479" height="740" alt="Pieza «¿Cómo conmemoras el 8 de marzo?»: retrato sonriente de una mujer junto a un número 8 grande y un bote, sobre fondo amarillo.">
+              <figcaption><span class="sq-title">¿Cómo conmemoras el 8 de marzo?</span></figcaption>
+            </figure>
+            <figure class="sq-item">
+              <img class="sq-pic" src="mujeresdeoro_ciencia_04.jpg" width="1481" height="741" alt="Pieza de la conferencia «El Poder de la Mujer Rural», el jueves 11 de marzo a las 5 p. m. por Zoom y Facebook Live, con la fotografía de una mujer rural con las manos en la cintura.">
+              <figcaption><span class="sq-title">Conferencia: El Poder de la Mujer Rural.</span></figcaption>
+            </figure>
+            <figure class="sq-item">
+              <img class="sq-pic" src="mujeresdeoro_ciencia_05.jpg" width="1200" height="1200" alt="Pieza del Día de la Mujer y la Niña en la Ciencia: Rosalind Franklin mirando por un microscopio, con la frase «La ciencia y la vida cotidiana no pueden y no deben separarse», sobre fondo durazno.">
+              <figcaption><span class="sq-title">Rosalind Franklin.</span></figcaption>
+            </figure>
+            <figure class="sq-item">
+              <img class="sq-pic" src="mujeresdeoro_ciencia_06.jpg" width="1200" height="1200" alt="Pieza del Día de la Mujer y la Niña en la Ciencia: Gerty Cori sostiene un tubo de ensayo, con la frase «Creo que el arte y la ciencia son glorias de la mente humana», sobre fondo azul oscuro.">
+              <figcaption><span class="sq-title">Gerty Cori.</span></figcaption>
+            </figure>
+            <figure class="sq-item">
+              <img class="sq-pic" src="mujeresdeoro_ciencia_07.jpg" width="1201" height="1200" alt="Pieza del Día de la Mujer y la Niña en la Ciencia: retrato de Walys Vera, de 22 años, de El Bagre, Antioquia, graduada de ciencias matemáticas, dentro de un círculo amarillo con un cerebro ilustrado y una calculadora.">
+              <figcaption><span class="sq-title">Walys Vera, de El Bagre.</span></figcaption>
+            </figure>
+            <figure class="sq-item">
+              <img class="sq-pic" src="mujeresdeoro_ciencia_08.jpg" width="1201" height="1201" alt="Pieza con el testimonio de Walys Vera sobre estudiar ciencias matemáticas: «Al final del día sé que es difícil pero es mi pasión», sobre fondo durazno.">
+              <figcaption><span class="sq-title">Testimonio de Walys Vera.</span></figcaption>
+            </figure>
+          </div>
+        </div>
       </section>
 
       <div class="cta-block">
@@ -1020,9 +1057,8 @@
 // ---------- Decisiones: carrusel de Momento Cero ----------
   // Versión en JS puro del "squeeze carousel": una pieza abierta y, a su derecha,
   // tiras que se van comprimiendo. Al abrir una tira la fila se desliza y el texto de abajo cambia.
-  (function(){
-    const root = document.querySelector('[data-squeeze]');
-    if (!root) return;
+  document.querySelectorAll('[data-squeeze]').forEach(function(root){
+
     // sin container queries se queda la rejilla de respaldo que ya está en el HTML
     if (!(window.CSS && CSS.supports && CSS.supports('width', '1cqi'))) return;
 
@@ -1301,7 +1337,7 @@
     root.appendChild(ui);
     applyMotion();
     root.classList.add('is-ready');
-  })();
+  });
 
 
 </script>
