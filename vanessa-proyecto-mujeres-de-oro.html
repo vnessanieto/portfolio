@@ -296,6 +296,7 @@
   }
   .feed-grid img:hover{ transform: scale(1.035); z-index: 1; }
   .feed-grid-portrait img{ aspect-ratio: 1200/1489; }
+  @media (width <= 768px){ .feed-grid-portrait{ grid-template-columns: 1fr; gap: 12px; } }
   .cover-image img{ width: 100%; height: 100%; object-fit: cover; display: block; }
 
   /* ---- Decisiones: carrusel "squeeze" (cada pieza se muestra con su propia proporción) ---- */
