@@ -133,15 +133,7 @@
       color: var(--ink);
     }
     .mobile-nav-link:focus-visible{ outline: 2px solid var(--ink); outline-offset: -2px; }
-    .mobile-nav-link.is-active{ color: rgba(12,12,12,0.45); }
-    .mobile-nav-link.mobile-nav-pill{
-      margin-top: 20px;
-      justify-content: center;
-      background: var(--pill);
-      color: var(--pill-text);
-      border-radius: 4px;
-      border-bottom: none;
-    }
+    .mobile-nav-link.is-active{ color: rgba(12,12,12,0.65); }
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -443,7 +435,7 @@
     --footer-bg: #016644;
     --footer-title: #daffa2;
     --footer-ink: #ffffff;
-    --footer-muted: rgba(255,255,255,0.68);
+    --footer-muted: rgba(255,255,255,0.78);
     background: var(--footer-bg);
     border-radius: 0;
     padding: clamp(2rem, 6vw, 3.5rem) clamp(1.5rem, 6vw, 4rem);
@@ -454,7 +446,7 @@
   .footer-title{
     margin: 0 0 clamp(2rem, 6vw, 3.5rem);
     font-weight: 600;
-    font-size: clamp(6rem, 17vw, 15rem);
+    font-size: clamp(6rem, 15vw, 14rem);
     line-height: 0.94;
     letter-spacing: -0.02em;
     text-align: left;
@@ -468,14 +460,6 @@
     display: inline-block;
     width: max-content;
     will-change: transform;
-  }
-  @keyframes footerTitleDrift{
-    0%, 100% { transform: translateX(-2.2vw); }
-    50% { transform: translateX(2.2vw); }
-  }
-  /* arranca solo cuando el footer entra en viewport (ver JS) */
-  .site-footer.in-view #footerNameWrap{
-    animation: footerTitleDrift 22s ease-in-out infinite;
   }
   .letter{
     display: inline-block;
@@ -564,17 +548,97 @@
   @media (prefers-reduced-motion: reduce){ .lang-switch{ transition: none; } }
 
   /* ---- EN: "Let’s talk!" ocupa el mismo ancho que "¡Hablemos!" ---- */
-  .footer-title{ font-size: clamp(7.2rem, 20.3vw, 18rem); }
+  .footer-title{ font-size: clamp(7.2rem, 18vw, 17rem); }
   @media (width <= 768px){ .footer-title{ font-size: clamp(3.25rem, 17.5vw, 5.1rem); } } /* en móvil se ve completo, con el "!" */
+
+  /* ---- móvil: flechas para recorrer las historias (mismo estilo que .hgallery-nav) ----
+     solo aparecen cuando las historias no caben en el ancho disponible; el JS las muestra/oculta */
+  .stories-wrap{ position: relative; }
+  .stories-wrap .stories-nav{ display: none; }
+  @media (width <= 768px){
+    .stories-wrap.has-overflow .stories-nav{ display: flex; }
+    .stories-wrap.has-overflow .stories-nav[hidden]{ display: none; }
+  }
+
+  /* ---- footer móvil: título fijo y centrado (igual que el Home) ----
+     en móvil el título sobredimensionado se recortaba y se desplazaba; aquí se ajusta
+     al recuadro, se centra y no se mueve. Solo queda el efecto de peso de las letras. */
+  @media (width <= 768px){
+    .footer-title{
+      font-size: clamp(3rem, 15.5vw, 4.8rem);
+      white-space: normal;
+      text-align: center;
+    }
+    #footerNameWrap{ display: block; width: 100%; }
+    .site-footer.in-view #footerNameWrap{ animation: none; transform: none; }
+  }
+
+  /* ---- accesibilidad: enlace para saltar al contenido + utilidades ---- */
+  .skip-link{
+    position: absolute; left: 12px; top: -120px; z-index: 10000;
+    padding: 12px 18px; border-radius: 6px;
+    background: #0e0e0e; color: #ffffff; box-shadow: 0 0 0 2px #ffffff;
+    font: 600 14px/1.2 'Inter', system-ui, sans-serif; letter-spacing: 0.02em; text-decoration: none;
+  }
+  .skip-link:focus, .skip-link:focus-visible{ top: 12px; outline: 3px solid #daffa2; outline-offset: 2px; }
+  .sr-only{
+    position: absolute !important; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0;
+    overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+  }
+  main:focus{ outline: none; }
+
+  /* ---- accesibilidad: pausa para los videos en loop de las historias ---- */
+  .story-media .video-toggle{
+    position: absolute; right: 10px; bottom: 10px; z-index: 3;
+    width: 32px; height: 32px; display: grid; place-items: center; padding: 0;
+    border: 0; border-radius: 50%; cursor: pointer;
+    background: rgba(240,242,247,0.92); color: var(--ink); box-shadow: 0 2px 10px rgba(12,12,12,0.25);
+    transition: opacity 0.2s ease;
+  }
+  .story-media .video-toggle:hover{ opacity: 0.85; }
+  .story-media .video-toggle:focus-visible{ outline: 2px solid #ffffff; outline-offset: 2px; box-shadow: 0 0 0 4px var(--ink); }
+  .story-media .video-toggle svg{ display: block; }
+  .story-media .video-toggle .ico-play{ display: none; }
+  .story-media.is-paused .video-toggle .ico-pause{ display: none; }
+  .story-media.is-paused .video-toggle .ico-play{ display: block; }
+  .story-media > div:last-child{ padding-right: 40px; }
+
+  /* ---- accesibilidad: el correo del pie nunca se sale del recuadro (320 px / espaciado de texto aumentado) ---- */
+  .footer-link{ max-width: 100%; }
+  .footer-link .link-text{ min-width: 0; overflow-wrap: anywhere; }
+  @media (width <= 360px){ .footer-link{ font-size: 1rem; } }
+  .result-video:focus-within{ outline: 2px solid var(--ink); outline-offset: 4px; }
+
+  /* ---- menú completo visible en móvil (360–768px) ----
+     con solo 4 opciones + idioma, el menú de desktop cabe en una línea: se muestra en lugar de la
+     hamburguesa. Los tamaños escalan con el ancho (a 768px quedan como en desktop) y el área táctil
+     sube a 44px sin cambiar el aspecto. Por debajo de 360px (zoom alto) se mantiene la hamburguesa. */
+  @media (width <= 768px) and (width >= 360px){
+    .topbar{ min-height: 44px; }
+    #mainNav{ display: flex; gap: 0; }
+    .nav-toggle, .mobile-nav{ display: none; }
+    body.nav-open{ overflow: visible; }
+    .nav-hover{ display: none; }
+    .topbar nav a, .topbar .lang-switch{ white-space: nowrap; flex-shrink: 0; }
+    .topbar nav a.tab, .topbar nav a.pill, .topbar .lang-switch{ font-size: clamp(11px, 3vw, 13px); letter-spacing: 0.03em; }
+    .topbar nav a.tab{ padding: 7px clamp(3px, 1.4vw, 12px); }
+    .topbar nav a.pill{ position: relative; padding: 7px clamp(3px, 1.4vw, 12px); margin-left: 0; background: none; border: 0; border-radius: 6px;
+      color: rgba(12,12,12,0.6); font-weight: 500; text-transform: uppercase; }
+    .topbar nav a.pill:hover, .topbar nav a.pill:focus-visible{ background: none; border: 0; }
+    .topbar .lang-switch{ position: relative; min-height: 30px; min-width: 0; margin-left: clamp(3px, 1.4vw, 12px); margin-right: 0; padding: 6px clamp(7px, 1.6vw, 10px); }
+    .topbar nav a.tab::after, .topbar nav a.pill::after{ content: ""; position: absolute; inset: -7px 0; }
+    .topbar .lang-switch::after{ content: ""; position: absolute; inset: -7px -4px; }
+  }
 </style>
 </head>
 <body>
+<a class="skip-link" href="#contenido">Skip to content</a>
 
 <div class="page">
   <div class="stage-inner">
 
-    <div class="topbar">
-      <nav id="mainNav">
+    <header class="topbar">
+      <nav id="mainNav" aria-label="Main">
         <span class="nav-hover" id="navHover"></span>
         <span class="nav-active-bar" id="navActiveBar"></span>
         <a href="./" class="tab" data-page="index">Home</a>
@@ -588,9 +652,9 @@
         <span class="nav-toggle-bar"></span>
         <span class="nav-toggle-bar"></span>
       </button>
-    </div>
+    </header>
 
-    <div class="mobile-nav" id="mobileNav">
+    <div class="mobile-nav" id="mobileNav" role="navigation" aria-label="Mobile menu">
       <a href="./" class="mobile-nav-link" data-page="index">Home</a>
       <a href="about.html" class="mobile-nav-link" data-page="sobre-mi">About me</a>
       <a href="./#projects" class="mobile-nav-link" data-page="proyectos">Projects</a>
@@ -602,7 +666,7 @@
         <span>Contents</span>
         <button id="tocToggle" aria-label="Collapse contents">−</button>
       </div>
-      <nav class="toc-list">
+      <nav class="toc-list" aria-label="On this page">
         <a href="#context">Context</a>
         <a href="#research">Research</a>
         <a href="#decisions">Decisions</a>
@@ -611,10 +675,10 @@
       </nav>
     </aside>
 
-    <div class="project-content">
+    <main class="project-content" id="contenido" tabindex="-1">
 
       <h1 class="project-title-big">Tierra Dorada</h1>
-      <p class="subtitle">Environmental communication built together with young leaders in mining territories.</p>
+      <p class="subtitle">Environmental communication developed with young leaders in mining communities.</p>
 
       <div class="meta-grid">
         <div><span class="meta-label">Client</span><span class="meta-value">USAID Colombia</span></div>
@@ -631,15 +695,17 @@
 
       <section id="introduction">
         <h2>Introduction</h2>
-        <h3 class="section-subtitle">Communication and teaching tools for community leaders</h3>
-        <p>Tierra Dorada was an alliance between Chemonics, Arteaga Latam and CORCRESER aimed at reducing the environmental impact of informal mining practices in the Serranía de San Lucas, the Bajo Cauca in Antioquia and the San Juan subregion of Chocó. I joined the project when the visual identity was already well advanced, becoming part of the communications team. My work focused on designing and structuring training workshops, giving local leaders conceptual and creative tools so that they themselves could communicate the environmental challenges in their municipalities.</p>
+        <h3 class="section-subtitle">Communication tools for community leaders</h3>
+        <p>Tierra Dorada was an initiative led by Chemonics, Arteaga Latam, and CORCRESER to reduce the environmental impact of informal mining in the Serranía de San Lucas, Bajo Cauca in Antioquia, and the San Juan subregion of Chocó. I joined when the visual identity was already well developed and became part of the communications team. My work focused on designing and structuring workshops that gave local leaders conceptual and creative tools to communicate the environmental challenges in their municipalities.</p>
       </section>
 
       <section id="stories">
-        <div class="stories-row">
+        <div class="stories-wrap">
+        <div class="stories-row" id="storiesRow">
           <div class="story-card">
             <div class="story-media">
-              <video src="../tierradorada_02.mp4" autoplay muted loop playsinline></video>
+              <video src="../tierradorada_02.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Sunset over the river, looping video without audio."></video>
+              <button class="video-toggle" type="button" aria-label="Pause video: Río adentro"><svg class="ico-pause" width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><rect x="2.5" y="2" width="3" height="10" rx="0.6"/><rect x="8.5" y="2" width="3" height="10" rx="0.6"/></svg><svg class="ico-play" width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3.5 1.8v10.4L12 7z"/></svg></button>
               <div class="story-top">
                 <span class="story-icon">VN</span>
                 <span class="story-bar"><span class="story-bar-fill"></span></span>
@@ -652,7 +718,8 @@
           </div>
           <div class="story-card">
             <div class="story-media">
-              <video src="../tierradorada_03.mp4" autoplay muted loop playsinline></video>
+              <video src="../tierradorada_03.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Two participants moving around inside a room, looping video without audio."></video>
+              <button class="video-toggle" type="button" aria-label="Pause video: Se goza igual"><svg class="ico-pause" width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><rect x="2.5" y="2" width="3" height="10" rx="0.6"/><rect x="8.5" y="2" width="3" height="10" rx="0.6"/></svg><svg class="ico-play" width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3.5 1.8v10.4L12 7z"/></svg></button>
               <div class="story-top">
                 <span class="story-icon">VN</span>
                 <span class="story-bar"><span class="story-bar-fill"></span></span>
@@ -665,7 +732,8 @@
           </div>
           <div class="story-card">
             <div class="story-media">
-              <video src="../tierradorada_04.mp4" autoplay muted loop playsinline></video>
+              <video src="../tierradorada_04.mp4" autoplay muted loop playsinline preload="metadata" aria-label="White paint spreading over a dark surface, looping video without audio."></video>
+              <button class="video-toggle" type="button" aria-label="Pause video: Barequeo de oro"><svg class="ico-pause" width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><rect x="2.5" y="2" width="3" height="10" rx="0.6"/><rect x="8.5" y="2" width="3" height="10" rx="0.6"/></svg><svg class="ico-play" width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3.5 1.8v10.4L12 7z"/></svg></button>
               <div class="story-top">
                 <span class="story-icon">VN</span>
                 <span class="story-bar"><span class="story-bar-fill"></span></span>
@@ -677,48 +745,51 @@
             </div>
           </div>
         </div>
+        <button class="hgallery-nav stories-nav prev" type="button" aria-label="Previous" aria-controls="storiesRow" hidden>&#8249;</button>
+        <button class="hgallery-nav stories-nav next" type="button" aria-label="Next" aria-controls="storiesRow">&#8250;</button>
+        </div>
       </section>
 
       <section id="context">
         <h2>Context</h2>
-        <h3 class="section-subtitle">Complex territories and diverse local languages</h3>
+        <h3 class="section-subtitle">Different territories, different ways of communicating</h3>
         <p>The intervention took place in remote rural areas marked by informal mining and complex security dynamics. We worked directly with young leaders, artists, musicians and local cultural collectives. Because of the strong cultural diversity between communities, the workshops couldn’t follow a rigid format and had to adapt to the languages, rhythms and forms of expression of each municipality.</p>
       </section>
 
 
       <div class="collage" id="tdCollage" role="img" aria-label="Photo collage of the fieldwork in Tierra Dorada">
-        <div class="collage-photo cp-1"><img src="../tierradorada_05.jpg" alt=""></div>
-        <div class="collage-photo cp-2"><img src="../tierradorada_06.jpg" alt=""></div>
-        <div class="collage-photo cp-3"><img src="../tierradorada_07.jpg" alt=""></div>
-        <div class="collage-photo cp-4"><img src="../tierradorada_08.jpg" alt=""></div>
-        <div class="collage-photo cp-5"><img src="../tierradorada_09.jpg" alt=""></div>
-        <div class="collage-photo cp-6"><img src="../tierradorada_10.jpg" alt=""></div>
+        <div class="collage-photo cp-1"><img src="../tierradorada_05.jpg" alt="Two women smile at the camera in a selfie; one wears a lanyard around her neck."></div>
+        <div class="collage-photo cp-2"><img src="../tierradorada_06.jpg" alt="Mural in progress on white fabric: monstera leaves painted in green and pink, with paint pots beside them."></div>
+        <div class="collage-photo cp-3"><img src="../tierradorada_07.jpg" alt="View from above of green hills and a valley under a cloudy sky."></div>
+        <div class="collage-photo cp-4"><img src="../tierradorada_08.jpg" alt="A dog seen from behind looks out at the horizon from a terrace at dusk."></div>
+        <div class="collage-photo cp-5"><img src="../tierradorada_09.jpg" alt="A white motorcycle taxi with a black roof on a road lined with trees."></div>
+        <div class="collage-photo cp-6"><img src="../tierradorada_10.jpg" alt="View from inside a vehicle toward a bridge in the distance at sunset."></div>
       </div>
 
       <section id="research">
         <h2>Research</h2>
         <h3 class="section-subtitle">Immersion in the territory and direct listening with young leaders</h3>
-        <p>The research was based on face-to-face fieldwork with art collectives and youth leaders in the municipalities where we worked. Through interviews, observation and active-listening exercises, we mapped their everyday forms of expression and their usual community channels before defining the teaching methodology for each workshop.</p>
+        <p>The research involved fieldwork with art collectives and young leaders in the municipalities where we worked. Through interviews, observation, and active listening, we learned about their everyday forms of expression and the communication channels they used in their communities before defining the approach for each workshop.</p>
       </section>
 
 
       <div class="hgallery" id="tdHgallery">
         <button class="hgallery-nav prev" aria-label="Previous" type="button">&#8249;</button>
         <div class="hgallery-track" id="hgTrack">
-          <div class="hgallery-tile"><img src="../tierradorada_11.jpg" alt=""></div>
-          <div class="hgallery-tile"><img src="../tierradorada_12.jpg" alt=""></div>
-          <div class="hgallery-tile"><img src="../tierradorada_13.jpg" alt=""></div>
-          <div class="hgallery-tile"><img src="../tierradorada_14.jpg" alt=""></div>
-          <div class="hgallery-tile"><img src="../tierradorada_15.jpg" alt=""></div>
-          <div class="hgallery-tile"><img src="../tierradorada_16.jpg" alt=""></div>
-          <div class="hgallery-tile"><img src="../tierradorada_17.jpg" alt=""></div>
-          <div class="hgallery-tile"><img src="../tierradorada_11.jpg" alt=""></div>
-          <div class="hgallery-tile"><img src="../tierradorada_12.jpg" alt=""></div>
-          <div class="hgallery-tile"><img src="../tierradorada_13.jpg" alt=""></div>
-          <div class="hgallery-tile"><img src="../tierradorada_14.jpg" alt=""></div>
-          <div class="hgallery-tile"><img src="../tierradorada_15.jpg" alt=""></div>
-          <div class="hgallery-tile"><img src="../tierradorada_16.jpg" alt=""></div>
-          <div class="hgallery-tile"><img src="../tierradorada_17.jpg" alt=""></div>
+          <div class="hgallery-tile"><img src="../tierradorada_11.jpg" alt="A group of young people sitting on the floor around a mural in progress smile at the camera."></div>
+          <div class="hgallery-tile"><img src="../tierradorada_12.jpg" alt="Close-up of a young woman painting a mural spread out on the floor."></div>
+          <div class="hgallery-tile"><img src="../tierradorada_13.jpg" alt="A young woman with curly hair, hand near her mouth, listens attentively."></div>
+          <div class="hgallery-tile"><img src="../tierradorada_14.jpg" alt="Two young women lean over a table, drawing together on paper."></div>
+          <div class="hgallery-tile"><img src="../tierradorada_15.jpg" alt="A group of people sit around a table with papers and markers, working together on an activity."></div>
+          <div class="hgallery-tile"><img src="../tierradorada_16.jpg" alt="A person kneels to paint a huge mural on the floor of a large room."></div>
+          <div class="hgallery-tile"><img src="../tierradorada_17.jpg" alt="Group photo of the participants outdoors, among trees."></div>
+          <div class="hgallery-tile" aria-hidden="true"><img src="../tierradorada_11.jpg" alt=""></div>
+          <div class="hgallery-tile" aria-hidden="true"><img src="../tierradorada_12.jpg" alt=""></div>
+          <div class="hgallery-tile" aria-hidden="true"><img src="../tierradorada_13.jpg" alt=""></div>
+          <div class="hgallery-tile" aria-hidden="true"><img src="../tierradorada_14.jpg" alt=""></div>
+          <div class="hgallery-tile" aria-hidden="true"><img src="../tierradorada_15.jpg" alt=""></div>
+          <div class="hgallery-tile" aria-hidden="true"><img src="../tierradorada_16.jpg" alt=""></div>
+          <div class="hgallery-tile" aria-hidden="true"><img src="../tierradorada_17.jpg" alt=""></div>
         </div>
         <button class="hgallery-nav next" aria-label="Next" type="button">&#8250;</button>
       </div>
@@ -726,8 +797,8 @@
 
       <section id="decisions">
         <h2>Decisions</h2>
-        <h3 class="section-subtitle">Giving the community tools instead of imposing corporate pieces</h3>
-        <p>The central decision wasn’t visual but strategic: defining the designer’s role in the territory. Instead of producing finished pieces from a desk, the work consisted of training young leaders and giving them conceptual and creative tools so that they could be the ones to communicate their environmental learnings. I acted as a bridge between the consortium’s guidelines and local realities, taking on the role of a teaching facilitator more than a final author, and prioritizing community ownership over strict control of the graphics.</p>
+        <h3 class="section-subtitle">Sharing tools instead of imposing finished materials</h3>
+        <p>The central decision wasn’t a visual one; it was about defining the designer’s role in the territory. Rather than producing finished pieces from a desk, I helped train young leaders and gave them conceptual and creative tools to communicate what they were learning about the environment. I acted as a bridge between the consortium’s guidelines and local realities, facilitating the process rather than acting as the sole author, and prioritizing community ownership over strict control of the visual materials.</p>
       </section>
 
       <div class="solo-image">
@@ -745,24 +816,24 @@
 
       <section id="result">
         <h2>Result</h2>
-        <h3 class="section-subtitle">Environmental campaigns co-created and led by local youth</h3>
-        <p>As a result of the workshops, murals, songs, poems and audiovisual pieces were co-created, all focused on caring for water, soil and air in mining enclaves. The young leaders weren’t just attendees; they took an active role as spokespeople and content producers in their municipalities. The strategy ensured that communities built their own environmental mitigation messages using their usual cultural expressions, guaranteeing local legitimacy.</p>
+        <h3 class="section-subtitle">Environmental campaigns created with local young people</h3>
+        <p>The workshops led to the creation of murals, songs, poems, and audiovisual pieces about protecting water, soil, and air in mining areas. The young leaders took an active role, not just as participants but as spokespeople and content creators in their municipalities. The approach gave communities a way to develop environmental messages through their own cultural expressions.</p>
         <div class="result-video">
-          <iframe src="https://drive.google.com/file/d/1j53i4b-MFfgfHE-E5slAFXmYOTiozUZo/preview" allow="autoplay" allowfullscreen loading="lazy"></iframe>
+          <iframe src="https://drive.google.com/file/d/1j53i4b-MFfgfHE-E5slAFXmYOTiozUZo/preview" title="Tierra Dorada project results video" allow="autoplay" allowfullscreen loading="lazy"></iframe>
         </div>
       </section>
 
       <section id="reflections">
         <h2>Reflections</h2>
-        <h3 class="section-subtitle">Designing with purpose, in service of the human realities of the territory</h3>
-        <p>From my time at Arteaga Latam, what I value most is having worked directly with communities. For me as a designer, the creative process takes on real meaning when it goes beyond the screen and serves organizations with social and environmental impact. Working with these young people was deeply confronting — hearing their stories of leadership in contexts where exercising it can cost your life moved me and taught me about determination. Despite the hostility of their surroundings, there was always joy, inspiration and an absolute commitment to their messages. I came home certain that my craft doesn’t belong only to the digital space, but to the places where design can back the voice of those who are transforming their territory.</p>
+        <h3 class="section-subtitle">Designing in response to the realities of each territory</h3>
+        <p>What I value most about my time at Arteaga Latam is having worked directly with communities. For me, design becomes meaningful when it goes beyond the screen and supports organizations working for social and environmental change. Working with these young people challenged me. Hearing their stories of leadership in contexts where taking on that role can cost you your life taught me about determination. Despite the difficult conditions around them, they brought joy, inspiration, and a strong commitment to their messages. I came away understanding that my work doesn’t belong only in digital spaces; it can also support the voices of people working to transform their communities.</p>
       </section>
 
-    </div>
+    </main>
   </div>
 </div>
 
-<div class="back-nav">
+<div class="back-nav" role="navigation" aria-label="Back">
   <a href="./" class="back-link">
     <svg class="back-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
     <span class="link-text">Back</span>
@@ -776,16 +847,16 @@
     </div>
 
     <div class="footer-links" id="footerLinks">
-      <a href="mailto:vanessanieton@gmail.com" class="footer-link"><span class="link-text">vanessanieton@gmail.com</span> <span class="link-arrow">&#8599;</span></a>
-      <a href="https://www.linkedin.com/in/vnessanieto/" class="footer-link" target="_blank" rel="noopener"><span class="link-text">LinkedIn</span> <span class="link-arrow">&#8599;</span></a>
+      <a href="mailto:vanessanieton@gmail.com" class="footer-link"><span class="link-text">vanessanieton@gmail.com</span> <span class="link-arrow" aria-hidden="true">&#8599;</span></a>
+      <a href="https://www.linkedin.com/in/vnessanieto/" class="footer-link" target="_blank" rel="noopener"><span class="link-text">LinkedIn</span> <span class="link-arrow" aria-hidden="true">&#8599;</span></a>
     </div>
 
     <div class="footer-music" id="footerMusic">
-      <p class="footer-italic">Music is a great way to get to know each other:</p>
-      <a href="https://open.spotify.com/user/vnessanieto" class="footer-link" target="_blank" rel="noopener"><span class="link-text">My Spotify</span> <span class="link-arrow">&#8599;</span></a>
+      <p class="footer-italic">Music is a great way to get to know me:</p>
+      <a href="https://open.spotify.com/user/vnessanieto" class="footer-link" target="_blank" rel="noopener"><span class="link-text">My Spotify</span> <span class="link-arrow" aria-hidden="true">&#8599;</span></a>
     </div>
 
-    <p class="footer-credit">Designed and built with lots of love and overthinking.</p>
+    <p class="footer-credit">Designed and built with care and a lot of overthinking.</p>
   </div>
 </footer>
 
@@ -878,11 +949,11 @@
     });
 
     document.addEventListener('keydown', function(e){
-      if (e.key === 'Escape') closeMenu();
+      if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true'){ closeMenu(); toggle.focus(); }
     });
 
     window.addEventListener('resize', function(){
-      if (window.innerWidth > 768) closeMenu();
+      if (window.innerWidth >= 360) closeMenu();
     });
   })();
 
@@ -1055,6 +1126,82 @@
       }
     }
   })();
+</script>
+
+
+<script>
+// ---------- Historias en video: loop con botón de pausa (WCAG 2.2.2) ----------
+(function(){
+  var cards = document.querySelectorAll('.story-media');
+  if (!cards.length) return;
+  var en = (document.documentElement.lang || '').indexOf('en') === 0;
+  var L = en ? ['Pause video: ', 'Play video: '] : ['Pausar video: ', 'Reproducir video: '];
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var hasIO = 'IntersectionObserver' in window;
+  cards.forEach(function(card){
+    var video = card.querySelector('video'), btn = card.querySelector('.video-toggle');
+    if (!video || !btn) return;
+    var base = btn.getAttribute('aria-label').replace(/^(Pausar|Reproducir|Pause|Play) video: /, '');
+    var userPaused = false;
+    function sync(){
+      card.classList.toggle('is-paused', video.paused);
+      btn.setAttribute('aria-label', (video.paused ? L[1] : L[0]) + base);
+    }
+    function play(){ var p = video.play(); if (p && p.catch) p.catch(function(){}); }
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      if (video.paused){ userPaused = false; play(); } else { userPaused = true; video.pause(); }
+      sync();
+    });
+    video.addEventListener('play', sync);
+    video.addEventListener('pause', sync);
+    if (reduced){ userPaused = true; video.removeAttribute('autoplay'); video.pause(); sync(); return; }
+    if (hasIO){
+      new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if (e.isIntersecting){ if (!userPaused) play(); } else { video.pause(); }
+        });
+      }, { threshold: 0.2 }).observe(card);
+    }
+    sync();
+  });
+})();
+</script>
+
+
+<script>
+// ---------- Historias (móvil): flechas para ver todas las tarjetas ----------
+(function(){
+  var wrap = document.querySelector('.stories-wrap');
+  if (!wrap) return;
+  var row = wrap.querySelector('.stories-row');
+  var prev = wrap.querySelector('.stories-nav.prev'), next = wrap.querySelector('.stories-nav.next');
+  if (!row || !prev || !next) return;
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function step(){
+    var card = row.querySelector('.story-card');
+    var gap = parseFloat(getComputedStyle(row).columnGap) || 0;
+    return card ? card.getBoundingClientRect().width + gap : row.clientWidth * 0.8;
+  }
+  function update(){
+    var max = row.scrollWidth - row.clientWidth;
+    var overflow = max > 2;
+    wrap.classList.toggle('has-overflow', overflow);
+    var atStart = row.scrollLeft <= 2, atEnd = row.scrollLeft >= max - 2;
+    var focused = document.activeElement;
+    prev.hidden = atStart; next.hidden = atEnd;
+    // si el botón con foco desaparece al llegar a un extremo, el foco pasa al otro
+    if (focused === prev && atStart && !next.hidden) next.focus();
+    else if (focused === next && atEnd && !prev.hidden) prev.focus();
+  }
+  function go(dir){ row.scrollBy({ left: dir * step(), behavior: reduced ? 'auto' : 'smooth' }); }
+  prev.addEventListener('click', function(){ go(-1); });
+  next.addEventListener('click', function(){ go(1); });
+  row.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  window.addEventListener('load', update);
+  update();
+})();
 </script>
 
 </body>

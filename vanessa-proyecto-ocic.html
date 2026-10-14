@@ -137,15 +137,7 @@
       color: var(--ink);
     }
     .mobile-nav-link:focus-visible{ outline: 2px solid var(--ink); outline-offset: -2px; }
-    .mobile-nav-link.is-active{ color: rgba(12,12,12,0.45); }
-    .mobile-nav-link.mobile-nav-pill{
-      margin-top: 20px;
-      justify-content: center;
-      background: var(--pill);
-      color: var(--pill-text);
-      border-radius: 4px;
-      border-bottom: none;
-    }
+    .mobile-nav-link.is-active{ color: rgba(12,12,12,0.65); }
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -482,7 +474,7 @@
     --footer-bg: #016644;
     --footer-title: #daffa2;
     --footer-ink: #ffffff;
-    --footer-muted: rgba(255,255,255,0.68);
+    --footer-muted: rgba(255,255,255,0.78);
     background: var(--footer-bg);
     border-radius: 0;
     padding: clamp(2rem, 6vw, 3.5rem) clamp(1.5rem, 6vw, 4rem);
@@ -493,7 +485,7 @@
   .footer-title{
     margin: 0 0 clamp(2rem, 6vw, 3.5rem);
     font-weight: 600;
-    font-size: clamp(6rem, 17vw, 15rem);
+    font-size: clamp(6rem, 15vw, 14rem);
     line-height: 0.94;
     letter-spacing: -0.02em;
     text-align: left;
@@ -507,14 +499,6 @@
     display: inline-block;
     width: max-content;
     will-change: transform;
-  }
-  @keyframes footerTitleDrift{
-    0%, 100% { transform: translateX(-2.2vw); }
-    50% { transform: translateX(2.2vw); }
-  }
-  /* arranca solo cuando el footer entra en viewport (ver JS) */
-  .site-footer.in-view #footerNameWrap{
-    animation: footerTitleDrift 22s ease-in-out infinite;
   }
   .letter{
     display: inline-block;
@@ -601,15 +585,87 @@
     .lang-switch{ min-height: 44px; min-width: 44px; margin-left: 0; margin-right: 4px; }
   }
   @media (prefers-reduced-motion: reduce){ .lang-switch{ transition: none; } }
+
+  /* ---- footer móvil: título fijo y centrado (igual que el Home) ----
+     en móvil el título sobredimensionado se recortaba y se desplazaba; aquí se ajusta
+     al recuadro, se centra y no se mueve. Solo queda el efecto de peso de las letras. */
+  @media (width <= 768px){
+    .footer-title{
+      font-size: clamp(2.5rem, 13vw, 4rem);
+      white-space: normal;
+      text-align: center;
+    }
+    #footerNameWrap{ display: block; width: 100%; }
+    .site-footer.in-view #footerNameWrap{ animation: none; transform: none; }
+  }
+
+  /* ---- accesibilidad: enlace para saltar al contenido + utilidades ---- */
+  .skip-link{
+    position: absolute; left: 12px; top: -120px; z-index: 10000;
+    padding: 12px 18px; border-radius: 6px;
+    background: #0e0e0e; color: #ffffff; box-shadow: 0 0 0 2px #ffffff;
+    font: 600 14px/1.2 'Inter', system-ui, sans-serif; letter-spacing: 0.02em; text-decoration: none;
+  }
+  .skip-link:focus, .skip-link:focus-visible{ top: 12px; outline: 3px solid #daffa2; outline-offset: 2px; }
+  .sr-only{
+    position: absolute !important; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0;
+    overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+  }
+  main:focus{ outline: none; }
+
+  /* ---- accesibilidad: el correo del pie nunca se sale del recuadro (320 px / espaciado de texto aumentado) ---- */
+  .footer-link{ max-width: 100%; }
+  .footer-link .link-text{ min-width: 0; overflow-wrap: anywhere; }
+  @media (width <= 360px){ .footer-link{ font-size: 1rem; } }
+
+  /* ---- accesibilidad: pausar GIF animados (WCAG 2.2.2) ---- */
+  .anim-toggle{
+    position: fixed; left: 16px; bottom: 16px; z-index: 15;
+    display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px 0 12px;
+    border: 0; border-radius: 999px; cursor: pointer;
+    background: rgba(240,242,247,0.96); color: var(--ink, #0c0c0c);
+    box-shadow: 0 2px 12px rgba(12,12,12,0.22);
+    font: 600 13px/1 'Inter', system-ui, sans-serif; letter-spacing: 0.02em;
+    transition: opacity 0.2s ease;
+  }
+  .anim-toggle:hover{ opacity: 0.85; }
+  .anim-toggle:focus-visible{ outline: 2px solid var(--ink, #0c0c0c); outline-offset: 3px; }
+  .anim-toggle svg{ display: block; }
+  .anim-toggle .ico-play{ display: none; }
+  .anim-toggle[aria-pressed="true"] .ico-pause{ display: none; }
+  .anim-toggle[aria-pressed="true"] .ico-play{ display: block; }
+  @media (prefers-reduced-motion: reduce){ .anim-toggle{ transition: none; } }
+
+  /* ---- menú completo visible en móvil (360–768px) ----
+     con solo 4 opciones + idioma, el menú de desktop cabe en una línea: se muestra en lugar de la
+     hamburguesa. Los tamaños escalan con el ancho (a 768px quedan como en desktop) y el área táctil
+     sube a 44px sin cambiar el aspecto. Por debajo de 360px (zoom alto) se mantiene la hamburguesa. */
+  @media (width <= 768px) and (width >= 360px){
+    .topbar{ min-height: 44px; }
+    #mainNav{ display: flex; gap: 0; }
+    .nav-toggle, .mobile-nav{ display: none; }
+    body.nav-open{ overflow: visible; }
+    .nav-hover{ display: none; }
+    .topbar nav a, .topbar .lang-switch{ white-space: nowrap; flex-shrink: 0; }
+    .topbar nav a.tab, .topbar nav a.pill, .topbar .lang-switch{ font-size: clamp(11px, 3vw, 13px); letter-spacing: 0.03em; }
+    .topbar nav a.tab{ padding: 7px clamp(3px, 1.4vw, 12px); }
+    .topbar nav a.pill{ position: relative; padding: 7px clamp(3px, 1.4vw, 12px); margin-left: 0; background: none; border: 0; border-radius: 6px;
+      color: rgba(12,12,12,0.6); font-weight: 500; text-transform: uppercase; }
+    .topbar nav a.pill:hover, .topbar nav a.pill:focus-visible{ background: none; border: 0; }
+    .topbar .lang-switch{ position: relative; min-height: 30px; min-width: 0; margin-left: clamp(3px, 1.4vw, 12px); margin-right: 0; padding: 6px clamp(7px, 1.6vw, 10px); }
+    .topbar nav a.tab::after, .topbar nav a.pill::after{ content: ""; position: absolute; inset: -7px 0; }
+    .topbar .lang-switch::after{ content: ""; position: absolute; inset: -7px -4px; }
+  }
 </style>
 </head>
 <body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
 
 <div class="page">
   <div class="stage-inner">
 
-    <div class="topbar">
-      <nav id="mainNav">
+    <header class="topbar">
+      <nav id="mainNav" aria-label="Principal">
         <span class="nav-hover" id="navHover"></span>
         <span class="nav-active-bar" id="navActiveBar"></span>
         <a href="index.html" class="tab" data-page="index">Inicio</a>
@@ -623,9 +679,9 @@
         <span class="nav-toggle-bar"></span>
         <span class="nav-toggle-bar"></span>
       </button>
-    </div>
+    </header>
 
-    <div class="mobile-nav" id="mobileNav">
+    <div class="mobile-nav" id="mobileNav" role="navigation" aria-label="Menú móvil">
       <a href="index.html" class="mobile-nav-link" data-page="index">Inicio</a>
       <a href="vanessa-sobre-mi.html" class="mobile-nav-link" data-page="sobre-mi">Sobre mí</a>
       <a href="index.html#proyectos" class="mobile-nav-link" data-page="proyectos">Proyectos</a>
@@ -637,7 +693,7 @@
         <span>Contenidos</span>
         <button id="tocToggle" aria-label="Colapsar índice">−</button>
       </div>
-      <nav class="toc-list">
+      <nav class="toc-list" aria-label="En esta página">
         <a href="#problema">Problema</a>
         <a href="#contexto">Contexto</a>
         <a href="#investigacion">Investigación</a>
@@ -646,7 +702,7 @@
       </nav>
     </aside>
 
-    <div class="project-content">
+    <main class="project-content" id="contenido" tabindex="-1">
 
       <p class="eyebrow">Observatorio Colombiano de la Industria del Cannabis</p>
       <h1>OCIC</h1>
@@ -770,11 +826,11 @@
         <p>También fue un proyecto en el que aprendí mucho del trabajo en equipo. Trabajé de cerca con un equipo especializado en agronegocios, aprendiendo a escuchar otras perspectivas, incorporar conocimiento que no era propio de mi disciplina y convertir ese conocimiento en un sistema visual que pudiera crecer con el proyecto.</p>
       </section>
 
-    </div>
+    </main>
   </div>
 </div>
 
-<div class="back-nav">
+<div class="back-nav" role="navigation" aria-label="Volver">
   <a href="index.html" class="back-link">
     <svg class="back-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
     <span class="link-text">Atrás</span>
@@ -788,13 +844,13 @@
     </div>
 
     <div class="footer-links" id="footerLinks">
-      <a href="mailto:vanessanieton@gmail.com" class="footer-link"><span class="link-text">vanessanieton@gmail.com</span> <span class="link-arrow">&#8599;</span></a>
-      <a href="https://www.linkedin.com/in/vnessanieto/" class="footer-link" target="_blank" rel="noopener"><span class="link-text">LinkedIn</span> <span class="link-arrow">&#8599;</span></a>
+      <a href="mailto:vanessanieton@gmail.com" class="footer-link"><span class="link-text">vanessanieton@gmail.com</span> <span class="link-arrow" aria-hidden="true">&#8599;</span></a>
+      <a href="https://www.linkedin.com/in/vnessanieto/" class="footer-link" target="_blank" rel="noopener"><span class="link-text">LinkedIn</span> <span class="link-arrow" aria-hidden="true">&#8599;</span></a>
     </div>
 
     <div class="footer-music" id="footerMusic">
       <p class="footer-italic">La m&#250;sica es una gran forma de conocernos:</p>
-      <a href="https://open.spotify.com/user/vnessanieto" class="footer-link" target="_blank" rel="noopener"><span class="link-text">Mi Spotify</span> <span class="link-arrow">&#8599;</span></a>
+      <a href="https://open.spotify.com/user/vnessanieto" class="footer-link" target="_blank" rel="noopener"><span class="link-text">Mi Spotify</span> <span class="link-arrow" aria-hidden="true">&#8599;</span></a>
     </div>
 
     <p class="footer-credit">Dise&#241;ado y construido con mucho amor y overthinking.</p>
@@ -889,11 +945,11 @@
     });
 
     document.addEventListener('keydown', function(e){
-      if (e.key === 'Escape') closeMenu();
+      if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true'){ closeMenu(); toggle.focus(); }
     });
 
     window.addEventListener('resize', function(){
-      if (window.innerWidth > 768) closeMenu();
+      if (window.innerWidth >= 360) closeMenu();
     });
   })();
 </script>
@@ -1270,6 +1326,58 @@
   })();
 
 
+</script>
+
+
+<script>
+// ---------- Pausar GIF animados: un solo control para toda la página (WCAG 2.2.2) ----------
+(function(){
+  var imgs = function(){ return Array.prototype.slice.call(document.querySelectorAll('img')).filter(function(i){
+    return /\.gif(\?|$)/i.test(i.getAttribute('data-gif-src') || i.getAttribute('src') || ''); }); };
+  if (!imgs().length) return;
+  var en = (document.documentElement.lang || '').indexOf('en') === 0;
+  var TXT = en ? {pause: 'Pause animations', play: 'Play animations'} : {pause: 'Pausar animaciones', play: 'Reproducir animaciones'};
+  var paused = false;
+
+  function freeze(img){
+    if (img.getAttribute('data-gif-src')) return;
+    var src = img.getAttribute('src');
+    function doFreeze(){
+      try{
+        var c = document.createElement('canvas');
+        c.width = img.naturalWidth; c.height = img.naturalHeight;
+        c.getContext('2d').drawImage(img, 0, 0);
+        var still = c.toDataURL('image/png');
+        img.setAttribute('data-gif-src', src);
+        img.setAttribute('src', still);
+      }catch(e){}
+    }
+    if (img.complete && img.naturalWidth) doFreeze(); else img.addEventListener('load', function once(){ img.removeEventListener('load', once); if (paused) doFreeze(); });
+  }
+  function unfreeze(img){
+    var src = img.getAttribute('data-gif-src');
+    if (!src) return;
+    img.setAttribute('src', src); img.removeAttribute('data-gif-src');
+  }
+
+  var btn = document.createElement('button');
+  btn.type = 'button'; btn.className = 'anim-toggle';
+  btn.innerHTML = '<svg class="ico-pause" width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><rect x="2.5" y="2" width="3" height="10" rx="0.6"/><rect x="8.5" y="2" width="3" height="10" rx="0.6"/></svg>' +
+                  '<svg class="ico-play" width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3.5 1.8v10.4L12 7z"/></svg><span></span>';
+  function sync(){
+    btn.setAttribute('aria-pressed', paused ? 'true' : 'false');
+    btn.lastChild.textContent = paused ? TXT.play : TXT.pause;
+  }
+  function apply(){ imgs().forEach(function(i){ paused ? freeze(i) : unfreeze(i); }); sync(); }
+  btn.addEventListener('click', function(){ paused = !paused; apply(); });
+  document.body.appendChild(btn);
+
+  // las fotos apiladas se clonan después de cargar: las nuevas copias también se congelan
+  new MutationObserver(function(){ if (paused) imgs().forEach(freeze); }).observe(document.body, {childList: true, subtree: true});
+
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){ paused = true; window.addEventListener('load', apply); }
+  sync();
+})();
 </script>
 
 </body>

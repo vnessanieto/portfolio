@@ -138,15 +138,7 @@
       color: var(--ink);
     }
     .mobile-nav-link:focus-visible{ outline: 2px solid var(--ink); outline-offset: -2px; }
-    .mobile-nav-link.is-active{ color: rgba(12,12,12,0.45); }
-    .mobile-nav-link.mobile-nav-pill{
-      margin-top: 20px;
-      justify-content: center;
-      background: var(--pill);
-      color: var(--pill-text);
-      border-radius: 4px;
-      border-bottom: none;
-    }
+    .mobile-nav-link.is-active{ color: rgba(12,12,12,0.65); }
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -358,6 +350,8 @@
     display: block; width: 100%; height: auto; aspect-ratio: 16 / 9;
     object-fit: cover; border-radius: 4px; background: #1b1b1b;
   }
+  .photo-pair{ display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 0 8px; }
+  .photo-pair img{ display: block; width: 100%; height: auto; border-radius: 4px; }
   .video-pair{ display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
   .video-toggle{
     position: absolute; right: 10px; bottom: 10px;
@@ -507,7 +501,7 @@
     --footer-bg: #016644;
     --footer-title: #daffa2;
     --footer-ink: #ffffff;
-    --footer-muted: rgba(255,255,255,0.68);
+    --footer-muted: rgba(255,255,255,0.78);
     background: var(--footer-bg);
     border-radius: 0;
     padding: clamp(2rem, 6vw, 3.5rem) clamp(1.5rem, 6vw, 4rem);
@@ -518,7 +512,7 @@
   .footer-title{
     margin: 0 0 clamp(2rem, 6vw, 3.5rem);
     font-weight: 600;
-    font-size: clamp(6rem, 17vw, 15rem);
+    font-size: clamp(6rem, 15vw, 14rem);
     line-height: 0.94;
     letter-spacing: -0.02em;
     text-align: left;
@@ -532,14 +526,6 @@
     display: inline-block;
     width: max-content;
     will-change: transform;
-  }
-  @keyframes footerTitleDrift{
-    0%, 100% { transform: translateX(-2.2vw); }
-    50% { transform: translateX(2.2vw); }
-  }
-  /* arranca solo cuando el footer entra en viewport (ver JS) */
-  .site-footer.in-view #footerNameWrap{
-    animation: footerTitleDrift 22s ease-in-out infinite;
   }
   .letter{
     display: inline-block;
@@ -628,17 +614,71 @@
   @media (prefers-reduced-motion: reduce){ .lang-switch{ transition: none; } }
 
   /* ---- EN: "Let’s talk!" ocupa el mismo ancho que "¡Hablemos!" ---- */
-  .footer-title{ font-size: clamp(7.2rem, 20.3vw, 18rem); }
+  .footer-title{ font-size: clamp(7.2rem, 18vw, 17rem); }
   @media (width <= 768px){ .footer-title{ font-size: clamp(3.25rem, 17.5vw, 5.1rem); } } /* en móvil se ve completo, con el "!" */
+
+  /* ---- footer móvil: título fijo y centrado (igual que el Home) ----
+     en móvil el título sobredimensionado se recortaba y se desplazaba; aquí se ajusta
+     al recuadro, se centra y no se mueve. Solo queda el efecto de peso de las letras. */
+  @media (width <= 768px){
+    .footer-title{
+      font-size: clamp(3rem, 15.5vw, 4.8rem);
+      white-space: normal;
+      text-align: center;
+    }
+    #footerNameWrap{ display: block; width: 100%; }
+    .site-footer.in-view #footerNameWrap{ animation: none; transform: none; }
+  }
+
+  /* ---- accesibilidad: enlace para saltar al contenido + utilidades ---- */
+  .skip-link{
+    position: absolute; left: 12px; top: -120px; z-index: 10000;
+    padding: 12px 18px; border-radius: 6px;
+    background: #0e0e0e; color: #ffffff; box-shadow: 0 0 0 2px #ffffff;
+    font: 600 14px/1.2 'Inter', system-ui, sans-serif; letter-spacing: 0.02em; text-decoration: none;
+  }
+  .skip-link:focus, .skip-link:focus-visible{ top: 12px; outline: 3px solid #daffa2; outline-offset: 2px; }
+  .sr-only{
+    position: absolute !important; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0;
+    overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+  }
+  main:focus{ outline: none; }
+
+  /* ---- accesibilidad: el correo del pie nunca se sale del recuadro (320 px / espaciado de texto aumentado) ---- */
+  .footer-link{ max-width: 100%; }
+  .footer-link .link-text{ min-width: 0; overflow-wrap: anywhere; }
+  @media (width <= 360px){ .footer-link{ font-size: 1rem; } }
+
+  /* ---- menú completo visible en móvil (360–768px) ----
+     con solo 4 opciones + idioma, el menú de desktop cabe en una línea: se muestra en lugar de la
+     hamburguesa. Los tamaños escalan con el ancho (a 768px quedan como en desktop) y el área táctil
+     sube a 44px sin cambiar el aspecto. Por debajo de 360px (zoom alto) se mantiene la hamburguesa. */
+  @media (width <= 768px) and (width >= 360px){
+    .topbar{ min-height: 44px; }
+    #mainNav{ display: flex; gap: 0; }
+    .nav-toggle, .mobile-nav{ display: none; }
+    body.nav-open{ overflow: visible; }
+    .nav-hover{ display: none; }
+    .topbar nav a, .topbar .lang-switch{ white-space: nowrap; flex-shrink: 0; }
+    .topbar nav a.tab, .topbar nav a.pill, .topbar .lang-switch{ font-size: clamp(11px, 3vw, 13px); letter-spacing: 0.03em; }
+    .topbar nav a.tab{ padding: 7px clamp(3px, 1.4vw, 12px); }
+    .topbar nav a.pill{ position: relative; padding: 7px clamp(3px, 1.4vw, 12px); margin-left: 0; background: none; border: 0; border-radius: 6px;
+      color: rgba(12,12,12,0.6); font-weight: 500; text-transform: uppercase; }
+    .topbar nav a.pill:hover, .topbar nav a.pill:focus-visible{ background: none; border: 0; }
+    .topbar .lang-switch{ position: relative; min-height: 30px; min-width: 0; margin-left: clamp(3px, 1.4vw, 12px); margin-right: 0; padding: 6px clamp(7px, 1.6vw, 10px); }
+    .topbar nav a.tab::after, .topbar nav a.pill::after{ content: ""; position: absolute; inset: -7px 0; }
+    .topbar .lang-switch::after{ content: ""; position: absolute; inset: -7px -4px; }
+  }
 </style>
 </head>
 <body>
+<a class="skip-link" href="#contenido">Skip to content</a>
 
 <div class="page">
   <div class="stage-inner">
 
-    <div class="topbar">
-      <nav id="mainNav">
+    <header class="topbar">
+      <nav id="mainNav" aria-label="Main">
         <span class="nav-hover" id="navHover"></span>
         <span class="nav-active-bar" id="navActiveBar"></span>
         <a href="./" class="tab" data-page="index">Home</a>
@@ -652,9 +692,9 @@
         <span class="nav-toggle-bar"></span>
         <span class="nav-toggle-bar"></span>
       </button>
-    </div>
+    </header>
 
-    <div class="mobile-nav" id="mobileNav">
+    <div class="mobile-nav" id="mobileNav" role="navigation" aria-label="Mobile menu">
       <a href="./" class="mobile-nav-link" data-page="index">Home</a>
       <a href="about.html" class="mobile-nav-link" data-page="sobre-mi">About me</a>
       <a href="./#projects" class="mobile-nav-link" data-page="proyectos">Projects</a>
@@ -666,18 +706,18 @@
         <span>Contents</span>
         <button id="tocToggle" aria-label="Collapse contents">−</button>
       </div>
-      <nav class="toc-list">
+      <nav class="toc-list" aria-label="On this page">
         <a href="#problem">Problem</a>
         <a href="#context">Context</a>
         <a href="#decisions">Decisions</a>
-        <a href="#learnings">Learnings</a>
+        <a href="#learnings">What I learned</a>
       </nav>
     </aside>
 
-    <div class="project-content">
+    <main class="project-content" id="contenido" tabindex="-1">
 
       <h1>Mujeres de Oro</h1>
-      <p class="subtitle">Design of campaigns and content for communities in Bajo Cauca, Antioquia</p>
+      <p class="subtitle">Campaigns and content for communities in Bajo Cauca, Antioquia</p>
 
       <div class="meta-grid">
         <div>
@@ -712,9 +752,9 @@
 
       <section id="problem">
         <h2>Problem</h2>
-        <h3 class="section-subtitle">Translating a purpose into images</h3>
-        <p>Mujeres de Oro set out to strengthen women’s political participation, economic autonomy and leadership in Bajo Cauca, Antioquia. The challenge was to communicate these goals in communities with diverse realities, where talking about gender equity required understanding the context and the people we were speaking to.</p>
-        <p>When I arrived, the visual identity was already defined. My challenge was to bring that purpose to campaigns and content, finding for each message a way of representing it that was relevant to those who would receive it, without reducing the work to producing attractive pieces.</p>
+        <h3 class="section-subtitle">Turning a purpose into visual communication</h3>
+        <p>Mujeres de Oro aimed to strengthen women’s political participation, economic autonomy, and leadership in Bajo Cauca, Antioquia. The challenge was to communicate these goals across communities with different realities, where talking about gender equity meant understanding the context and the people we were addressing.</p>
+        <p>When I joined the project, the visual identity was already in place. My role was to bring its purpose into campaigns and content, finding a relevant way to represent each message for the people receiving it, rather than focusing only on making attractive pieces.</p>
 
         <a class="ig-link" href="https://www.instagram.com/mujeres_deoro/" target="_blank" rel="noopener">
           <img src="../mujeresdeoro_instagram.jpg" width="1118" height="1325" alt="Instagram profile of Mujeres de Oro (@mujeres_deoro): highlighted stories and a grid of posts with the project’s campaign pieces, photographs and videos. Opens the profile in a new tab.">
@@ -724,9 +764,9 @@
 
       <section id="context">
         <h2>Context</h2>
-        <h3 class="section-subtitle">Designing from a reality I didn’t know</h3>
-        <p>I worked alongside communicators, anthropologists and sociologists who knew the communities of Bajo Cauca, a region marked by inequality and disputes over territory. Their experience helped me better understand the women we were addressing.</p>
-        <p>The project let me get to know a Colombia I probably wouldn’t have discovered any other way, and it changed how I understand who I’m designing for.</p>
+        <h3 class="section-subtitle">Designing from a context I was still learning about</h3>
+        <p>I worked alongside communications specialists, anthropologists, and sociologists who knew the communities of Bajo Cauca, a region marked by inequality and territorial disputes. Their experience helped me better understand the women we were communicating with.</p>
+        <p>The project introduced me to a part of Colombia I might not otherwise have come to know, and changed how I think about the people I design for.</p>
 
         <div class="feed-grid">
           <img src="../mujeresdeoro_yuri_alvear.jpg" width="1200" height="1200" alt="Mujeres de Oro piece for Afro-Colombian Heritage Month: Yuri Alvear holds a medal over colored bands with geometric patterns.">
@@ -738,8 +778,8 @@
 
       <section id="decisions">
         <h2>Decisions</h2>
-        <h3 class="section-subtitle">Each story called for a different form</h3>
-        <p>The visual decisions depended on what each story needed to tell. In <em>Mujer: vida, tierra y territorio</em> (Woman: life, land and territory), I developed illustrations inspired by the natural richness of Bajo Cauca and pieces with photographs and testimonies to recognize women’s role in caring for life and their communities.</p>
+        <h3 class="section-subtitle">Finding the right form for each story</h3>
+        <p>The visual decisions depended on what each story needed to communicate. For <em>Mujer: vida, tierra y territorio</em> (Woman: Life, Land, and Territory), I developed illustrations inspired by Bajo Cauca’s natural richness, alongside pieces featuring photographs and testimonies that recognized women’s role in caring for life and their communities.</p>
 
         <div class="feed-grid feed-grid-portrait">
           <img src="../mujeresdeoro_vida_tierra_01.jpg" width="1200" height="1489" alt="8M illustration “Vida, Tierra y Territorio”: profile silhouette of a woman filled with green and yellow leaves and plants, with a bee near her face, on a dark blue background.">
@@ -748,7 +788,7 @@
         </div>
         <p class="component-caption">Illustrations from the 8M campaign “Vida, Tierra y Territorio.”</p>
 
-        <p>For <em>Momento Cero</em> (Moment Zero), the November 25 campaign against violence toward women, I used orange as a visual link to the international observance, weaving it into Mujeres de Oro’s identity.</p>
+        <p>For <em>Momento Cero</em> (Moment Zero), the November 25 campaign against violence against women, I used orange to connect the campaign to the international observance and incorporated it into Mujeres de Oro’s visual identity.</p>
 
         <div class="squeeze" data-squeeze aria-label="Pieces and photos from the Momento Cero campaign">
           <div class="sq-items">
@@ -789,6 +829,10 @@
 
         <div class="result-item">
           <p class="result-item-title">Municipal Youth Councils</p>
+          <div class="photo-pair">
+            <img src="../mujeresdeoro_cmj_proceso_01.jpg" width="1000" height="1333" loading="lazy" decoding="async" alt="Printed sheets with several copies of a young woman with long curly hair, frames already cut out, on a wooden table.">
+            <img src="../mujeresdeoro_cmj_proceso_02.jpg" width="1000" height="1333" loading="lazy" decoding="async" alt="Several paper cut-outs of a young woman in a white t-shirt and jeans holding a yellow object, laid out on a wooden table.">
+          </div>
           <div class="video-block">
             <video src="../mujeresdeoro_cmj_zaragoza.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Looping video of the Municipal Youth Councils in Zaragoza: animations and photographs of young people, and the testimony of a woman speaking about women’s participation."></video>
             <button class="video-toggle" type="button" aria-label="Pause video: Zaragoza">
@@ -817,12 +861,12 @@
       </section>
 
       <section id="learnings">
-        <h2>Learnings</h2>
+        <h2>What I learned</h2>
         <h3 class="section-subtitle">Designing from context</h3>
-        <p>Getting to know Bajo Cauca taught me the difference between designing from an office and knowing people up close. Some campaigns that seemed to work in Medellín needed other languages and channels to reach the communities, such as WhatsApp, radio and printed materials, instead of relying on Instagram.</p>
+        <p>Getting to know Bajo Cauca showed me the difference between designing from an office and getting to know people directly. Some campaigns that seemed to work in Medellín needed different approaches and channels to reach these communities, including WhatsApp, radio, and printed materials rather than Instagram alone.</p>
 
 
-        <p>I also learned that representing someone means considering their context and safety. In the case of some women leaders at risk, we chose illustrations instead of photographs to tell their stories without exposing their faces. This experience changed how I understand design and confirmed my interest in communication with purpose.</p>
+        <p>I also learned that representing someone means taking their context and safety into account. For some women leaders who faced risks, we chose illustrations instead of photographs so we could tell their stories without exposing their faces. This experience changed how I think about design and reinforced my interest in purposeful communication.</p>
 
         <div class="squeeze squeeze-purple" data-squeeze aria-label="Pieces for commemorative dates">
           <div class="sq-items">
@@ -863,7 +907,7 @@
       </section>
 
       <div class="cta-block">
-        <p>You can see all of the Mujeres de Oro content here:</p>
+        <p>You can find more of the Mujeres de Oro work here:</p>
         <a class="cta-button" href="https://www.instagram.com/mujeres_deoro/" target="_blank" rel="noopener">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg>
           <span>@mujeres_deoro on Instagram</span>
@@ -872,11 +916,11 @@
       </div>
 
 
-    </div>
+    </main>
   </div>
 </div>
 
-<div class="back-nav">
+<div class="back-nav" role="navigation" aria-label="Back">
   <a href="./" class="back-link">
     <svg class="back-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
     <span class="link-text">Back</span>
@@ -890,16 +934,16 @@
     </div>
 
     <div class="footer-links" id="footerLinks">
-      <a href="mailto:vanessanieton@gmail.com" class="footer-link"><span class="link-text">vanessanieton@gmail.com</span> <span class="link-arrow">&#8599;</span></a>
-      <a href="https://www.linkedin.com/in/vnessanieto/" class="footer-link" target="_blank" rel="noopener"><span class="link-text">LinkedIn</span> <span class="link-arrow">&#8599;</span></a>
+      <a href="mailto:vanessanieton@gmail.com" class="footer-link"><span class="link-text">vanessanieton@gmail.com</span> <span class="link-arrow" aria-hidden="true">&#8599;</span></a>
+      <a href="https://www.linkedin.com/in/vnessanieto/" class="footer-link" target="_blank" rel="noopener"><span class="link-text">LinkedIn</span> <span class="link-arrow" aria-hidden="true">&#8599;</span></a>
     </div>
 
     <div class="footer-music" id="footerMusic">
-      <p class="footer-italic">Music is a great way to get to know each other:</p>
-      <a href="https://open.spotify.com/user/vnessanieto" class="footer-link" target="_blank" rel="noopener"><span class="link-text">My Spotify</span> <span class="link-arrow">&#8599;</span></a>
+      <p class="footer-italic">Music is a great way to get to know me:</p>
+      <a href="https://open.spotify.com/user/vnessanieto" class="footer-link" target="_blank" rel="noopener"><span class="link-text">My Spotify</span> <span class="link-arrow" aria-hidden="true">&#8599;</span></a>
     </div>
 
-    <p class="footer-credit">Designed and built with lots of love and overthinking.</p>
+    <p class="footer-credit">Designed and built with care and a lot of overthinking.</p>
   </div>
 </footer>
 
@@ -991,11 +1035,11 @@
     });
 
     document.addEventListener('keydown', function(e){
-      if (e.key === 'Escape') closeMenu();
+      if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true'){ closeMenu(); toggle.focus(); }
     });
 
     window.addEventListener('resize', function(){
-      if (window.innerWidth > 768) closeMenu();
+      if (window.innerWidth >= 360) closeMenu();
     });
   })();
 </script>

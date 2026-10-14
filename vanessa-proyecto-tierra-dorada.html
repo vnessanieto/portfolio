@@ -133,15 +133,7 @@
       color: var(--ink);
     }
     .mobile-nav-link:focus-visible{ outline: 2px solid var(--ink); outline-offset: -2px; }
-    .mobile-nav-link.is-active{ color: rgba(12,12,12,0.45); }
-    .mobile-nav-link.mobile-nav-pill{
-      margin-top: 20px;
-      justify-content: center;
-      background: var(--pill);
-      color: var(--pill-text);
-      border-radius: 4px;
-      border-bottom: none;
-    }
+    .mobile-nav-link.is-active{ color: rgba(12,12,12,0.65); }
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -443,7 +435,7 @@
     --footer-bg: #016644;
     --footer-title: #daffa2;
     --footer-ink: #ffffff;
-    --footer-muted: rgba(255,255,255,0.68);
+    --footer-muted: rgba(255,255,255,0.78);
     background: var(--footer-bg);
     border-radius: 0;
     padding: clamp(2rem, 6vw, 3.5rem) clamp(1.5rem, 6vw, 4rem);
@@ -454,7 +446,7 @@
   .footer-title{
     margin: 0 0 clamp(2rem, 6vw, 3.5rem);
     font-weight: 600;
-    font-size: clamp(6rem, 17vw, 15rem);
+    font-size: clamp(6rem, 15vw, 14rem);
     line-height: 0.94;
     letter-spacing: -0.02em;
     text-align: left;
@@ -468,14 +460,6 @@
     display: inline-block;
     width: max-content;
     will-change: transform;
-  }
-  @keyframes footerTitleDrift{
-    0%, 100% { transform: translateX(-2.2vw); }
-    50% { transform: translateX(2.2vw); }
-  }
-  /* arranca solo cuando el footer entra en viewport (ver JS) */
-  .site-footer.in-view #footerNameWrap{
-    animation: footerTitleDrift 22s ease-in-out infinite;
   }
   .letter{
     display: inline-block;
@@ -562,15 +546,95 @@
     .lang-switch{ min-height: 44px; min-width: 44px; margin-left: 0; margin-right: 4px; }
   }
   @media (prefers-reduced-motion: reduce){ .lang-switch{ transition: none; } }
+
+  /* ---- móvil: flechas para recorrer las historias (mismo estilo que .hgallery-nav) ----
+     solo aparecen cuando las historias no caben en el ancho disponible; el JS las muestra/oculta */
+  .stories-wrap{ position: relative; }
+  .stories-wrap .stories-nav{ display: none; }
+  @media (width <= 768px){
+    .stories-wrap.has-overflow .stories-nav{ display: flex; }
+    .stories-wrap.has-overflow .stories-nav[hidden]{ display: none; }
+  }
+
+  /* ---- footer móvil: título fijo y centrado (igual que el Home) ----
+     en móvil el título sobredimensionado se recortaba y se desplazaba; aquí se ajusta
+     al recuadro, se centra y no se mueve. Solo queda el efecto de peso de las letras. */
+  @media (width <= 768px){
+    .footer-title{
+      font-size: clamp(2.5rem, 13vw, 4rem);
+      white-space: normal;
+      text-align: center;
+    }
+    #footerNameWrap{ display: block; width: 100%; }
+    .site-footer.in-view #footerNameWrap{ animation: none; transform: none; }
+  }
+
+  /* ---- accesibilidad: enlace para saltar al contenido + utilidades ---- */
+  .skip-link{
+    position: absolute; left: 12px; top: -120px; z-index: 10000;
+    padding: 12px 18px; border-radius: 6px;
+    background: #0e0e0e; color: #ffffff; box-shadow: 0 0 0 2px #ffffff;
+    font: 600 14px/1.2 'Inter', system-ui, sans-serif; letter-spacing: 0.02em; text-decoration: none;
+  }
+  .skip-link:focus, .skip-link:focus-visible{ top: 12px; outline: 3px solid #daffa2; outline-offset: 2px; }
+  .sr-only{
+    position: absolute !important; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0;
+    overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+  }
+  main:focus{ outline: none; }
+
+  /* ---- accesibilidad: pausa para los videos en loop de las historias ---- */
+  .story-media .video-toggle{
+    position: absolute; right: 10px; bottom: 10px; z-index: 3;
+    width: 32px; height: 32px; display: grid; place-items: center; padding: 0;
+    border: 0; border-radius: 50%; cursor: pointer;
+    background: rgba(240,242,247,0.92); color: var(--ink); box-shadow: 0 2px 10px rgba(12,12,12,0.25);
+    transition: opacity 0.2s ease;
+  }
+  .story-media .video-toggle:hover{ opacity: 0.85; }
+  .story-media .video-toggle:focus-visible{ outline: 2px solid #ffffff; outline-offset: 2px; box-shadow: 0 0 0 4px var(--ink); }
+  .story-media .video-toggle svg{ display: block; }
+  .story-media .video-toggle .ico-play{ display: none; }
+  .story-media.is-paused .video-toggle .ico-pause{ display: none; }
+  .story-media.is-paused .video-toggle .ico-play{ display: block; }
+  .story-media > div:last-child{ padding-right: 40px; }
+
+  /* ---- accesibilidad: el correo del pie nunca se sale del recuadro (320 px / espaciado de texto aumentado) ---- */
+  .footer-link{ max-width: 100%; }
+  .footer-link .link-text{ min-width: 0; overflow-wrap: anywhere; }
+  @media (width <= 360px){ .footer-link{ font-size: 1rem; } }
+  .result-video:focus-within{ outline: 2px solid var(--ink); outline-offset: 4px; }
+
+  /* ---- menú completo visible en móvil (360–768px) ----
+     con solo 4 opciones + idioma, el menú de desktop cabe en una línea: se muestra en lugar de la
+     hamburguesa. Los tamaños escalan con el ancho (a 768px quedan como en desktop) y el área táctil
+     sube a 44px sin cambiar el aspecto. Por debajo de 360px (zoom alto) se mantiene la hamburguesa. */
+  @media (width <= 768px) and (width >= 360px){
+    .topbar{ min-height: 44px; }
+    #mainNav{ display: flex; gap: 0; }
+    .nav-toggle, .mobile-nav{ display: none; }
+    body.nav-open{ overflow: visible; }
+    .nav-hover{ display: none; }
+    .topbar nav a, .topbar .lang-switch{ white-space: nowrap; flex-shrink: 0; }
+    .topbar nav a.tab, .topbar nav a.pill, .topbar .lang-switch{ font-size: clamp(11px, 3vw, 13px); letter-spacing: 0.03em; }
+    .topbar nav a.tab{ padding: 7px clamp(3px, 1.4vw, 12px); }
+    .topbar nav a.pill{ position: relative; padding: 7px clamp(3px, 1.4vw, 12px); margin-left: 0; background: none; border: 0; border-radius: 6px;
+      color: rgba(12,12,12,0.6); font-weight: 500; text-transform: uppercase; }
+    .topbar nav a.pill:hover, .topbar nav a.pill:focus-visible{ background: none; border: 0; }
+    .topbar .lang-switch{ position: relative; min-height: 30px; min-width: 0; margin-left: clamp(3px, 1.4vw, 12px); margin-right: 0; padding: 6px clamp(7px, 1.6vw, 10px); }
+    .topbar nav a.tab::after, .topbar nav a.pill::after{ content: ""; position: absolute; inset: -7px 0; }
+    .topbar .lang-switch::after{ content: ""; position: absolute; inset: -7px -4px; }
+  }
 </style>
 </head>
 <body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
 
 <div class="page">
   <div class="stage-inner">
 
-    <div class="topbar">
-      <nav id="mainNav">
+    <header class="topbar">
+      <nav id="mainNav" aria-label="Principal">
         <span class="nav-hover" id="navHover"></span>
         <span class="nav-active-bar" id="navActiveBar"></span>
         <a href="index.html" class="tab" data-page="index">Inicio</a>
@@ -584,9 +648,9 @@
         <span class="nav-toggle-bar"></span>
         <span class="nav-toggle-bar"></span>
       </button>
-    </div>
+    </header>
 
-    <div class="mobile-nav" id="mobileNav">
+    <div class="mobile-nav" id="mobileNav" role="navigation" aria-label="Menú móvil">
       <a href="index.html" class="mobile-nav-link" data-page="index">Inicio</a>
       <a href="vanessa-sobre-mi.html" class="mobile-nav-link" data-page="sobre-mi">Sobre mí</a>
       <a href="index.html#proyectos" class="mobile-nav-link" data-page="proyectos">Proyectos</a>
@@ -598,7 +662,7 @@
         <span>Contenidos</span>
         <button id="tocToggle" aria-label="Colapsar índice">−</button>
       </div>
-      <nav class="toc-list">
+      <nav class="toc-list" aria-label="En esta página">
         <a href="#contexto">Contexto</a>
         <a href="#investigacion">Investigación</a>
         <a href="#decisiones">Decisiones</a>
@@ -607,7 +671,7 @@
       </nav>
     </aside>
 
-    <div class="project-content">
+    <main class="project-content" id="contenido" tabindex="-1">
 
       <h1 class="project-title-big">Tierra Dorada</h1>
       <p class="subtitle">Comunicación ambiental construida junto a líderes juveniles en territorios mineros.</p>
@@ -632,10 +696,12 @@
       </section>
 
       <section id="stories">
-        <div class="stories-row">
+        <div class="stories-wrap">
+        <div class="stories-row" id="storiesRow">
           <div class="story-card">
             <div class="story-media">
-              <video src="tierradorada_02.mp4" autoplay muted loop playsinline></video>
+              <video src="tierradorada_02.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Atardecer sobre el río, video en loop sin audio."></video>
+              <button class="video-toggle" type="button" aria-label="Pausar video: Río adentro"><svg class="ico-pause" width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><rect x="2.5" y="2" width="3" height="10" rx="0.6"/><rect x="8.5" y="2" width="3" height="10" rx="0.6"/></svg><svg class="ico-play" width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3.5 1.8v10.4L12 7z"/></svg></button>
               <div class="story-top">
                 <span class="story-icon">VN</span>
                 <span class="story-bar"><span class="story-bar-fill"></span></span>
@@ -648,7 +714,8 @@
           </div>
           <div class="story-card">
             <div class="story-media">
-              <video src="tierradorada_03.mp4" autoplay muted loop playsinline></video>
+              <video src="tierradorada_03.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Dos participantes en movimiento dentro de un salón, video en loop sin audio."></video>
+              <button class="video-toggle" type="button" aria-label="Pausar video: Se goza igual"><svg class="ico-pause" width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><rect x="2.5" y="2" width="3" height="10" rx="0.6"/><rect x="8.5" y="2" width="3" height="10" rx="0.6"/></svg><svg class="ico-play" width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3.5 1.8v10.4L12 7z"/></svg></button>
               <div class="story-top">
                 <span class="story-icon">VN</span>
                 <span class="story-bar"><span class="story-bar-fill"></span></span>
@@ -661,7 +728,8 @@
           </div>
           <div class="story-card">
             <div class="story-media">
-              <video src="tierradorada_04.mp4" autoplay muted loop playsinline></video>
+              <video src="tierradorada_04.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Pintura blanca extendiéndose sobre una superficie oscura, video en loop sin audio."></video>
+              <button class="video-toggle" type="button" aria-label="Pausar video: Barequeo de oro"><svg class="ico-pause" width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><rect x="2.5" y="2" width="3" height="10" rx="0.6"/><rect x="8.5" y="2" width="3" height="10" rx="0.6"/></svg><svg class="ico-play" width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3.5 1.8v10.4L12 7z"/></svg></button>
               <div class="story-top">
                 <span class="story-icon">VN</span>
                 <span class="story-bar"><span class="story-bar-fill"></span></span>
@@ -673,6 +741,9 @@
             </div>
           </div>
         </div>
+        <button class="hgallery-nav stories-nav prev" type="button" aria-label="Anterior" aria-controls="storiesRow" hidden>&#8249;</button>
+        <button class="hgallery-nav stories-nav next" type="button" aria-label="Siguiente" aria-controls="storiesRow">&#8250;</button>
+        </div>
       </section>
 
       <section id="contexto">
@@ -683,12 +754,12 @@
 
 
       <div class="collage" id="tdCollage" role="img" aria-label="Collage fotográfico del trabajo de campo en Tierra Dorada">
-        <div class="collage-photo cp-1"><img src="tierradorada_05.jpg" alt=""></div>
-        <div class="collage-photo cp-2"><img src="tierradorada_06.jpg" alt=""></div>
-        <div class="collage-photo cp-3"><img src="tierradorada_07.jpg" alt=""></div>
-        <div class="collage-photo cp-4"><img src="tierradorada_08.jpg" alt=""></div>
-        <div class="collage-photo cp-5"><img src="tierradorada_09.jpg" alt=""></div>
-        <div class="collage-photo cp-6"><img src="tierradorada_10.jpg" alt=""></div>
+        <div class="collage-photo cp-1"><img src="tierradorada_05.jpg" alt="Dos mujeres sonríen a la cámara en un selfie; una lleva una credencial colgada al cuello."></div>
+        <div class="collage-photo cp-2"><img src="tierradorada_06.jpg" alt="Mural en proceso sobre tela blanca: hojas de monstera pintadas en verde y rosado, con tarros de pintura al lado."></div>
+        <div class="collage-photo cp-3"><img src="tierradorada_07.jpg" alt="Vista desde lo alto de colinas verdes y un valle bajo un cielo con nubes."></div>
+        <div class="collage-photo cp-4"><img src="tierradorada_08.jpg" alt="Un perro visto de espaldas mira el horizonte desde una terraza al atardecer."></div>
+        <div class="collage-photo cp-5"><img src="tierradorada_09.jpg" alt="Un mototaxi blanco con techo negro en un camino rodeado de árboles."></div>
+        <div class="collage-photo cp-6"><img src="tierradorada_10.jpg" alt="Vista desde el interior de un vehículo hacia un puente en la distancia, al atardecer."></div>
       </div>
 
       <section id="investigacion">
@@ -701,20 +772,20 @@
       <div class="hgallery" id="tdHgallery">
         <button class="hgallery-nav prev" aria-label="Anterior" type="button">&#8249;</button>
         <div class="hgallery-track" id="hgTrack">
-          <div class="hgallery-tile"><img src="tierradorada_11.jpg" alt=""></div>
-          <div class="hgallery-tile"><img src="tierradorada_12.jpg" alt=""></div>
-          <div class="hgallery-tile"><img src="tierradorada_13.jpg" alt=""></div>
-          <div class="hgallery-tile"><img src="tierradorada_14.jpg" alt=""></div>
-          <div class="hgallery-tile"><img src="tierradorada_15.jpg" alt=""></div>
-          <div class="hgallery-tile"><img src="tierradorada_16.jpg" alt=""></div>
-          <div class="hgallery-tile"><img src="tierradorada_17.jpg" alt=""></div>
-          <div class="hgallery-tile"><img src="tierradorada_11.jpg" alt=""></div>
-          <div class="hgallery-tile"><img src="tierradorada_12.jpg" alt=""></div>
-          <div class="hgallery-tile"><img src="tierradorada_13.jpg" alt=""></div>
-          <div class="hgallery-tile"><img src="tierradorada_14.jpg" alt=""></div>
-          <div class="hgallery-tile"><img src="tierradorada_15.jpg" alt=""></div>
-          <div class="hgallery-tile"><img src="tierradorada_16.jpg" alt=""></div>
-          <div class="hgallery-tile"><img src="tierradorada_17.jpg" alt=""></div>
+          <div class="hgallery-tile"><img src="tierradorada_11.jpg" alt="Un grupo de jóvenes sentados en el suelo alrededor de un mural en proceso sonríen a la cámara."></div>
+          <div class="hgallery-tile"><img src="tierradorada_12.jpg" alt="Primer plano de una joven pintando un mural extendido sobre el piso."></div>
+          <div class="hgallery-tile"><img src="tierradorada_13.jpg" alt="Una joven de cabello rizado, con la mano cerca de la boca, escucha con atención."></div>
+          <div class="hgallery-tile"><img src="tierradorada_14.jpg" alt="Dos jóvenes inclinadas sobre una mesa dibujan juntas sobre papel."></div>
+          <div class="hgallery-tile"><img src="tierradorada_15.jpg" alt="Un grupo de personas sentadas alrededor de una mesa con papeles y marcadores trabaja en una actividad en equipo."></div>
+          <div class="hgallery-tile"><img src="tierradorada_16.jpg" alt="Una persona arrodillada pinta un mural enorme sobre el piso de un salón amplio."></div>
+          <div class="hgallery-tile"><img src="tierradorada_17.jpg" alt="Foto grupal de los participantes al aire libre, entre árboles."></div>
+          <div class="hgallery-tile" aria-hidden="true"><img src="tierradorada_11.jpg" alt=""></div>
+          <div class="hgallery-tile" aria-hidden="true"><img src="tierradorada_12.jpg" alt=""></div>
+          <div class="hgallery-tile" aria-hidden="true"><img src="tierradorada_13.jpg" alt=""></div>
+          <div class="hgallery-tile" aria-hidden="true"><img src="tierradorada_14.jpg" alt=""></div>
+          <div class="hgallery-tile" aria-hidden="true"><img src="tierradorada_15.jpg" alt=""></div>
+          <div class="hgallery-tile" aria-hidden="true"><img src="tierradorada_16.jpg" alt=""></div>
+          <div class="hgallery-tile" aria-hidden="true"><img src="tierradorada_17.jpg" alt=""></div>
         </div>
         <button class="hgallery-nav next" aria-label="Siguiente" type="button">&#8250;</button>
       </div>
@@ -744,7 +815,7 @@
         <h3 class="section-subtitle">Campañas ambientales cocreadas y lideradas por la juventud local</h3>
         <p>Como fruto de los talleres se cocrearon murales, canciones, poemas y piezas audiovisuales orientadas al cuidado del agua, el suelo y el aire en enclaves mineros. Los jóvenes líderes no actuaron como simples asistentes, sino que asumieron un rol activo como voceros y productores de contenido en sus municipios. La estrategia aseguró que las comunidades construyeran sus propios mensajes de mitigación ambiental utilizando sus expresiones culturales habituales y garantizando legitimidad local.</p>
         <div class="result-video">
-          <iframe src="https://drive.google.com/file/d/1j53i4b-MFfgfHE-E5slAFXmYOTiozUZo/preview" allow="autoplay" allowfullscreen loading="lazy"></iframe>
+          <iframe src="https://drive.google.com/file/d/1j53i4b-MFfgfHE-E5slAFXmYOTiozUZo/preview" title="Video de resultados del proyecto Tierra Dorada" allow="autoplay" allowfullscreen loading="lazy"></iframe>
         </div>
       </section>
 
@@ -754,11 +825,11 @@
         <p>De mi paso por Arteaga Latam, lo que más valoro es haber trabajado directamente con las comunidades. Para mí como diseñadora, el proceso creativo cobra verdadero sentido cuando trasciende la pantalla y se pone al servicio de organizaciones con impacto social y ambiental. Trabajar con estos jóvenes fue profundamente confrontante — escuchar sus historias de liderazgo en contextos donde ejercerlo puede costar la vida me conmovió y me enseñó sobre determinación. A pesar de la hostilidad de su entorno, siempre hubo alegría, inspiración y un compromiso absoluto con sus mensajes. Volví a casa con la certeza de que mi oficio no pertenece únicamente al espacio digital, sino a los lugares donde el diseño puede respaldar la voz de quienes transforman su territorio.</p>
       </section>
 
-    </div>
+    </main>
   </div>
 </div>
 
-<div class="back-nav">
+<div class="back-nav" role="navigation" aria-label="Volver">
   <a href="index.html" class="back-link">
     <svg class="back-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
     <span class="link-text">Atrás</span>
@@ -772,13 +843,13 @@
     </div>
 
     <div class="footer-links" id="footerLinks">
-      <a href="mailto:vanessanieton@gmail.com" class="footer-link"><span class="link-text">vanessanieton@gmail.com</span> <span class="link-arrow">&#8599;</span></a>
-      <a href="https://www.linkedin.com/in/vnessanieto/" class="footer-link" target="_blank" rel="noopener"><span class="link-text">LinkedIn</span> <span class="link-arrow">&#8599;</span></a>
+      <a href="mailto:vanessanieton@gmail.com" class="footer-link"><span class="link-text">vanessanieton@gmail.com</span> <span class="link-arrow" aria-hidden="true">&#8599;</span></a>
+      <a href="https://www.linkedin.com/in/vnessanieto/" class="footer-link" target="_blank" rel="noopener"><span class="link-text">LinkedIn</span> <span class="link-arrow" aria-hidden="true">&#8599;</span></a>
     </div>
 
     <div class="footer-music" id="footerMusic">
       <p class="footer-italic">La m&#250;sica es una gran forma de conocernos:</p>
-      <a href="https://open.spotify.com/user/vnessanieto" class="footer-link" target="_blank" rel="noopener"><span class="link-text">Mi Spotify</span> <span class="link-arrow">&#8599;</span></a>
+      <a href="https://open.spotify.com/user/vnessanieto" class="footer-link" target="_blank" rel="noopener"><span class="link-text">Mi Spotify</span> <span class="link-arrow" aria-hidden="true">&#8599;</span></a>
     </div>
 
     <p class="footer-credit">Dise&#241;ado y construido con mucho amor y overthinking.</p>
@@ -874,11 +945,11 @@
     });
 
     document.addEventListener('keydown', function(e){
-      if (e.key === 'Escape') closeMenu();
+      if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true'){ closeMenu(); toggle.focus(); }
     });
 
     window.addEventListener('resize', function(){
-      if (window.innerWidth > 768) closeMenu();
+      if (window.innerWidth >= 360) closeMenu();
     });
   })();
 
@@ -1051,6 +1122,82 @@
       }
     }
   })();
+</script>
+
+
+<script>
+// ---------- Historias en video: loop con botón de pausa (WCAG 2.2.2) ----------
+(function(){
+  var cards = document.querySelectorAll('.story-media');
+  if (!cards.length) return;
+  var en = (document.documentElement.lang || '').indexOf('en') === 0;
+  var L = en ? ['Pause video: ', 'Play video: '] : ['Pausar video: ', 'Reproducir video: '];
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var hasIO = 'IntersectionObserver' in window;
+  cards.forEach(function(card){
+    var video = card.querySelector('video'), btn = card.querySelector('.video-toggle');
+    if (!video || !btn) return;
+    var base = btn.getAttribute('aria-label').replace(/^(Pausar|Reproducir|Pause|Play) video: /, '');
+    var userPaused = false;
+    function sync(){
+      card.classList.toggle('is-paused', video.paused);
+      btn.setAttribute('aria-label', (video.paused ? L[1] : L[0]) + base);
+    }
+    function play(){ var p = video.play(); if (p && p.catch) p.catch(function(){}); }
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      if (video.paused){ userPaused = false; play(); } else { userPaused = true; video.pause(); }
+      sync();
+    });
+    video.addEventListener('play', sync);
+    video.addEventListener('pause', sync);
+    if (reduced){ userPaused = true; video.removeAttribute('autoplay'); video.pause(); sync(); return; }
+    if (hasIO){
+      new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if (e.isIntersecting){ if (!userPaused) play(); } else { video.pause(); }
+        });
+      }, { threshold: 0.2 }).observe(card);
+    }
+    sync();
+  });
+})();
+</script>
+
+
+<script>
+// ---------- Historias (móvil): flechas para ver todas las tarjetas ----------
+(function(){
+  var wrap = document.querySelector('.stories-wrap');
+  if (!wrap) return;
+  var row = wrap.querySelector('.stories-row');
+  var prev = wrap.querySelector('.stories-nav.prev'), next = wrap.querySelector('.stories-nav.next');
+  if (!row || !prev || !next) return;
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function step(){
+    var card = row.querySelector('.story-card');
+    var gap = parseFloat(getComputedStyle(row).columnGap) || 0;
+    return card ? card.getBoundingClientRect().width + gap : row.clientWidth * 0.8;
+  }
+  function update(){
+    var max = row.scrollWidth - row.clientWidth;
+    var overflow = max > 2;
+    wrap.classList.toggle('has-overflow', overflow);
+    var atStart = row.scrollLeft <= 2, atEnd = row.scrollLeft >= max - 2;
+    var focused = document.activeElement;
+    prev.hidden = atStart; next.hidden = atEnd;
+    // si el botón con foco desaparece al llegar a un extremo, el foco pasa al otro
+    if (focused === prev && atStart && !next.hidden) next.focus();
+    else if (focused === next && atEnd && !prev.hidden) prev.focus();
+  }
+  function go(dir){ row.scrollBy({ left: dir * step(), behavior: reduced ? 'auto' : 'smooth' }); }
+  prev.addEventListener('click', function(){ go(-1); });
+  next.addEventListener('click', function(){ go(1); });
+  row.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  window.addEventListener('load', update);
+  update();
+})();
 </script>
 
 </body>

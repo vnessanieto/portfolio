@@ -138,15 +138,7 @@
       color: var(--ink);
     }
     .mobile-nav-link:focus-visible{ outline: 2px solid var(--ink); outline-offset: -2px; }
-    .mobile-nav-link.is-active{ color: rgba(12,12,12,0.45); }
-    .mobile-nav-link.mobile-nav-pill{
-      margin-top: 20px;
-      justify-content: center;
-      background: var(--pill);
-      color: var(--pill-text);
-      border-radius: 4px;
-      border-bottom: none;
-    }
+    .mobile-nav-link.is-active{ color: rgba(12,12,12,0.65); }
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -358,6 +350,8 @@
     display: block; width: 100%; height: auto; aspect-ratio: 16 / 9;
     object-fit: cover; border-radius: 4px; background: #1b1b1b;
   }
+  .photo-pair{ display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 0 8px; }
+  .photo-pair img{ display: block; width: 100%; height: auto; border-radius: 4px; }
   .video-pair{ display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
   .video-toggle{
     position: absolute; right: 10px; bottom: 10px;
@@ -507,7 +501,7 @@
     --footer-bg: #016644;
     --footer-title: #daffa2;
     --footer-ink: #ffffff;
-    --footer-muted: rgba(255,255,255,0.68);
+    --footer-muted: rgba(255,255,255,0.78);
     background: var(--footer-bg);
     border-radius: 0;
     padding: clamp(2rem, 6vw, 3.5rem) clamp(1.5rem, 6vw, 4rem);
@@ -518,7 +512,7 @@
   .footer-title{
     margin: 0 0 clamp(2rem, 6vw, 3.5rem);
     font-weight: 600;
-    font-size: clamp(6rem, 17vw, 15rem);
+    font-size: clamp(6rem, 15vw, 14rem);
     line-height: 0.94;
     letter-spacing: -0.02em;
     text-align: left;
@@ -532,14 +526,6 @@
     display: inline-block;
     width: max-content;
     will-change: transform;
-  }
-  @keyframes footerTitleDrift{
-    0%, 100% { transform: translateX(-2.2vw); }
-    50% { transform: translateX(2.2vw); }
-  }
-  /* arranca solo cuando el footer entra en viewport (ver JS) */
-  .site-footer.in-view #footerNameWrap{
-    animation: footerTitleDrift 22s ease-in-out infinite;
   }
   .letter{
     display: inline-block;
@@ -626,15 +612,69 @@
     .lang-switch{ min-height: 44px; min-width: 44px; margin-left: 0; margin-right: 4px; }
   }
   @media (prefers-reduced-motion: reduce){ .lang-switch{ transition: none; } }
+
+  /* ---- footer móvil: título fijo y centrado (igual que el Home) ----
+     en móvil el título sobredimensionado se recortaba y se desplazaba; aquí se ajusta
+     al recuadro, se centra y no se mueve. Solo queda el efecto de peso de las letras. */
+  @media (width <= 768px){
+    .footer-title{
+      font-size: clamp(2.5rem, 13vw, 4rem);
+      white-space: normal;
+      text-align: center;
+    }
+    #footerNameWrap{ display: block; width: 100%; }
+    .site-footer.in-view #footerNameWrap{ animation: none; transform: none; }
+  }
+
+  /* ---- accesibilidad: enlace para saltar al contenido + utilidades ---- */
+  .skip-link{
+    position: absolute; left: 12px; top: -120px; z-index: 10000;
+    padding: 12px 18px; border-radius: 6px;
+    background: #0e0e0e; color: #ffffff; box-shadow: 0 0 0 2px #ffffff;
+    font: 600 14px/1.2 'Inter', system-ui, sans-serif; letter-spacing: 0.02em; text-decoration: none;
+  }
+  .skip-link:focus, .skip-link:focus-visible{ top: 12px; outline: 3px solid #daffa2; outline-offset: 2px; }
+  .sr-only{
+    position: absolute !important; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0;
+    overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+  }
+  main:focus{ outline: none; }
+
+  /* ---- accesibilidad: el correo del pie nunca se sale del recuadro (320 px / espaciado de texto aumentado) ---- */
+  .footer-link{ max-width: 100%; }
+  .footer-link .link-text{ min-width: 0; overflow-wrap: anywhere; }
+  @media (width <= 360px){ .footer-link{ font-size: 1rem; } }
+
+  /* ---- menú completo visible en móvil (360–768px) ----
+     con solo 4 opciones + idioma, el menú de desktop cabe en una línea: se muestra en lugar de la
+     hamburguesa. Los tamaños escalan con el ancho (a 768px quedan como en desktop) y el área táctil
+     sube a 44px sin cambiar el aspecto. Por debajo de 360px (zoom alto) se mantiene la hamburguesa. */
+  @media (width <= 768px) and (width >= 360px){
+    .topbar{ min-height: 44px; }
+    #mainNav{ display: flex; gap: 0; }
+    .nav-toggle, .mobile-nav{ display: none; }
+    body.nav-open{ overflow: visible; }
+    .nav-hover{ display: none; }
+    .topbar nav a, .topbar .lang-switch{ white-space: nowrap; flex-shrink: 0; }
+    .topbar nav a.tab, .topbar nav a.pill, .topbar .lang-switch{ font-size: clamp(11px, 3vw, 13px); letter-spacing: 0.03em; }
+    .topbar nav a.tab{ padding: 7px clamp(3px, 1.4vw, 12px); }
+    .topbar nav a.pill{ position: relative; padding: 7px clamp(3px, 1.4vw, 12px); margin-left: 0; background: none; border: 0; border-radius: 6px;
+      color: rgba(12,12,12,0.6); font-weight: 500; text-transform: uppercase; }
+    .topbar nav a.pill:hover, .topbar nav a.pill:focus-visible{ background: none; border: 0; }
+    .topbar .lang-switch{ position: relative; min-height: 30px; min-width: 0; margin-left: clamp(3px, 1.4vw, 12px); margin-right: 0; padding: 6px clamp(7px, 1.6vw, 10px); }
+    .topbar nav a.tab::after, .topbar nav a.pill::after{ content: ""; position: absolute; inset: -7px 0; }
+    .topbar .lang-switch::after{ content: ""; position: absolute; inset: -7px -4px; }
+  }
 </style>
 </head>
 <body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
 
 <div class="page">
   <div class="stage-inner">
 
-    <div class="topbar">
-      <nav id="mainNav">
+    <header class="topbar">
+      <nav id="mainNav" aria-label="Principal">
         <span class="nav-hover" id="navHover"></span>
         <span class="nav-active-bar" id="navActiveBar"></span>
         <a href="index.html" class="tab" data-page="index">Inicio</a>
@@ -648,9 +688,9 @@
         <span class="nav-toggle-bar"></span>
         <span class="nav-toggle-bar"></span>
       </button>
-    </div>
+    </header>
 
-    <div class="mobile-nav" id="mobileNav">
+    <div class="mobile-nav" id="mobileNav" role="navigation" aria-label="Menú móvil">
       <a href="index.html" class="mobile-nav-link" data-page="index">Inicio</a>
       <a href="vanessa-sobre-mi.html" class="mobile-nav-link" data-page="sobre-mi">Sobre mí</a>
       <a href="index.html#proyectos" class="mobile-nav-link" data-page="proyectos">Proyectos</a>
@@ -662,7 +702,7 @@
         <span>Contenidos</span>
         <button id="tocToggle" aria-label="Colapsar índice">−</button>
       </div>
-      <nav class="toc-list">
+      <nav class="toc-list" aria-label="En esta página">
         <a href="#problema">Problema</a>
         <a href="#contexto">Contexto</a>
         <a href="#decisiones">Decisiones</a>
@@ -670,7 +710,7 @@
       </nav>
     </aside>
 
-    <div class="project-content">
+    <main class="project-content" id="contenido" tabindex="-1">
 
       <h1>Mujeres de Oro</h1>
       <p class="subtitle">Diseño de campañas y contenidos para comunidades del Bajo Cauca antioqueño</p>
@@ -785,6 +825,10 @@
 
         <div class="result-item">
           <p class="result-item-title">Consejos Municipales de Juventud</p>
+          <div class="photo-pair">
+            <img src="mujeresdeoro_cmj_proceso_01.jpg" width="1000" height="1333" loading="lazy" decoding="async" alt="Hojas impresas con varias copias de una joven de cabello largo y rizado, ya con los marcos recortados, sobre una mesa de madera.">
+            <img src="mujeresdeoro_cmj_proceso_02.jpg" width="1000" height="1333" loading="lazy" decoding="async" alt="Varios recortes de papel de una joven con camiseta blanca y jean que sostiene un objeto amarillo, dispuestos sobre una mesa de madera.">
+          </div>
           <div class="video-block">
             <video src="mujeresdeoro_cmj_zaragoza.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Video en loop de los Consejos Municipales de Juventud en Zaragoza: animaciones y fotografías de jóvenes, y el testimonio de una mujer que habla de la participación de las mujeres."></video>
             <button class="video-toggle" type="button" aria-label="Pausar video: Zaragoza">
@@ -868,11 +912,11 @@
       </div>
 
 
-    </div>
+    </main>
   </div>
 </div>
 
-<div class="back-nav">
+<div class="back-nav" role="navigation" aria-label="Volver">
   <a href="index.html" class="back-link">
     <svg class="back-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
     <span class="link-text">Atrás</span>
@@ -886,13 +930,13 @@
     </div>
 
     <div class="footer-links" id="footerLinks">
-      <a href="mailto:vanessanieton@gmail.com" class="footer-link"><span class="link-text">vanessanieton@gmail.com</span> <span class="link-arrow">&#8599;</span></a>
-      <a href="https://www.linkedin.com/in/vnessanieto/" class="footer-link" target="_blank" rel="noopener"><span class="link-text">LinkedIn</span> <span class="link-arrow">&#8599;</span></a>
+      <a href="mailto:vanessanieton@gmail.com" class="footer-link"><span class="link-text">vanessanieton@gmail.com</span> <span class="link-arrow" aria-hidden="true">&#8599;</span></a>
+      <a href="https://www.linkedin.com/in/vnessanieto/" class="footer-link" target="_blank" rel="noopener"><span class="link-text">LinkedIn</span> <span class="link-arrow" aria-hidden="true">&#8599;</span></a>
     </div>
 
     <div class="footer-music" id="footerMusic">
       <p class="footer-italic">La m&#250;sica es una gran forma de conocernos:</p>
-      <a href="https://open.spotify.com/user/vnessanieto" class="footer-link" target="_blank" rel="noopener"><span class="link-text">Mi Spotify</span> <span class="link-arrow">&#8599;</span></a>
+      <a href="https://open.spotify.com/user/vnessanieto" class="footer-link" target="_blank" rel="noopener"><span class="link-text">Mi Spotify</span> <span class="link-arrow" aria-hidden="true">&#8599;</span></a>
     </div>
 
     <p class="footer-credit">Dise&#241;ado y construido con mucho amor y overthinking.</p>
@@ -987,11 +1031,11 @@
     });
 
     document.addEventListener('keydown', function(e){
-      if (e.key === 'Escape') closeMenu();
+      if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true'){ closeMenu(); toggle.focus(); }
     });
 
     window.addEventListener('resize', function(){
-      if (window.innerWidth > 768) closeMenu();
+      if (window.innerWidth >= 360) closeMenu();
     });
   })();
 </script>

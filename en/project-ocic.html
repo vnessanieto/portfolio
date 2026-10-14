@@ -137,15 +137,7 @@
       color: var(--ink);
     }
     .mobile-nav-link:focus-visible{ outline: 2px solid var(--ink); outline-offset: -2px; }
-    .mobile-nav-link.is-active{ color: rgba(12,12,12,0.45); }
-    .mobile-nav-link.mobile-nav-pill{
-      margin-top: 20px;
-      justify-content: center;
-      background: var(--pill);
-      color: var(--pill-text);
-      border-radius: 4px;
-      border-bottom: none;
-    }
+    .mobile-nav-link.is-active{ color: rgba(12,12,12,0.65); }
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -482,7 +474,7 @@
     --footer-bg: #016644;
     --footer-title: #daffa2;
     --footer-ink: #ffffff;
-    --footer-muted: rgba(255,255,255,0.68);
+    --footer-muted: rgba(255,255,255,0.78);
     background: var(--footer-bg);
     border-radius: 0;
     padding: clamp(2rem, 6vw, 3.5rem) clamp(1.5rem, 6vw, 4rem);
@@ -493,7 +485,7 @@
   .footer-title{
     margin: 0 0 clamp(2rem, 6vw, 3.5rem);
     font-weight: 600;
-    font-size: clamp(6rem, 17vw, 15rem);
+    font-size: clamp(6rem, 15vw, 14rem);
     line-height: 0.94;
     letter-spacing: -0.02em;
     text-align: left;
@@ -507,14 +499,6 @@
     display: inline-block;
     width: max-content;
     will-change: transform;
-  }
-  @keyframes footerTitleDrift{
-    0%, 100% { transform: translateX(-2.2vw); }
-    50% { transform: translateX(2.2vw); }
-  }
-  /* arranca solo cuando el footer entra en viewport (ver JS) */
-  .site-footer.in-view #footerNameWrap{
-    animation: footerTitleDrift 22s ease-in-out infinite;
   }
   .letter{
     display: inline-block;
@@ -603,17 +587,89 @@
   @media (prefers-reduced-motion: reduce){ .lang-switch{ transition: none; } }
 
   /* ---- EN: "Let’s talk!" ocupa el mismo ancho que "¡Hablemos!" ---- */
-  .footer-title{ font-size: clamp(7.2rem, 20.3vw, 18rem); }
+  .footer-title{ font-size: clamp(7.2rem, 18vw, 17rem); }
   @media (width <= 768px){ .footer-title{ font-size: clamp(3.25rem, 17.5vw, 5.1rem); } } /* en móvil se ve completo, con el "!" */
+
+  /* ---- footer móvil: título fijo y centrado (igual que el Home) ----
+     en móvil el título sobredimensionado se recortaba y se desplazaba; aquí se ajusta
+     al recuadro, se centra y no se mueve. Solo queda el efecto de peso de las letras. */
+  @media (width <= 768px){
+    .footer-title{
+      font-size: clamp(3rem, 15.5vw, 4.8rem);
+      white-space: normal;
+      text-align: center;
+    }
+    #footerNameWrap{ display: block; width: 100%; }
+    .site-footer.in-view #footerNameWrap{ animation: none; transform: none; }
+  }
+
+  /* ---- accesibilidad: enlace para saltar al contenido + utilidades ---- */
+  .skip-link{
+    position: absolute; left: 12px; top: -120px; z-index: 10000;
+    padding: 12px 18px; border-radius: 6px;
+    background: #0e0e0e; color: #ffffff; box-shadow: 0 0 0 2px #ffffff;
+    font: 600 14px/1.2 'Inter', system-ui, sans-serif; letter-spacing: 0.02em; text-decoration: none;
+  }
+  .skip-link:focus, .skip-link:focus-visible{ top: 12px; outline: 3px solid #daffa2; outline-offset: 2px; }
+  .sr-only{
+    position: absolute !important; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0;
+    overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+  }
+  main:focus{ outline: none; }
+
+  /* ---- accesibilidad: el correo del pie nunca se sale del recuadro (320 px / espaciado de texto aumentado) ---- */
+  .footer-link{ max-width: 100%; }
+  .footer-link .link-text{ min-width: 0; overflow-wrap: anywhere; }
+  @media (width <= 360px){ .footer-link{ font-size: 1rem; } }
+
+  /* ---- accesibilidad: pausar GIF animados (WCAG 2.2.2) ---- */
+  .anim-toggle{
+    position: fixed; left: 16px; bottom: 16px; z-index: 15;
+    display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px 0 12px;
+    border: 0; border-radius: 999px; cursor: pointer;
+    background: rgba(240,242,247,0.96); color: var(--ink, #0c0c0c);
+    box-shadow: 0 2px 12px rgba(12,12,12,0.22);
+    font: 600 13px/1 'Inter', system-ui, sans-serif; letter-spacing: 0.02em;
+    transition: opacity 0.2s ease;
+  }
+  .anim-toggle:hover{ opacity: 0.85; }
+  .anim-toggle:focus-visible{ outline: 2px solid var(--ink, #0c0c0c); outline-offset: 3px; }
+  .anim-toggle svg{ display: block; }
+  .anim-toggle .ico-play{ display: none; }
+  .anim-toggle[aria-pressed="true"] .ico-pause{ display: none; }
+  .anim-toggle[aria-pressed="true"] .ico-play{ display: block; }
+  @media (prefers-reduced-motion: reduce){ .anim-toggle{ transition: none; } }
+
+  /* ---- menú completo visible en móvil (360–768px) ----
+     con solo 4 opciones + idioma, el menú de desktop cabe en una línea: se muestra en lugar de la
+     hamburguesa. Los tamaños escalan con el ancho (a 768px quedan como en desktop) y el área táctil
+     sube a 44px sin cambiar el aspecto. Por debajo de 360px (zoom alto) se mantiene la hamburguesa. */
+  @media (width <= 768px) and (width >= 360px){
+    .topbar{ min-height: 44px; }
+    #mainNav{ display: flex; gap: 0; }
+    .nav-toggle, .mobile-nav{ display: none; }
+    body.nav-open{ overflow: visible; }
+    .nav-hover{ display: none; }
+    .topbar nav a, .topbar .lang-switch{ white-space: nowrap; flex-shrink: 0; }
+    .topbar nav a.tab, .topbar nav a.pill, .topbar .lang-switch{ font-size: clamp(11px, 3vw, 13px); letter-spacing: 0.03em; }
+    .topbar nav a.tab{ padding: 7px clamp(3px, 1.4vw, 12px); }
+    .topbar nav a.pill{ position: relative; padding: 7px clamp(3px, 1.4vw, 12px); margin-left: 0; background: none; border: 0; border-radius: 6px;
+      color: rgba(12,12,12,0.6); font-weight: 500; text-transform: uppercase; }
+    .topbar nav a.pill:hover, .topbar nav a.pill:focus-visible{ background: none; border: 0; }
+    .topbar .lang-switch{ position: relative; min-height: 30px; min-width: 0; margin-left: clamp(3px, 1.4vw, 12px); margin-right: 0; padding: 6px clamp(7px, 1.6vw, 10px); }
+    .topbar nav a.tab::after, .topbar nav a.pill::after{ content: ""; position: absolute; inset: -7px 0; }
+    .topbar .lang-switch::after{ content: ""; position: absolute; inset: -7px -4px; }
+  }
 </style>
 </head>
 <body>
+<a class="skip-link" href="#contenido">Skip to content</a>
 
 <div class="page">
   <div class="stage-inner">
 
-    <div class="topbar">
-      <nav id="mainNav">
+    <header class="topbar">
+      <nav id="mainNav" aria-label="Main">
         <span class="nav-hover" id="navHover"></span>
         <span class="nav-active-bar" id="navActiveBar"></span>
         <a href="./" class="tab" data-page="index">Home</a>
@@ -627,9 +683,9 @@
         <span class="nav-toggle-bar"></span>
         <span class="nav-toggle-bar"></span>
       </button>
-    </div>
+    </header>
 
-    <div class="mobile-nav" id="mobileNav">
+    <div class="mobile-nav" id="mobileNav" role="navigation" aria-label="Mobile menu">
       <a href="./" class="mobile-nav-link" data-page="index">Home</a>
       <a href="about.html" class="mobile-nav-link" data-page="sobre-mi">About me</a>
       <a href="./#projects" class="mobile-nav-link" data-page="proyectos">Projects</a>
@@ -641,7 +697,7 @@
         <span>Contents</span>
         <button id="tocToggle" aria-label="Collapse contents">−</button>
       </div>
-      <nav class="toc-list">
+      <nav class="toc-list" aria-label="On this page">
         <a href="#problem">Problem</a>
         <a href="#context">Context</a>
         <a href="#research">Research</a>
@@ -650,11 +706,11 @@
       </nav>
     </aside>
 
-    <div class="project-content">
+    <main class="project-content" id="contenido" tabindex="-1">
 
       <p class="eyebrow">Colombian Cannabis Industry Observatory</p>
       <h1>OCIC</h1>
-      <p class="subtitle">From cannabis stereotypes to specialized communication</p>
+      <p class="subtitle">Communicating an industry beyond cannabis stereotypes</p>
 
       <div class="meta-grid">
         <div><span class="meta-label">Client</span><span class="meta-value">Arteaga Latam</span></div>
@@ -682,9 +738,8 @@
 
       <section id="problem">
         <h2>Problem</h2>
-        <h3 class="section-subtitle">Communicating an industry beyond cannabis stereotypes</h3>
-        <p>OCIC sought to position the Colombian cannabis industry through its economic, scientific and business dimensions. The communication had to reach very different audiences: investors in the medical sector, export and customs specialists, doctors, government agencies and people interested in the subject.</p>
-        <p><strong>We needed to set ourselves apart from the communication associated with recreational cannabis and show that the observatory worked with information, analysis and specialized knowledge.</strong> The goal wasn’t to hide the connection to cannabis, but to communicate that the observatory approached the sector from another place: analysis, regulation, production, trade and economic opportunity.</p>
+        <p>OCIC sought to present the Colombian cannabis industry through its economic, scientific, and business dimensions. Its communications needed to reach a diverse audience, including investors in the medical sector, export and customs specialists, doctors, government agencies, and others interested in the industry.</p>
+        <p><strong>We needed to move away from visual language associated with recreational cannabis and show that the observatory worked with information, analysis, and specialized knowledge.</strong> The goal wasn’t to hide the connection to cannabis, but to communicate a different perspective on the sector: analysis, regulation, production, trade, and economic opportunity.</p>
 
         <figure class="story-image">
           <img src="../ocic_bocetos.jpg" width="1695" height="928" alt="Open notebook with pencil sketches of the OCIC logo: cannabis leaves, the acronym OCIC, the observatory’s full name and symbol explorations.">
@@ -699,15 +754,15 @@
 
       <section id="context">
         <h2>Context</h2>
-        <h3 class="section-subtitle">A sector rapidly expanding its possibilities</h3>
-        <p>OCIC was born in 2022, at a moment when the Colombian cannabis industry was beginning to expand beyond medicinal cultivation into research, production, export and business development. At the same time, the debate over regulating adult use was taking cannabis into a much broader public conversation.</p>
-        <p>I was the graphic coordinator from the start, working directly with the specialists who led the project and developing the identity and visual communication for social media, reports, campaigns, events and audiovisual pieces.</p>
+        <h3 class="section-subtitle">A sector exploring new possibilities</h3>
+        <p>OCIC was launched in 2022, as Colombia’s cannabis industry began expanding beyond medicinal cultivation into research, production, exports, and business development. At the same time, the debate around regulating adult-use cannabis was bringing the subject into a broader public conversation.</p>
+        <p>I coordinated the graphic design work from the start, working directly with the specialists leading the project. I developed the visual identity and communication across social media, reports, campaigns, events, and audiovisual content.</p>
       </section>
 
       <section id="research">
         <h2>Research</h2>
         <p>The project leaders were agribusiness experts and held direct conversations with small farmers and entrepreneurs in the sector. My job was to learn from that knowledge, follow their direction on where the project was heading, and complement it with references from cannabis-focused trade media.</p>
-        <p>Much of the work consisted of translating technical and economic information into presentations, infographics and digital content that diverse audiences could understand quickly.</p>
+        <p>Much of the work involved translating technical and economic information into presentations, infographics, and digital content that different audiences could understand quickly.</p>
 
         <div class="feed-grid feed-grid-photos">
           <img src="../ocic_feed_01.jpg" width="1200" height="1200" alt="Piece “Perspectivas &amp; necesidades de los mercados internacionales para productos de cannabis medicinal” (international market outlook and needs for medicinal cannabis products), with data bars formed by a cannabis crop under a blue sky." loading="lazy">
@@ -722,9 +777,9 @@
 
       <section id="result">
         <h2>Result</h2>
-        <p>Instead of giving every piece of content a completely new graphic solution, we gradually consolidated a system built on clear hierarchies and visual resources that helped organize information. The identity and visual system lasted through the years the project was active and was applied to social media, campaigns, reports, infographics, events and audiovisual pieces.</p>
+        <p>Rather than creating a new graphic solution for every piece, we gradually developed a system based on clear hierarchies and visual elements that helped organize the information. Throughout the project, we applied the identity and visual system across social media, campaigns, reports, infographics, events, and audiovisual content.</p>
 
-        <p>The system’s success showed in what it made possible afterward. With a brand manual and access to the editable files, other designers and the audiovisual team could produce new pieces while keeping everything coherent, without each piece depending on a single person. The identity stopped being a set of pieces and became a language the team could use and grow.</p>
+        <p>The value of the system became clear in how it could be used by others. With a brand guidelines document and access to the editable files, other designers and the audiovisual team could create new pieces while maintaining consistency, without relying on one person for every asset. The identity became more than a collection of deliverables: it gave the team a visual language they could keep using and developing.</p>
 
         <figure class="story-image">
           <img src="../ocic_redes_07.jpg" width="1600" height="900" alt="Cover “Ruta de internacionalización del cannabis medicinal”: an open green container with a person in a greenhouse crop, boxes on a pallet and logos of the Bogotá Chamber of Commerce and the observatory.">
@@ -769,16 +824,16 @@
 
       <section id="reflections">
         <h2>Reflections</h2>
-        <h3 class="section-subtitle">More autonomy, more confidence in design</h3>
-        <p>OCIC was one of the projects where I had the most autonomy at Arteaga Latam. I built my understanding of the problem alongside the team as I got to know the sector and its communication needs.</p>
-        <p>It was also a project where I learned a lot about teamwork. I worked closely with a team specialized in agribusiness, learning to listen to other perspectives, take in knowledge that wasn’t from my discipline and turn it into a visual system that could grow with the project.</p>
+        <h3 class="section-subtitle">Greater autonomy, greater confidence in my design decisions</h3>
+        <p>OCIC was one of the projects where I had the most autonomy at Arteaga Latam. As I learned more about the sector and its communication needs, I developed my understanding of the project alongside the team.</p>
+        <p>It was also a project where I learned a great deal from working with others. I collaborated closely with agribusiness specialists, learning to listen to different perspectives, draw on knowledge outside my own field, and translate it into a visual system that could grow with the project.</p>
       </section>
 
-    </div>
+    </main>
   </div>
 </div>
 
-<div class="back-nav">
+<div class="back-nav" role="navigation" aria-label="Back">
   <a href="./" class="back-link">
     <svg class="back-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
     <span class="link-text">Back</span>
@@ -792,16 +847,16 @@
     </div>
 
     <div class="footer-links" id="footerLinks">
-      <a href="mailto:vanessanieton@gmail.com" class="footer-link"><span class="link-text">vanessanieton@gmail.com</span> <span class="link-arrow">&#8599;</span></a>
-      <a href="https://www.linkedin.com/in/vnessanieto/" class="footer-link" target="_blank" rel="noopener"><span class="link-text">LinkedIn</span> <span class="link-arrow">&#8599;</span></a>
+      <a href="mailto:vanessanieton@gmail.com" class="footer-link"><span class="link-text">vanessanieton@gmail.com</span> <span class="link-arrow" aria-hidden="true">&#8599;</span></a>
+      <a href="https://www.linkedin.com/in/vnessanieto/" class="footer-link" target="_blank" rel="noopener"><span class="link-text">LinkedIn</span> <span class="link-arrow" aria-hidden="true">&#8599;</span></a>
     </div>
 
     <div class="footer-music" id="footerMusic">
-      <p class="footer-italic">Music is a great way to get to know each other:</p>
-      <a href="https://open.spotify.com/user/vnessanieto" class="footer-link" target="_blank" rel="noopener"><span class="link-text">My Spotify</span> <span class="link-arrow">&#8599;</span></a>
+      <p class="footer-italic">Music is a great way to get to know me:</p>
+      <a href="https://open.spotify.com/user/vnessanieto" class="footer-link" target="_blank" rel="noopener"><span class="link-text">My Spotify</span> <span class="link-arrow" aria-hidden="true">&#8599;</span></a>
     </div>
 
-    <p class="footer-credit">Designed and built with lots of love and overthinking.</p>
+    <p class="footer-credit">Designed and built with care and a lot of overthinking.</p>
   </div>
 </footer>
 
@@ -893,11 +948,11 @@
     });
 
     document.addEventListener('keydown', function(e){
-      if (e.key === 'Escape') closeMenu();
+      if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true'){ closeMenu(); toggle.focus(); }
     });
 
     window.addEventListener('resize', function(){
-      if (window.innerWidth > 768) closeMenu();
+      if (window.innerWidth >= 360) closeMenu();
     });
   })();
 </script>
@@ -1274,6 +1329,58 @@
   })();
 
 
+</script>
+
+
+<script>
+// ---------- Pausar GIF animados: un solo control para toda la página (WCAG 2.2.2) ----------
+(function(){
+  var imgs = function(){ return Array.prototype.slice.call(document.querySelectorAll('img')).filter(function(i){
+    return /\.gif(\?|$)/i.test(i.getAttribute('data-gif-src') || i.getAttribute('src') || ''); }); };
+  if (!imgs().length) return;
+  var en = (document.documentElement.lang || '').indexOf('en') === 0;
+  var TXT = en ? {pause: 'Pause animations', play: 'Play animations'} : {pause: 'Pausar animaciones', play: 'Reproducir animaciones'};
+  var paused = false;
+
+  function freeze(img){
+    if (img.getAttribute('data-gif-src')) return;
+    var src = img.getAttribute('src');
+    function doFreeze(){
+      try{
+        var c = document.createElement('canvas');
+        c.width = img.naturalWidth; c.height = img.naturalHeight;
+        c.getContext('2d').drawImage(img, 0, 0);
+        var still = c.toDataURL('image/png');
+        img.setAttribute('data-gif-src', src);
+        img.setAttribute('src', still);
+      }catch(e){}
+    }
+    if (img.complete && img.naturalWidth) doFreeze(); else img.addEventListener('load', function once(){ img.removeEventListener('load', once); if (paused) doFreeze(); });
+  }
+  function unfreeze(img){
+    var src = img.getAttribute('data-gif-src');
+    if (!src) return;
+    img.setAttribute('src', src); img.removeAttribute('data-gif-src');
+  }
+
+  var btn = document.createElement('button');
+  btn.type = 'button'; btn.className = 'anim-toggle';
+  btn.innerHTML = '<svg class="ico-pause" width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><rect x="2.5" y="2" width="3" height="10" rx="0.6"/><rect x="8.5" y="2" width="3" height="10" rx="0.6"/></svg>' +
+                  '<svg class="ico-play" width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3.5 1.8v10.4L12 7z"/></svg><span></span>';
+  function sync(){
+    btn.setAttribute('aria-pressed', paused ? 'true' : 'false');
+    btn.lastChild.textContent = paused ? TXT.play : TXT.pause;
+  }
+  function apply(){ imgs().forEach(function(i){ paused ? freeze(i) : unfreeze(i); }); sync(); }
+  btn.addEventListener('click', function(){ paused = !paused; apply(); });
+  document.body.appendChild(btn);
+
+  // las fotos apiladas se clonan después de cargar: las nuevas copias también se congelan
+  new MutationObserver(function(){ if (paused) imgs().forEach(freeze); }).observe(document.body, {childList: true, subtree: true});
+
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){ paused = true; window.addEventListener('load', apply); }
+  sync();
+})();
 </script>
 
 </body>
