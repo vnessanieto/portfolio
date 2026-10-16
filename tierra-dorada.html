@@ -194,20 +194,9 @@
   /* ---- imagen solita (mismo patrón que la cover/inline de El Veneco) ---- */
   .solo-image{ width: 100%; aspect-ratio: 16/9; overflow: hidden; margin: 0 0 clamp(2rem, 6vw, 3.5rem); }
 
-  .result-video{
-    width: 100%;
-    aspect-ratio: 16/9;
-    overflow: hidden;
-    border-radius: 4px;
-    margin: 32px 0 0;
-    background: #000;
-  }
-  .result-video iframe{
-    width: 100%;
-    height: 100%;
-    border: none;
-    display: block;
-  }
+  .result-video{ width: 100%; margin: 32px 0 0; }
+  .result-video video{ display: block; width: 100%; aspect-ratio: 16/9; border-radius: 4px; background: #000; }
+  .result-video figcaption{ margin-top: 10px; font-size: 0.8125rem; line-height: 1.4; color: var(--muted); }
   .solo-swatch{
     width: 100%; height: 100%; display: flex; align-items: flex-end; padding: 14px;
     font-size: 11px; color: rgba(255,255,255,0.85); font-weight: 500;
@@ -608,7 +597,7 @@
   .footer-link{ max-width: 100%; }
   .footer-link .link-text{ min-width: 0; overflow-wrap: anywhere; }
   @media (width <= 360px){ .footer-link{ font-size: 1rem; } }
-  .result-video:focus-within{ outline: 2px solid var(--ink); outline-offset: 4px; }
+  .result-video video:focus-visible{ outline: 2px solid var(--ink); outline-offset: 4px; }
 
   /* ---- menú completo visible en móvil (360–768px) ----
      con solo 4 opciones + idioma, el menú de desktop cabe en una línea: se muestra en lugar de la
@@ -670,7 +659,7 @@
       <nav class="toc-list" aria-label="En esta página">
         <a href="#contexto">Contexto</a>
         <a href="#investigacion">Investigación</a>
-        <a href="#decisiones">Decisiones</a>
+        <a href="#decisiones">Decisión</a>
         <a href="#resultado">Resultado</a>
         <a href="#reflexiones">Reflexiones</a>
       </nav>
@@ -754,7 +743,7 @@
       <section id="contexto">
         <h2>Contexto</h2>
         <h3 class="section-subtitle">Territorios complejos y lenguajes locales diversos</h3>
-        <p>La intervención se desarrolló en zonas rurales alejadas, marcadas por la informalidad minera y dinámicas complejas de seguridad. El trabajo se realizó directamente con jóvenes líderes, artistas, músicos y colectivos culturales locales. Debido a la marcada diversidad cultural entre comunidades, los talleres no admitían un formato rígido y exigían adaptarse a los lenguajes, ritmos y formas de expresión de cada municipio.</p>
+        <p>La intervención se desarrolló en zonas marcadas por la informalidad minera y dinámicas complejas de seguridad. El trabajo se realizó directamente con jóvenes líderes, artistas, músicos y colectivos culturales locales. Debido a la marcada diversidad cultural entre comunidades, los talleres no admitían un formato rígido y exigían adaptarse a los lenguajes, ritmos y formas de expresión de cada lugar.</p>
       </section>
 
 
@@ -770,7 +759,7 @@
       <section id="investigacion">
         <h2>Investigación</h2>
         <h3 class="section-subtitle">Inmersión en territorio y escucha directa con líderes juveniles</h3>
-        <p>La investigación se basó en el trabajo de campo cara a cara con colectivos artísticos y liderazgos juveniles en los municipios de incidencia. A través de entrevistas, observación y dinámicas de escucha activa, mapeamos sus formas cotidianas de expresión y sus canales comunitarios habituales antes de definir la metodología pedagógica de cada taller.</p>
+        <p>A través de entrevistas, observación y dinámicas de escucha activa, mapeamos sus formas cotidianas de expresión y sus canales comunitarios habituales antes de definir la metodología pedagógica de cada taller.</p>
       </section>
 
 
@@ -797,9 +786,9 @@
 
 
       <section id="decisiones">
-        <h2>Decisiones</h2>
+        <h2>Decisión</h2>
         <h3 class="section-subtitle">Facilitar herramientas para la comunidad en lugar de imponer piezas corporativas</h3>
-        <p>La decisión central no fue visual, sino estratégica — definir el rol del diseñador en territorio. En lugar de producir piezas terminadas desde un escritorio, el trabajo consistió en capacitar y brindar herramientas conceptuales y creativas a los líderes juveniles para que fueran ellos quienes comunicaran sus aprendizajes ambientales. Actué como puente entre los lineamientos del consorcio y las realidades locales, asumiendo un rol de facilitadora pedagógica más que de autora final, priorizando la apropiación comunitaria sobre el control estricto de la gráfica.</p>
+        <p>La decisión central fue definir mi rol de diseñadora en territorio. En lugar de producir piezas terminadas desde un escritorio, el trabajo consistió en capacitar y brindar herramientas conceptuales y creativas a los líderes juveniles para que fueran ellos quienes comunicaran sus aprendizajes ambientales. Actué como puente entre las necesidades del proyecto y las realidades locales.</p>
       </section>
 
       <div class="solo-image">
@@ -818,16 +807,19 @@
       <section id="resultado">
         <h2>Resultado</h2>
         <h3 class="section-subtitle">Campañas ambientales cocreadas y lideradas por la juventud local</h3>
-        <p>Como fruto de los talleres se cocrearon murales, canciones, poemas y piezas audiovisuales orientadas al cuidado del agua, el suelo y el aire en enclaves mineros. Los jóvenes líderes no actuaron como simples asistentes, sino que asumieron un rol activo como voceros y productores de contenido en sus municipios. La estrategia aseguró que las comunidades construyeran sus propios mensajes de mitigación ambiental utilizando sus expresiones culturales habituales y garantizando legitimidad local.</p>
-        <div class="result-video">
-          <iframe src="https://drive.google.com/file/d/1j53i4b-MFfgfHE-E5slAFXmYOTiozUZo/preview" title="Video de resultados del proyecto Tierra Dorada" allow="autoplay" allowfullscreen loading="lazy"></iframe>
-        </div>
+        <p>Murales, canciones, poemas y piezas audiovisuales orientadas al cuidado del agua, el suelo y el aire en contextos mineros. La estrategia aseguró que las comunidades construyeran sus propios mensajes de mitigación ambiental utilizando sus expresiones culturales habituales y garantizando legitimidad local.</p>
+        <figure class="result-video">
+          <video controls playsinline preload="none" poster="tierradorada_voces_poster.jpg" aria-label="Voces de la Tierra, video de 1 minuto y 20 segundos con imágenes del territorio y de los talleres: ríos, cascadas, bateo de oro, pobladores y jóvenes pintando murales">
+            <source src="tierradorada_voces.mp4" type="video/mp4">
+          </video>
+          <figcaption>Voces de la Tierra, una de las piezas audiovisuales resultantes de los talleres.</figcaption>
+        </figure>
       </section>
 
       <section id="reflexiones">
         <h2>Reflexiones</h2>
         <h3 class="section-subtitle">Diseñar con propósito al servicio de las realidades humanas del territorio</h3>
-        <p>De mi paso por Arteaga Latam, lo que más valoro es haber trabajado directamente con las comunidades. Para mí como diseñadora, el proceso creativo cobra verdadero sentido cuando trasciende la pantalla y se pone al servicio de organizaciones con impacto social y ambiental. Trabajar con estos jóvenes fue profundamente confrontante — escuchar sus historias de liderazgo en contextos donde ejercerlo puede costar la vida me conmovió y me enseñó sobre determinación. A pesar de la hostilidad de su entorno, siempre hubo alegría, inspiración y un compromiso absoluto con sus mensajes. Volví a casa con la certeza de que mi oficio no pertenece únicamente al espacio digital, sino a los lugares donde el diseño puede respaldar la voz de quienes transforman su territorio.</p>
+        <p>De mi paso por Arteaga Latam, lo que más valoro es haber trabajado directamente con las comunidades. Para mí como diseñadora, el proceso creativo cobra verdadero sentido cuando trasciende la pantalla y se pone al servicio de organizaciones con impacto social y ambiental. A pesar de la hostilidad del entorno de estas personas, siempre hubo alegría, inspiración y un compromiso absoluto con sus mensajes. Volví con la certeza de que mi oficio no pertenece únicamente al espacio digital, sino a los lugares donde el diseño puede respaldar la voz de quienes transforman su territorio.</p>
       </section>
 
     </main>

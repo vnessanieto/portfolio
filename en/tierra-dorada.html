@@ -194,20 +194,9 @@
   /* ---- imagen solita (mismo patrón que la cover/inline de El Veneco) ---- */
   .solo-image{ width: 100%; aspect-ratio: 16/9; overflow: hidden; margin: 0 0 clamp(2rem, 6vw, 3.5rem); }
 
-  .result-video{
-    width: 100%;
-    aspect-ratio: 16/9;
-    overflow: hidden;
-    border-radius: 4px;
-    margin: 32px 0 0;
-    background: #000;
-  }
-  .result-video iframe{
-    width: 100%;
-    height: 100%;
-    border: none;
-    display: block;
-  }
+  .result-video{ width: 100%; margin: 32px 0 0; }
+  .result-video video{ display: block; width: 100%; aspect-ratio: 16/9; border-radius: 4px; background: #000; }
+  .result-video figcaption{ margin-top: 10px; font-size: 0.8125rem; line-height: 1.4; color: var(--muted); }
   .solo-swatch{
     width: 100%; height: 100%; display: flex; align-items: flex-end; padding: 14px;
     font-size: 11px; color: rgba(255,255,255,0.85); font-weight: 500;
@@ -612,7 +601,7 @@
   .footer-link{ max-width: 100%; }
   .footer-link .link-text{ min-width: 0; overflow-wrap: anywhere; }
   @media (width <= 360px){ .footer-link{ font-size: 1rem; } }
-  .result-video:focus-within{ outline: 2px solid var(--ink); outline-offset: 4px; }
+  .result-video video:focus-visible{ outline: 2px solid var(--ink); outline-offset: 4px; }
 
   /* ---- menú completo visible en móvil (360–768px) ----
      con solo 4 opciones + idioma, el menú de desktop cabe en una línea: se muestra en lugar de la
@@ -674,7 +663,7 @@
       <nav class="toc-list" aria-label="On this page">
         <a href="#context">Context</a>
         <a href="#research">Research</a>
-        <a href="#decisions">Decisions</a>
+        <a href="#decisions">Decision</a>
         <a href="#result">Result</a>
         <a href="#reflections">Reflections</a>
       </nav>
@@ -758,7 +747,7 @@
       <section id="context">
         <h2>Context</h2>
         <h3 class="section-subtitle">Different territories, different ways of communicating</h3>
-        <p>The intervention took place in remote rural areas marked by informal mining and complex security dynamics. We worked directly with young leaders, artists, musicians and local cultural collectives. Because of the strong cultural diversity between communities, the workshops couldn’t follow a rigid format and had to adapt to the languages, rhythms and forms of expression of each municipality.</p>
+        <p>The project took place in areas affected by informal mining and complex security dynamics. We worked directly with young leaders, artists, musicians, and local cultural groups. Given the cultural diversity across communities, the workshops couldn’t follow a fixed format. They had to adapt to the language, rhythms, and forms of expression of each place.</p>
       </section>
 
 
@@ -773,8 +762,8 @@
 
       <section id="research">
         <h2>Research</h2>
-        <h3 class="section-subtitle">Immersion in the territory and direct listening with young leaders</h3>
-        <p>The research involved fieldwork with art collectives and young leaders in the municipalities where we worked. Through interviews, observation, and active listening, we learned about their everyday forms of expression and the communication channels they used in their communities before defining the approach for each workshop.</p>
+        <h3 class="section-subtitle">Understanding each territory through direct listening</h3>
+        <p>Through interviews, observation, and active listening, we explored how young people expressed themselves in their daily lives and which communication channels their communities already used. These insights informed the approach for each workshop.</p>
       </section>
 
 
@@ -801,9 +790,9 @@
 
 
       <section id="decisions">
-        <h2>Decisions</h2>
-        <h3 class="section-subtitle">Sharing tools instead of imposing finished materials</h3>
-        <p>The central decision wasn’t a visual one; it was about defining the designer’s role in the territory. Rather than producing finished pieces from a desk, I helped train young leaders and gave them conceptual and creative tools to communicate what they were learning about the environment. I acted as a bridge between the consortium’s guidelines and local realities, facilitating the process rather than acting as the sole author, and prioritizing community ownership over strict control of the visual materials.</p>
+        <h2>Decision</h2>
+        <h3 class="section-subtitle">Sharing tools rather than imposing finished materials</h3>
+        <p>A key decision was to define my role as a designer working directly in the territory. Rather than producing finished pieces remotely, I focused on training young leaders and giving them conceptual and creative tools to communicate their environmental knowledge in their own ways. My role was to connect the project’s objectives with the realities of each community.</p>
       </section>
 
       <div class="solo-image">
@@ -822,16 +811,19 @@
       <section id="result">
         <h2>Result</h2>
         <h3 class="section-subtitle">Environmental campaigns created with local young people</h3>
-        <p>The workshops led to the creation of murals, songs, poems, and audiovisual pieces about protecting water, soil, and air in mining areas. The young leaders took an active role, not just as participants but as spokespeople and content creators in their municipalities. The approach gave communities a way to develop environmental messages through their own cultural expressions.</p>
-        <div class="result-video">
-          <iframe src="https://drive.google.com/file/d/1j53i4b-MFfgfHE-E5slAFXmYOTiozUZo/preview" title="Tierra Dorada project results video" allow="autoplay" allowfullscreen loading="lazy"></iframe>
-        </div>
+        <p>The young people created murals, songs, poems, and audiovisual pieces about protecting water, soil, and air in areas affected by mining. The approach enabled communities to develop environmental messages in their own cultural forms of expression, helping those messages feel relevant and rooted in local realities.</p>
+        <figure class="result-video">
+          <video controls playsinline preload="none" poster="../tierradorada_voces_poster.jpg" aria-label="Voces de la Tierra, an 80-second video with images of the territory and the workshops: rivers, waterfalls, gold panning, local residents and young people painting murals">
+            <source src="../tierradorada_voces.mp4" type="video/mp4">
+          </video>
+          <figcaption>Voces de la Tierra, one of the audiovisual pieces that came out of the workshops.</figcaption>
+        </figure>
       </section>
 
       <section id="reflections">
         <h2>Reflections</h2>
-        <h3 class="section-subtitle">Designing in response to the realities of each territory</h3>
-        <p>What I value most about my time at Arteaga Latam is having worked directly with communities. For me, design becomes meaningful when it goes beyond the screen and supports organizations working for social and environmental change. Working with these young people challenged me. Hearing their stories of leadership in contexts where taking on that role can cost you your life taught me about determination. Despite the difficult conditions around them, they brought joy, inspiration, and a strong commitment to their messages. I came away understanding that my work doesn’t belong only in digital spaces; it can also support the voices of people working to transform their communities.</p>
+        <h3 class="section-subtitle">Designing in response to each territory</h3>
+        <p>What I value most about my time at Arteaga Latam is the opportunity to work directly with communities. As a designer, I find the creative process most meaningful when it extends beyond the screen and supports organizations working on social and environmental issues. Even in difficult circumstances, I encountered joy, inspiration, and a strong commitment to communicating these messages. The experience reinforced my belief that design can work beyond digital spaces and support the voices of people working to transform their communities.</p>
       </section>
 
     </main>
