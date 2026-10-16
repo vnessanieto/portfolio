@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vanessa Nieto — OCIC</title>
+<link rel="alternate" hreflang="es" href="https://vanessanieto.com/ocic">
+<link rel="alternate" hreflang="en" href="https://vanessanieto.com/en/ocic">
+<link rel="alternate" hreflang="x-default" href="https://vanessanieto.com/ocic">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #f0f2f7;
+    --ink: #0c0c0c;
+    --muted: #666666;
+    --caption: rgba(12, 12, 12, 0.75); /* gris 75 % para las leyendas */
+    --pill: #0c0c0c;
+    --pill-text: #f0f2f7;
+  }
+
+  *{ box-sizing: border-box; }
+
+  /* ---- responsive safety net ---- */
+  html{ -webkit-text-size-adjust: 100%; }
+  img, video, svg{ max-width: 100%; height: auto; display: block; }
+
+  html, body{
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', -apple-system, sans-serif;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+
+  a{ color: inherit; text-decoration: none; }
+
+  .page{ min-height: 100vh; padding: clamp(1.25rem, 3vw, 2rem) clamp(1.25rem, 4.5vw, 3rem) clamp(4rem, 9vw, 8.75rem); }
+
+  /* ---- top bar ---- */
+  .topbar{
+    display: flex; justify-content: flex-end; align-items: center;
+    font-size: 13px; letter-spacing: 0.04em; margin-bottom: clamp(2rem, 6vw, 4rem);
+    position: relative; z-index: 25;
+  }
+  .topbar nav{ position: relative; display: flex; align-items: center; gap: 4px; }
+  .nav-hover{
+    position: absolute; top: 0; height: 30px; border-radius: 6px;
+    background: rgba(12,12,12,0.07); opacity: 0; pointer-events: none;
+    transition: left 0.3s ease, width 0.3s ease, opacity 0.2s ease; z-index: 0;
+  }
+  .nav-active-bar{
+    position: absolute; bottom: -6px; height: 2px; background: var(--ink);
+    transition: left 0.3s ease, width 0.3s ease; z-index: 1;
+  }
+  .topbar nav a.tab{
+    position: relative; z-index: 2;
+    font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em;
+    padding: 7px 12px; border-radius: 6px;
+    color: rgba(12,12,12,0.6);
+    transition: color 0.3s ease;
+  }
+  .topbar nav a.tab.is-active{ color: var(--ink); }
+  .topbar nav a:focus-visible{ outline: 2px solid var(--ink); outline-offset: 4px; }
+  .topbar nav a.pill{
+    background: #016644; color: #ffffff; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em;
+    padding: 7px 12px; margin-left: 12px; border-radius: 6px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .nav-hover, .nav-active-bar, .topbar nav a.tab{ transition: none; }
+  }
+
+  /* ---- mobile nav (hamburger) ---- */
+  .nav-toggle{
+    display: none;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    z-index: 30;
+  }
+  .nav-toggle-bar{
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--ink);
+    border-radius: 2px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+  .nav-toggle:focus-visible{ outline: 2px solid var(--ink); outline-offset: 4px; }
+  .nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(1){ transform: translateY(7px) rotate(45deg); }
+  .nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(2){ opacity: 0; }
+  .nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(3){ transform: translateY(-7px) rotate(-45deg); }
+
+  .mobile-nav{
+    display: none;
+  }
+
+  body.nav-open{ overflow: hidden; }
+
+  @media (width <= 768px){
+    #mainNav{ display: none; }
+    .nav-toggle{ display: flex; }
+    .mobile-nav{
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      background: var(--bg);
+      padding: 96px 24px 48px;
+      gap: 4px;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .mobile-nav.open{ opacity: 1; visibility: visible; pointer-events: auto; }
+    .mobile-nav-link{
+      display: flex;
+      align-items: center;
+      min-height: 44px;
+      padding: 14px 4px;
+      font-size: clamp(1.25rem, 6vw, 1.75rem);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      border-bottom: 1px solid rgba(12,12,12,0.08);
+      color: var(--ink);
+    }
+    .mobile-nav-link:focus-visible{ outline: 2px solid var(--ink); outline-offset: -2px; }
+    .mobile-nav-link.is-active{ color: rgba(12,12,12,0.65); }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .nav-toggle-bar, .mobile-nav{ transition: none; }
+  }
+
+  /* ---- floating table of contents ---- */
+  .toc{
+    position: fixed;
+    top: 140px;
+    right: 48px;
+    width: 168px;
+    background: #e4e6ec;
+    padding: 16px;
+    font-size: 12px;
+    text-align: left;
+    z-index: 20;
+  }
+  .toc-header{
+    display: flex; justify-content: space-between; align-items: center;
+    text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted);
+    font-weight: 500; margin-bottom: 10px;
+  }
+  .toc-header button{
+    background: none; border: none; cursor: pointer;
+    font-size: 14px; color: var(--muted); line-height: 1; padding: 2px 4px;
+  }
+  .toc-header button:focus-visible{ outline: 2px solid var(--ink); }
+  .toc-list{ display: flex; flex-direction: column; align-items: flex-start; gap: 9px; }
+  .toc-list a{ display: block; width: 100%; text-align: left; color: var(--muted); font-weight: 400; }
+  .toc-list a.active{ color: var(--ink); font-weight: 600; }
+  .toc.collapsed .toc-list{ display: none; }
+
+  @media (width <= 1024px){
+    .toc{ display: none; }
+  }
+
+  /* ---- content column ---- */
+  .project-content{ width: 62%; max-width: 720px; margin: 0 auto; }
+  .stage-inner{ max-width: 1400px; margin: 0 auto; }
+
+  .eyebrow{
+    font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--muted); margin: 0 0 14px;
+  }
+
+  h1{
+    margin: 0 0 24px;
+    font-weight: 800;
+    font-size: clamp(2.5rem, 5vw, 4.25rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .subtitle{
+    font-style: italic;
+    font-size: 1.125rem;
+    color: var(--muted);
+    margin: 0 0 32px;
+  }
+
+  .meta-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: clamp(1rem, 3vw, 1.25rem) clamp(1rem, 3vw, 1.5rem);
+    padding: clamp(1.25rem, 3vw, 1.75rem) 0;
+    border-top: 1px solid #d6d9e0;
+    border-bottom: 1px solid #d6d9e0;
+    margin-bottom: clamp(2rem, 6vw, 3.5rem);
+  }
+  .meta-label{
+    display: block; font-size: 0.6875rem; text-transform: uppercase;
+    letter-spacing: 0.05em; color: var(--muted); margin-bottom: 6px;
+  }
+  .meta-value{ display: block; font-size: 0.875rem; color: var(--ink); line-height: 1.4; }
+  .meta-label-next{ margin-top: 12px; }
+  .meta-ig-link{
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: opacity 0.2s ease;
+  }
+  .meta-ig-link:hover{ text-decoration: underline; }
+  .meta-ig-link svg{ flex: 0 0 auto; }
+
+  section{ margin-bottom: clamp(2.5rem, 6vw, 3.25rem); scroll-margin-top: 100px; }
+  section h2{
+    font-size: 0.8125rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--muted); margin: 0 0 10px;
+  }
+  .section-subtitle{
+    font-size: clamp(1.125rem, 1.6vw, 1.25rem); font-weight: 700; line-height: 1.35;
+    letter-spacing: -0.01em; color: var(--ink); margin: 0 0 14px;
+  }
+  section p{ font-size: 1rem; line-height: 1.7; color: var(--ink); margin: 0 0 18px; }
+  section p:last-child{ margin-bottom: 0; }
+
+  /* ---- imágenes: portada e inline ---- */
+  .cover-image, .inline-image{
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: clamp(2rem, 6vw, 3.5rem);
+  }
+  section .inline-image{ margin: 28px 0; }
+
+  .cover-swatch, .inline-swatch, .tile{
+    width: 100%; height: 100%;
+    display: flex; align-items: flex-end; padding: 14px;
+    font-size: 11px; color: rgba(255,255,255,0.85); font-weight: 500;
+  }
+  .cover-swatch{ background: linear-gradient(135deg,#1c2531 0%,#3a4a63 45%,#b8860b 100%); }
+  .inline-swatch{ background: linear-gradient(135deg,#4a5c3a,#2c3a22); aspect-ratio: 16/9; }
+  .inline-image{ aspect-ratio: 16/9; }
+
+  .tile{ border-radius: 4px; overflow: hidden; padding: 10px; font-size: 10px; }
+  .swatch-o1{ background: linear-gradient(135deg,#3a4a63,#1c2531); }
+  .swatch-o2{ background: linear-gradient(135deg,#d9a441,#b8860b); color: rgba(0,0,0,0.6); }
+  .swatch-o3{ background: linear-gradient(135deg,#5c6b45,#2c3a22); }
+  .swatch-o4{ background: linear-gradient(135deg,#7c6a4a,#493c2c); }
+  .swatch-o5{ background: linear-gradient(135deg,#5c6b73,#33404a); }
+  .swatch-o6{ background: #c9ccd4; color: rgba(0,0,0,0.55); }
+
+  .component-caption{
+    font-size: 0.8125rem; color: var(--caption); margin: 14px 0 clamp(2rem, 6vw, 3rem); max-width: 560px;
+  }
+
+  /* ---- imágenes reales dentro de una sección (después del texto) ---- */
+  .story-image{ margin: 40px 0 0; }
+  .story-image img{ width: 100%; height: auto; border-radius: 4px; }
+
+  /* ---- Decisiones: proceso de construcción del logo (secuencia conectada) ---- */
+  .process-strip{
+    display: flex; align-items: center;
+    gap: 0; margin: 40px 0 0;
+    overflow-x: auto; padding-bottom: 6px;
+    scrollbar-width: none;
+  }
+  .process-strip::-webkit-scrollbar{ display: none; }
+  .process-step{ flex: 0 0 auto; }
+  .process-step .tile{ width: 128px; aspect-ratio: 3/4; }
+  .process-connector{
+    flex: 0 0 28px; height: 1px; background: rgba(12,12,12,0.2);
+    margin: 0 4px; position: relative;
+  }
+  .process-connector::after{
+    content: ''; position: absolute; right: -1px; top: -2.5px;
+    width: 5px; height: 5px; border-radius: 50%; background: var(--muted);
+  }
+
+  /* ---- Decisiones: sistema de identidad (composición superpuesta) ---- */
+  .identity-stack{
+    position: relative; width: 100%;
+    aspect-ratio: 16 / 7.5;
+    margin: 40px 0 0;
+  }
+  .identity-stack .tile{
+    position: absolute; box-shadow: 0 14px 28px rgba(12,12,12,0.16);
+  }
+  .identity-stack .tile.main{ left: 0; top: 0; width: 60%; height: 100%; z-index: 1; box-shadow: none; }
+  .identity-stack .tile.accent-a{ right: 8%; top: 0; width: 26%; height: 50%; z-index: 2; }
+  .identity-stack .tile.accent-b{ right: 0; bottom: 0; width: 30%; height: 54%; z-index: 3; }
+
+  /* ---- Resultado: feed de redes sociales ---- */
+  .feed-grid{
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 8px; margin: 40px 0 0;
+  }
+  .feed-grid .tile{
+    aspect-ratio: 1/1; padding: 8px;
+    transition: transform 0.3s ease;
+  }
+  .feed-grid .tile:hover{ transform: scale(1.035); z-index: 1; }
+  .feed-grid img{
+    width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 4px;
+    position: relative; transition: transform 0.3s ease;
+  }
+  .feed-grid img:hover{ transform: scale(1.035); z-index: 1; }
+
+  /* ---- Resultado: informes / infografías / eventos (grid editorial asimétrico) ---- */
+  .editorial-grid{ display: flex; gap: 14px; margin: 40px 0 0; }
+  .editorial-grid .tile{ transition: transform 0.3s ease; }
+  .editorial-grid .tile:hover{ transform: translateY(-4px); }
+  .editorial-grid .col-big{ flex: 1.4; }
+  .editorial-grid .col-big .tile{ width: 100%; height: 100%; aspect-ratio: 4/5; }
+  .editorial-grid .col-stack{ flex: 1; display: flex; flex-direction: column; gap: 14px; }
+  .editorial-grid .col-stack .tile{ flex: 1; aspect-ratio: 16/10; }
+
+  /* ---- Resultado: presentaciones (stack estático con leve abanico al pasar el cursor) ---- */
+  .deck-stack{ position: relative; width: 240px; aspect-ratio: 3/4; margin: 40px auto 0; }
+  .deck-stack .tile{
+    position: absolute; inset: 0; box-shadow: 0 16px 28px rgba(12,12,12,0.18);
+    transition: transform 0.35s ease;
+  }
+  .deck-stack .tile:nth-child(1){ transform: rotate(-7deg) translateY(6px); z-index: 1; }
+  .deck-stack .tile:nth-child(2){ transform: rotate(0deg); z-index: 2; }
+  .deck-stack .tile:nth-child(3){ transform: rotate(7deg) translateY(6px); z-index: 1; }
+  .deck-stack:hover .tile:nth-child(1){ transform: rotate(-15deg) translate(-26px, 10px); }
+  .deck-stack:hover .tile:nth-child(3){ transform: rotate(15deg) translate(26px, 10px); }
+
+  /* ---- Decisiones: piezas aplicadas (folleto, sitio web, boletín) ---- */
+  .mockup-grid{
+    display: grid; grid-template-columns: 982fr 841fr; gap: 14px; margin: 40px 0 0;
+  }
+  .mockup-grid .wide{ grid-column: 1 / -1; }
+  .mockup-grid img{ width: 100%; height: auto; border-radius: 4px; }
+  @media (max-width: 480px){
+    .mockup-grid{ grid-template-columns: 1fr; }
+  }
+
+  /* ---- Investigación: carrusel "squeeze" (cada pieza se muestra con su propia proporción) ---- */
+  .squeeze{ container-type: inline-size; margin: 40px 0 0; }
+  /* respaldo sin JS / sin container queries: rejilla simple */
+  .squeeze .sq-items{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
+  .squeeze .sq-item{ margin: 0; }
+  .squeeze .sq-item img{ width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 4px; }
+  .squeeze .sq-item figcaption{ display: none; }
+  .squeeze.is-ready .sq-items{ display: none; }
+
+  .sq-ui{
+    --sq-h: clamp(110px, 36cqi, 380px);
+    --sq-slat: 8px; --sq-gap: 16px; --sq-slat-gap: 8px; --sq-radius: 6px;
+    --sq-ms: 1000ms; --sq-ease: cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex; flex-direction: column; width: 100%;
+  }
+  @container (max-width: 34rem){
+    .sq-ui{ --sq-gap: 10px; --sq-slat: 6px; --sq-slat-gap: 6px; }
+  }
+  .sq-controls{ display: flex; justify-content: flex-end; gap: 8px; margin-bottom: 16px; }
+  .sq-arrow{
+    width: 36px; height: 36px; display: grid; place-items: center; padding: 0;
+    border: 0; border-radius: 6px; background: #016644; color: #fff; cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+  .sq-arrow:hover{ opacity: 0.85; }
+  .sq-arrow:focus-visible, .sq-card:focus-visible{ outline: 2px solid #016644; outline-offset: 2px; }
+  .sq-viewport{ width: 100%; overflow: hidden; height: var(--sq-h); touch-action: pan-y; }
+  .sq-strip{ display: flex; height: 100%; width: max-content; transition: transform var(--sq-ms) var(--sq-ease); }
+  .sq-strip.still, .sq-strip.still .sq-card{ transition: none !important; }
+  .sq-card{
+    position: relative; isolation: isolate; flex-shrink: 0; height: 100%;
+    padding: 0; border: 0; background: #dfe3ec; overflow: hidden; cursor: pointer;
+    transition: width var(--sq-ms) var(--sq-ease), margin-left var(--sq-ms) var(--sq-ease);
+  }
+  /* la imagen se dibuja siempre a su tamaño natural (alto del carrusel x su proporción) y centrada:
+     la tarjeta solo cambia cuánto de ella se ve */
+  .sq-card .sq-pic{
+    position: absolute; top: 0; bottom: 0; left: 50%; transform: translateX(-50%);
+    height: 100%; width: calc(var(--sq-h) * var(--ar, 1)); min-width: 0; max-width: none;
+    object-fit: cover; border-radius: 0; user-select: none;
+  }
+  .sq-panel{ display: grid; margin-top: 24px; }
+  .sq-cap{
+    grid-area: 1 / 1; opacity: 0; visibility: hidden;
+    transition: opacity var(--sq-ms) var(--sq-ease), visibility var(--sq-ms);
+  }
+  .sq-cap.is-shown{ opacity: 1; visibility: visible; }
+  .sq-cap-text{ max-width: 46rem; font-size: 13px; line-height: 1.6; text-wrap: balance; color: var(--caption); }
+  @container (min-width: 32rem){ .sq-cap-text{ font-size: 14px; } }
+  
+
+  @media (prefers-reduced-motion: reduce){
+    .feed-grid .tile, .feed-grid img, .editorial-grid .tile, .deck-stack .tile{ transition: none; }
+    .deck-stack:hover .tile:nth-child(1){ transform: rotate(-7deg) translateY(6px); }
+    .deck-stack:hover .tile:nth-child(3){ transform: rotate(7deg) translateY(6px); }
+  }
+
+  /* ---- espacio para video / animación ---- */
+  .media-block{
+    width: 100%; aspect-ratio: 16/9; border-radius: 4px; overflow: hidden;
+    position: relative; background: linear-gradient(135deg,#1c2531,#3a4a63);
+    display: flex; align-items: center; justify-content: center;
+    margin: 40px 0 0;
+  }
+  .play-button{
+    width: 60px; height: 60px; border-radius: 50%;
+    background: rgba(255,255,255,0.12); border: 1.5px solid rgba(255,255,255,0.75);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .media-caption{ position: absolute; bottom: 14px; left: 14px; font-size: 11px; color: rgba(255,255,255,0.85); font-weight: 500; }
+
+  @media (width <= 768px){
+    nav{ gap: 16px; font-size: 11px; }
+    .project-content{ width: 100%; max-width: none; margin-left: 0; }
+    .meta-grid{ grid-template-columns: 1fr 1fr; }
+    h1{ font-size: clamp(2.125rem, 11vw, 2.75rem); }
+
+    .process-step .tile{ width: 96px; }
+
+    .identity-stack{ aspect-ratio: auto; height: auto; }
+    .identity-stack .tile{ position: static; width: 100% !important; height: auto !important; aspect-ratio: 4/3; box-shadow: none; margin-bottom: 10px; }
+
+    .editorial-grid{ flex-direction: column; }
+    .editorial-grid .col-big .tile{ aspect-ratio: 16/10; }
+
+    .deck-stack{ width: 180px; }
+  }
+
+  /* ---- shared arrow, used on Case Study, header socials and footer links ---- */
+  .link-arrow{
+    display: inline-block;
+    transition: transform 0.25s ease;
+  }
+  a:hover .link-arrow,
+  a:focus-visible .link-arrow{
+    transform: translate(3px, -3px);
+  }
+
+  /* ---- shared underline, same components as above ---- */
+  .link-text{ position: relative; }
+  .link-text::after{
+    content: '';
+    position: absolute;
+    left: 0; bottom: -2px;
+    width: 100%; height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+  }
+  a:hover .link-text::after,
+  a:focus-visible .link-text::after{
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  /* ---- footer (igual que en Inicio) ---- */
+  .site-footer{
+    padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1.25rem, 4.5vw, 3rem) clamp(3rem, 8vw, 6rem);
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .footer-panel{
+    /* paleta verde ya definida en el proyecto (misma que Sobre mí) */
+    --footer-bg: #016644;
+    --footer-title: #daffa2;
+    --footer-ink: #ffffff;
+    --footer-muted: rgba(255,255,255,0.78);
+    background: var(--footer-bg);
+    border-radius: 0;
+    padding: clamp(2rem, 6vw, 3.5rem) clamp(1.5rem, 6vw, 4rem);
+    color: var(--footer-ink);
+    /* contiene el título sobredimensionado: nunca ensancha <body> */
+    overflow: hidden;
+  }
+  .footer-title{
+    margin: 0 0 clamp(2rem, 6vw, 3.5rem);
+    font-weight: 600;
+    font-size: clamp(6rem, 15vw, 14rem);
+    line-height: 0.94;
+    letter-spacing: -0.02em;
+    text-align: left;
+    white-space: nowrap;
+    color: var(--footer-title);
+  }
+  /* se dimensiona a su contenido real (más ancho que el panel a propósito,
+     por eso el panel necesita overflow:hidden) para que el translateX lo
+     desplace como una sola pieza gráfica */
+  #footerNameWrap{
+    display: inline-block;
+    width: max-content;
+    will-change: transform;
+  }
+  .letter{
+    display: inline-block;
+    font-weight: 400;
+    transition: font-weight 0.3s ease;
+  }
+  .letter.dist-0{ font-weight: 800; }
+  .letter.dist-1{ font-weight: 700; }
+  .letter.dist-2{ font-weight: 500; }
+  .footer-links{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .footer-link{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    width: fit-content;
+    color: var(--footer-ink);
+    font-weight: 700;
+    font-size: clamp(1.125rem, 2.5vw, 1.25rem);
+    text-decoration: none;
+  }
+  .footer-link:focus-visible{
+    outline: 2px solid var(--footer-ink);
+    outline-offset: 4px;
+  }
+  .footer-music{ margin-bottom: 64px; }
+  .footer-italic{
+    margin: 0 0 8px;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.0625rem;
+    color: var(--footer-muted);
+  }
+  .footer-credit{
+    margin: 0;
+    font-weight: 400;
+    font-size: 0.8125rem;
+    color: var(--footer-muted);
+  }
+
+  @media (width <= 768px){
+    .footer-title{ font-size: clamp(3.25rem, 19vw, 5.5rem); }
+    .footer-link{ min-height: 44px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .letter{ transition: none; }
+    .link-arrow{ transition: none; }
+    .site-footer.in-view #footerNameWrap{ animation: none; transform: none; }
+  }
+
+  /* ---- botón Atrás (fin de caso de estudio, antes del footer) ---- */
+  .back-nav{ max-width:1400px; margin:0 auto; padding: 0 clamp(1.25rem, 4.5vw, 3rem) clamp(1.5rem, 4vw, 2.5rem); }
+  .back-link{ display:inline-flex; align-items:center; gap:6px; color:var(--ink); font-weight:700; font-size:15px; text-decoration:none; background:none; border:none; cursor:pointer; font-family:inherit; }
+  .back-icon{ display:inline-flex; transition: transform 0.25s ease; }
+  .back-nav{ display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  .next-link:hover .back-icon, .next-link:focus-visible .back-icon{ transform: translateX(3px); }
+  .back-link:hover .back-icon, .back-link:focus-visible .back-icon{ transform: translateX(-3px); }
+  .back-link:focus-visible{ outline:2px solid var(--ink); outline-offset:4px; border-radius:4px; }
+  @media (width <= 768px){ .back-link{ min-height:44px; } }
+  @media (prefers-reduced-motion: reduce){ .back-icon{ transition:none; } }
+
+  /* ---- selector de idioma (ES / EN) ---- */
+  .lang-switch{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 30px;
+    margin-left: 12px;
+    padding: 6px 10px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+    border: 1.5px solid var(--ink);
+    border-radius: 6px;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .lang-switch:hover{ background: var(--ink); color: var(--bg); }
+  .lang-switch:focus-visible{ outline: 2px solid var(--ink); outline-offset: 4px; }
+  @media (width <= 768px){
+    .lang-switch{ min-height: 44px; min-width: 44px; margin-left: 0; margin-right: 4px; }
+  }
+  @media (prefers-reduced-motion: reduce){ .lang-switch{ transition: none; } }
+
+  /* ---- footer móvil: título fijo y centrado (igual que el Home) ----
+     en móvil el título sobredimensionado se recortaba y se desplazaba; aquí se ajusta
+     al recuadro, se centra y no se mueve. Solo queda el efecto de peso de las letras. */
+  @media (width <= 768px){
+    .footer-title{
+      font-size: clamp(2.5rem, 13vw, 4rem);
+      white-space: normal;
+      text-align: center;
+    }
+    #footerNameWrap{ display: block; width: 100%; }
+    .site-footer.in-view #footerNameWrap{ animation: none; transform: none; }
+  }
+
+  /* ---- accesibilidad: enlace para saltar al contenido + utilidades ---- */
+  .skip-link{
+    position: absolute; left: 12px; top: -120px; z-index: 10000;
+    padding: 12px 18px; border-radius: 6px;
+    background: #0e0e0e; color: #ffffff; box-shadow: 0 0 0 2px #ffffff;
+    font: 600 14px/1.2 'Inter', system-ui, sans-serif; letter-spacing: 0.02em; text-decoration: none;
+  }
+  .skip-link:focus, .skip-link:focus-visible{ top: 12px; outline: 3px solid #daffa2; outline-offset: 2px; }
+  .sr-only{
+    position: absolute !important; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0;
+    overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+  }
+  main:focus{ outline: none; }
+
+  /* ---- accesibilidad: el correo del pie nunca se sale del recuadro (320 px / espaciado de texto aumentado) ---- */
+  .footer-link{ max-width: 100%; }
+  .footer-link .link-text{ min-width: 0; overflow-wrap: anywhere; }
+  @media (width <= 360px){ .footer-link{ font-size: 1rem; } }
+
+  /* ---- accesibilidad: pausar GIF animados (WCAG 2.2.2) ---- */
+  .anim-toggle{
+    position: fixed; left: 16px; bottom: 16px; z-index: 15;
+    display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px 0 12px;
+    border: 0; border-radius: 999px; cursor: pointer;
+    background: rgba(240,242,247,0.96); color: var(--ink, #0c0c0c);
+    box-shadow: 0 2px 12px rgba(12,12,12,0.22);
+    font: 600 13px/1 'Inter', system-ui, sans-serif; letter-spacing: 0.02em;
+    transition: opacity 0.2s ease;
+  }
+  .anim-toggle:hover{ opacity: 0.85; }
+  .anim-toggle:focus-visible{ outline: 2px solid var(--ink, #0c0c0c); outline-offset: 3px; }
+  .anim-toggle svg{ display: block; }
+  .anim-toggle .ico-play{ display: none; }
+  .anim-toggle[aria-pressed="true"] .ico-pause{ display: none; }
+  .anim-toggle[aria-pressed="true"] .ico-play{ display: block; }
+  @media (prefers-reduced-motion: reduce){ .anim-toggle{ transition: none; } }
+
+  /* ---- menú completo visible en móvil (360–768px) ----
+     con solo 4 opciones + idioma, el menú de desktop cabe en una línea: se muestra en lugar de la
+     hamburguesa. Los tamaños escalan con el ancho (a 768px quedan como en desktop) y el área táctil
+     sube a 44px sin cambiar el aspecto. Por debajo de 360px (zoom alto) se mantiene la hamburguesa. */
+  @media (width <= 768px) and (width >= 360px){
+    .topbar{ min-height: 44px; }
+    #mainNav{ display: flex; gap: 0; }
+    .nav-toggle, .mobile-nav{ display: none; }
+    body.nav-open{ overflow: visible; }
+    .nav-hover{ display: none; }
+    .topbar nav a, .topbar .lang-switch{ white-space: nowrap; flex-shrink: 0; }
+    .topbar nav a.tab, .topbar nav a.pill, .topbar .lang-switch{ font-size: clamp(11px, 3vw, 13px); letter-spacing: 0.03em; }
+    .topbar nav a.tab{ padding: 7px clamp(3px, 1.4vw, 12px); }
+    .topbar nav a.pill{ position: relative; padding: 7px clamp(3px, 1.4vw, 12px); margin-left: 0; background: none; border: 0; border-radius: 6px;
+      color: rgba(12,12,12,0.6); font-weight: 500; text-transform: uppercase; }
+    .topbar nav a.pill:hover, .topbar nav a.pill:focus-visible{ background: none; border: 0; }
+    .topbar .lang-switch{ position: relative; min-height: 30px; min-width: 0; margin-left: clamp(3px, 1.4vw, 12px); margin-right: 0; padding: 6px clamp(7px, 1.6vw, 10px); }
+    .topbar nav a.tab::after, .topbar nav a.pill::after{ content: ""; position: absolute; inset: -7px 0; }
+    .topbar .lang-switch::after{ content: ""; position: absolute; inset: -7px -4px; }
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+<div class="page">
+  <div class="stage-inner">
+
+    <header class="topbar">
+      <nav id="mainNav" aria-label="Principal">
+        <span class="nav-hover" id="navHover"></span>
+        <span class="nav-active-bar" id="navActiveBar"></span>
+        <a href="index.html" class="tab" data-page="index">Inicio</a>
+        <a href="vanessa-sobre-mi.html" class="tab" data-page="sobre-mi">Sobre mí</a>
+        <a href="index.html#proyectos" class="tab" data-page="proyectos">Proyectos</a>
+        <a href="index.html#contacto" class="pill">Hablemos</a>
+      </nav>
+      <a class="lang-switch" href="en/ocic" hreflang="en" lang="en" aria-label="Ver este sitio en inglés">EN</a>
+      <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="mobileNav" aria-label="Abrir menú">
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+    </header>
+
+    <div class="mobile-nav" id="mobileNav" role="navigation" aria-label="Menú móvil">
+      <a href="index.html" class="mobile-nav-link" data-page="index">Inicio</a>
+      <a href="vanessa-sobre-mi.html" class="mobile-nav-link" data-page="sobre-mi">Sobre mí</a>
+      <a href="index.html#proyectos" class="mobile-nav-link" data-page="proyectos">Proyectos</a>
+      <a href="index.html#contacto" class="mobile-nav-link mobile-nav-pill" data-page="contacto">Hablemos</a>
+    </div>
+
+    <aside class="toc" id="toc">
+      <div class="toc-header">
+        <span>Contenidos</span>
+        <button id="tocToggle" aria-label="Colapsar índice">−</button>
+      </div>
+      <nav class="toc-list" aria-label="En esta página">
+        <a href="#problema">Problema</a>
+        <a href="#contexto">Contexto</a>
+        <a href="#investigacion">Investigación</a>
+        <a href="#resultado">Resultado</a>
+        <a href="#reflexiones">Reflexiones</a>
+      </nav>
+    </aside>
+
+    <main class="project-content" id="contenido" tabindex="-1">
+
+      <p class="eyebrow">Observatorio Colombiano de la Industria del Cannabis</p>
+      <h1>OCIC</h1>
+      <p class="subtitle">De los estereotipos del cannabis a una comunicación especializada</p>
+
+      <div class="meta-grid">
+        <div><span class="meta-label">Cliente</span><span class="meta-value">Arteaga Latam</span></div>
+        <div><span class="meta-label">Rol</span><span class="meta-value">Coordinadora gráfica</span></div>
+        <div>
+          <span class="meta-label">Aporte</span>
+          <span class="meta-value">Identidad de marca</span>
+          <span class="meta-value">Dirección de arte</span>
+        </div>
+        <div>
+          <span class="meta-label">LinkedIn</span>
+          <a class="meta-value meta-ig-link" href="https://www.linkedin.com/showcase/observatorio-colombiano-de-la-industria-del-cannabis/" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"></path>
+            </svg>
+            OCIC
+          </a>
+          <span class="meta-label meta-label-next">X</span>
+          <a class="meta-value meta-ig-link" href="https://x.com/OBScannabis_Co" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            @OBScannabis_Co
+          </a>
+        </div>
+      </div>
+
+      <section id="problema">
+        <h2>Problema</h2>
+        <h3 class="section-subtitle">Comunicar una industria más allá de los estereotipos del cannabis</h3>
+        <p>El OCIC buscaba posicionar la industria colombiana del cannabis desde su dimensión económica, científica y empresarial. La comunicación debía llegar a públicos muy distintos: inversionistas del sector medicinal, especialistas en exportación y aduanas, médicos, entidades de gobierno y personas interesadas en el tema.</p>
+        <p><strong>Necesitábamos diferenciarnos de la comunicación asociada al cannabis recreativo y demostrar que el observatorio trabajaba con información, análisis y conocimiento especializado.</strong> No se trataba de ocultar la relación con el cannabis, sino de comunicar que el observatorio abordaba el sector desde otro lugar: análisis, regulación, producción, comercio y oportunidades económicas.</p>
+
+        <figure class="story-image">
+          <img src="ocic_bocetos.jpg" width="1695" height="928" alt="Cuaderno abierto con bocetos a lápiz del logotipo del OCIC: hojas de cannabis, la sigla OCIC, el nombre completo del observatorio y exploraciones de símbolos.">
+        </figure>
+        <p class="component-caption">Bocetos iniciales: exploraciones de símbolo y tipografía para el observatorio.</p>
+
+        <figure class="story-image">
+          <img src="ocic_propuestas_logo.png" width="1091" height="597" alt="Cinco propuestas de logotipo del OCIC; la seleccionada es un símbolo geométrico verde junto al nombre Observatorio Colombiano de la Industria del Cannabis.">
+        </figure>
+        <p class="component-caption">Propuestas de logotipo y versión seleccionada.</p>
+      </section>
+
+      <section id="contexto">
+        <h2>Contexto</h2>
+        <h3 class="section-subtitle">Un sector que estaba ampliando rápidamente sus posibilidades</h3>
+        <p>El OCIC nació en 2022, en un momento en que la industria colombiana del cannabis comenzaba a expandirse más allá del cultivo medicinal, hacia la investigación, producción, exportación y desarrollo empresarial. Al mismo tiempo, el debate sobre la regulación del uso adulto llevaba el cannabis a una conversación pública mucho más amplia.</p>
+        <p>Fui coordinadora gráfica desde sus inicios, trabajando directamente con las especialistas que lideraban el proyecto y desarrollando la identidad y comunicación visual para redes, informes, campañas, eventos y piezas audiovisuales.</p>
+      </section>
+
+      <section id="investigacion">
+        <h2>Investigación</h2>
+        <p>Las líderes del proyecto eran expertas en agronegocios y mantenían conversaciones directas con pequeños agricultores y empresarios del sector. Mi trabajo consistió en aprender de ese conocimiento, seguir su dirección sobre el rumbo del proyecto y complementarlo con referencias de medios especializados en cannabis.</p>
+        <p>Buena parte del trabajo consistió en traducir información técnica y económica en presentaciones, infografías y contenidos digitales que pudieran ser comprendidos rápidamente por públicos diversos.</p>
+
+        <div class="feed-grid feed-grid-photos">
+          <img src="ocic_feed_01.jpg" width="1200" height="1200" alt="Pieza «Perspectivas & necesidades de los mercados internacionales para productos de cannabis medicinal», con barras de datos formadas por un cultivo de cannabis bajo cielo azul." loading="lazy">
+          <img src="ocic_feed_02.jpg" width="1200" height="1200" alt="Pieza «10 años de cannabis legal en Uruguay», con el Palacio Legislativo, recortes de prensa y una pancarta de 2013, en azul y amarillo." loading="lazy">
+          <img src="ocic_feed_03.jpg" width="1200" height="1200" alt="Pieza con un mapa de Colombia: el uso de productos medicinales o cosméticos a base de cannabis se informó más en Bogotá, Antioquia y el Eje Cafetero." loading="lazy">
+          <img src="ocic_feed_04.jpg" width="1200" height="1201" alt="Pieza de evento: charla «Perspectiva internacional de la evolución del cannabis medicinal» con el speaker Jesse Stanley, el 3 de noviembre a las 9:30 a. m. vía Zoom." loading="lazy">
+          <img src="ocic_feed_05.jpg" width="1200" height="1200" alt="Pieza «Estrategias disponibles en la regulación aduanera colombiana para promover el comercio internacional: zonas francas», con un contenedor amarillo abierto en un campo." loading="lazy">
+          <img src="ocic_feed_06.jpg" width="1200" height="1200" alt="Pieza «¿Cómo pueden beneficiarse las empresas al utilizar las Sociedades de Comercialización Internacional para sus actividades de exportación?», sobre una vista aérea de un barco de contenedores y un campo verde." loading="lazy">
+        </div>
+        <p class="component-caption">Piezas diseñadas para las redes sociales del observatorio.</p>
+      </section>
+
+      <section id="resultado">
+        <h2>Resultado</h2>
+        <p>En lugar de hacer que cada contenido tuviera una solución gráfica completamente nueva, fuimos consolidando un sistema basado en jerarquías claras y recursos visuales que ayudaran a organizar la información. La identidad y el sistema visual se mantuvieron durante los años en los que estuvo activo el proyecto y se aplicaron a redes sociales, campañas, informes, infografías, eventos y piezas audiovisuales.</p>
+
+        <p>El éxito del sistema se vio en lo que permitió después. Con un manual de marca y acceso a los editables, otros diseñadores y el equipo audiovisual pudieron producir nuevas piezas manteniendo la coherencia, sin que cada contenido dependiera de una sola persona. La identidad dejó de ser un conjunto de piezas y pasó a ser un lenguaje que el equipo podía usar y hacer crecer.</p>
+
+        <figure class="story-image">
+          <img src="ocic_redes_07.jpg" width="1600" height="900" alt="Portada «Ruta de internacionalización del cannabis medicinal»: un contenedor verde abierto con una persona en un cultivo bajo invernadero, cajas sobre un pallet y logos de la Cámara de Comercio de Bogotá y del observatorio.">
+        </figure>
+
+        <div class="squeeze" data-squeeze aria-label="Piezas y registros del observatorio">
+          <div class="sq-items">
+            <figure class="sq-item">
+              <img class="sq-pic" src="ocic_redes_08.gif" width="1100" height="579" alt="Animación de la pantalla de Adobe Illustrator mientras se arma la portada, con el fondo de contenedores apilados en blanco y negro.">
+              <figcaption><span class="sq-title">Armado de la portada.</span><span class="sq-desc">Evento con la Cámara de Comercio de Bogotá para construir, junto a expertos, una ruta de exportación de cannabis medicinal; las fotos que siguen son de ese evento.</span></figcaption>
+            </figure>
+            <figure class="sq-item">
+              <img class="sq-pic" src="ocic_redes_12.jpg" width="1600" height="1066" alt="Fotografía de cinco participantes sentados en sillas frente a una pared clara, conversando durante el panel.">
+              <figcaption><span class="sq-title">Conversación entre los invitados.</span></figcaption>
+            </figure>
+            <figure class="sq-item">
+              <img class="sq-pic" src="ocic_redes_09.jpg" width="1200" height="1287" alt="Invitación «Ruta de internacionalización del cannabis medicinal»: una caja de cartón abierta con plantas de cannabis sobre un calendario, el 3 de noviembre a las 9:30 a. m. vía Zoom.">
+              <figcaption><span class="sq-title">Invitación a la socialización de resultados.</span></figcaption>
+            </figure>
+            <figure class="sq-item">
+              <img class="sq-pic" src="ocic_redes_10.jpg" width="1181" height="768" alt="Fotografía del evento: tres panelistas sentados frente a un auditorio, con un atril de la Cámara de Comercio de Bogotá y un banner del observatorio.">
+              <figcaption><span class="sq-title">El evento en la Cámara de Comercio.</span></figcaption>
+            </figure>
+            <figure class="sq-item">
+              <img class="sq-pic" src="ocic_redes_11.jpg" width="1200" height="1200" alt="Pieza «Bogotá exporta, Colombia avanza»: fondo verde con cajas sobre un pallet, y los datos del evento: 3 de noviembre, 9:30 a. m., vía Zoom.">
+              <figcaption><span class="sq-title">Bogotá exporta, Colombia avanza.</span></figcaption>
+            </figure>
+            <figure class="sq-item">
+              <img class="sq-pic" src="ocic_redes_13.jpg" width="1456" height="1023" alt="Portada «Cannabis: Abriendo caminos para la internacionalización», con una vista aérea de un barco de contenedores sobre un campo verde y los logos de la Cámara de Comercio de Bogotá y del observatorio.">
+              <figcaption><span class="sq-title">Abriendo caminos para la internacionalización.</span></figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div class="mockup-grid">
+          <img class="wide" src="ocic_editorial_01.jpg" width="2000" height="1089" alt="Folleto institucional del observatorio abierto sobre un fondo verde, junto a una portada cuadrada con una planta de cannabis y el lema «Fortalecemos la industria del cannabis, promoviendo conversaciones informadas».">
+          <img src="ocic_editorial_02.jpg" width="982" height="901" alt="Una persona frente a un portátil que muestra el sitio web de JA&amp;A, con el lema «Fortalecemos la industria, promoviendo conversaciones informadas» y la sección «Sobre nosotros».">
+          <img src="ocic_editorial_03.jpg" width="841" height="901" alt="Boletín digital del observatorio: a la izquierda una pieza con un médico y el dato del 73,4 % sobre el uso medicinal de la flor seca; a la derecha la sección «Cannabis picks» y el «Tweet destacado».">
+        </div>
+        <p class="component-caption">Folleto institucional, sitio web y boletín del observatorio.</p>
+      </section>
+
+      <section id="reflexiones">
+        <h2>Reflexiones</h2>
+        <h3 class="section-subtitle">Mayor autonomía, mayor confianza al diseñar</h3>
+        <p>OCIC fue uno de los proyectos en los que tuve mayor autonomía dentro de Arteaga Latam. Fui construyendo mi comprensión del problema junto al equipo a medida que conocía el sector y sus necesidades de comunicación.</p>
+        <p>También fue un proyecto en el que aprendí mucho del trabajo en equipo. Trabajé de cerca con un equipo especializado en agronegocios, aprendiendo a escuchar otras perspectivas, incorporar conocimiento que no era propio de mi disciplina y convertir ese conocimiento en un sistema visual que pudiera crecer con el proyecto.</p>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<div class="back-nav" role="navigation" aria-label="Navegación entre proyectos">
+  <a href="index.html" class="back-link">
+    <svg class="back-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+    <span class="link-text">Atrás</span>
+  </a>
+  <a href="el-veneco" class="back-link next-link" aria-label="Siguiente proyecto: El Veneco">
+    <span class="link-text">Siguiente</span>
+    <svg class="back-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+  </a>
+</div>
+
+<footer class="site-footer" id="contacto">
+  <div class="footer-panel">
+    <div class="name-wrap" id="footerNameWrap">
+      <h2 class="footer-title" id="footerTitleText">&#161;Hablemos!</h2>
+    </div>
+
+    <div class="footer-links" id="footerLinks">
+      <a href="mailto:vanessanieton@gmail.com" class="footer-link"><span class="link-text">vanessanieton@gmail.com</span> <span class="link-arrow" aria-hidden="true">&#8599;</span></a>
+      <a href="https://www.linkedin.com/in/vnessanieto/" class="footer-link" target="_blank" rel="noopener"><span class="link-text">LinkedIn</span> <span class="link-arrow" aria-hidden="true">&#8599;</span></a>
+    </div>
+
+    <div class="footer-music" id="footerMusic">
+      <p class="footer-italic">La m&#250;sica es una gran forma de conocernos:</p>
+      <a href="https://open.spotify.com/user/vnessanieto" class="footer-link" target="_blank" rel="noopener"><span class="link-text">Mi Spotify</span> <span class="link-arrow" aria-hidden="true">&#8599;</span></a>
+    </div>
+
+    <p class="footer-credit">Dise&#241;ado y construido con mucho amor y overthinking.</p>
+  </div>
+</footer>
+
+<script>
+  const toc = document.getElementById('toc');
+  const tocToggle = document.getElementById('tocToggle');
+  tocToggle.addEventListener('click', () => {
+    const collapsed = toc.classList.toggle('collapsed');
+    tocToggle.textContent = collapsed ? '+' : '−';
+    tocToggle.setAttribute('aria-label', collapsed ? 'Expandir índice' : 'Colapsar índice');
+  });
+
+  const links = document.querySelectorAll('.toc-list a');
+  const sections = [...document.querySelectorAll('section[id]')];
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      const link = document.querySelector(`.toc-list a[href="#${entry.target.id}"]`);
+      if (!link) return;
+      if (entry.isIntersecting){
+        links.forEach((l) => l.classList.remove('active'));
+        link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-40% 0px -50% 0px' });
+  sections.forEach((s) => observer.observe(s));
+
+  (function(){
+    var nav = document.getElementById('mainNav');
+    var hoverEl = document.getElementById('navHover');
+    var activeBar = document.getElementById('navActiveBar');
+    var tabs = nav.querySelectorAll('a.tab');
+    var CURRENT_PAGE = 'proyectos';
+
+    function moveTo(source, target){
+      if (!source || !target) return;
+      target.style.left = source.offsetLeft + 'px';
+      target.style.width = source.offsetWidth + 'px';
+    }
+
+    var activeTab = null;
+    tabs.forEach(function(tab){
+      if (tab.dataset.page === CURRENT_PAGE){
+        tab.classList.add('is-active');
+        activeTab = tab;
+      }
+      tab.addEventListener('mouseenter', function(){
+        hoverEl.style.opacity = '1';
+        moveTo(tab, hoverEl);
+      });
+    });
+    nav.addEventListener('mouseleave', function(){ hoverEl.style.opacity = '0'; });
+
+    function placeActiveBar(){ if (activeTab) moveTo(activeTab, activeBar); }
+    placeActiveBar();
+    window.addEventListener('load', placeActiveBar);
+    window.addEventListener('resize', placeActiveBar);
+
+    document.querySelectorAll('.mobile-nav-link').forEach(function(link){
+      if (link.dataset.page === CURRENT_PAGE) link.classList.add('is-active');
+    });
+  })();
+
+  // ---------- Mobile nav: hamburger toggle (accesible, sin depender de hover) ----------
+  (function(){
+    var toggle = document.getElementById('navToggle');
+    var panel = document.getElementById('mobileNav');
+    if (!toggle || !panel) return;
+
+    function closeMenu(){
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Abrir menú');
+      panel.classList.remove('open');
+      document.body.classList.remove('nav-open');
+    }
+    function openMenu(){
+      toggle.setAttribute('aria-expanded', 'true');
+      toggle.setAttribute('aria-label', 'Cerrar menú');
+      panel.classList.add('open');
+      document.body.classList.add('nav-open');
+    }
+
+    toggle.addEventListener('click', function(){
+      var isOpen = toggle.getAttribute('aria-expanded') === 'true';
+      if (isOpen) closeMenu(); else openMenu();
+    });
+
+    panel.querySelectorAll('a').forEach(function(link){
+      link.addEventListener('click', closeMenu);
+    });
+
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true'){ closeMenu(); toggle.focus(); }
+    });
+
+    window.addEventListener('resize', function(){
+      if (window.innerWidth >= 360) closeMenu();
+    });
+  })();
+</script>
+
+<script>
+  // ---------- Footer: bubble text + alineacion con la columna de contenido ----------
+  (function(){
+    var prefersReducedFooter = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function makeBubbleLine(line){
+      var text = line.textContent;
+      line.textContent = '';
+      [].forEach.call(text, function(ch){
+        var span = document.createElement('span');
+        span.className = 'letter';
+        span.textContent = ch === ' ' ? '\u00A0' : ch;
+        line.appendChild(span);
+      });
+
+      if (prefersReducedFooter) return;
+
+      var letters = [].slice.call(line.querySelectorAll('.letter'));
+      letters.forEach(function(letter, idx){
+        letter.addEventListener('mouseenter', function(){
+          letters.forEach(function(other, j){
+            var dist = Math.abs(idx - j);
+            other.classList.remove('dist-0', 'dist-1', 'dist-2');
+            if (dist === 0) other.classList.add('dist-0');
+            else if (dist === 1) other.classList.add('dist-1');
+            else if (dist === 2) other.classList.add('dist-2');
+          });
+        });
+      });
+      line.addEventListener('mouseleave', function(){
+        letters.forEach(function(l){ l.classList.remove('dist-0', 'dist-1', 'dist-2'); });
+      });
+    }
+
+    var footerTitleText = document.getElementById('footerTitleText');
+    if (footerTitleText) makeBubbleLine(footerTitleText);
+
+    function alignFooterLinks(){
+      var footerLinks = document.getElementById('footerLinks');
+      var footerMusic = document.getElementById('footerMusic');
+      var contentCol = document.querySelector('.project-content');
+      var panel = document.querySelector('.footer-panel');
+      if (!footerLinks || !footerMusic || !contentCol || !panel) return;
+
+      if (window.innerWidth <= 768){
+        footerLinks.style.marginLeft = '';
+        footerMusic.style.marginLeft = '';
+        return;
+      }
+
+      var contentRect = contentCol.getBoundingClientRect();
+      var panelRect = panel.getBoundingClientRect();
+      var panelPadLeft = parseFloat(getComputedStyle(panel).paddingLeft);
+      var contentStart = panelRect.left + panelPadLeft;
+      var offset = Math.max(0, contentRect.left - contentStart);
+
+      footerLinks.style.marginLeft = offset + 'px';
+      footerMusic.style.marginLeft = offset + 'px';
+    }
+
+    window.addEventListener('load', alignFooterLinks);
+    window.addEventListener('resize', alignFooterLinks);
+    alignFooterLinks();
+
+    // ---------- El título del footer empieza a moverse solo al entrar en viewport ----------
+    var footerEl = document.getElementById('contacto');
+    if (footerEl && !prefersReducedFooter){
+      if (!('IntersectionObserver' in window)){
+        footerEl.classList.add('in-view');
+      } else {
+        var footerIo = new IntersectionObserver(function(entries){
+          entries.forEach(function(entry){
+            if (entry.isIntersecting){
+              footerEl.classList.add('in-view');
+              footerIo.disconnect();
+            }
+          });
+        }, { threshold: 0.2 });
+        footerIo.observe(footerEl);
+      }
+    }
+  })();
+</script>
+
+<script>
+// ---------- Investigación: carrusel de piezas para redes ----------
+  // Versión en JS puro del "squeeze carousel": una pieza abierta y, a su derecha,
+  // tiras que se van comprimiendo. Al abrir una tira la fila se desliza y el texto de abajo cambia.
+  (function(){
+    const root = document.querySelector('[data-squeeze]');
+    if (!root) return;
+    // sin container queries se queda la rejilla de respaldo que ya está en el HTML
+    if (!(window.CSS && CSS.supports && CSS.supports('width', '1cqi'))) return;
+
+    const items = [...root.querySelectorAll('.sq-item')];
+    const count = items.length;
+    if (!count) return;
+
+    // reparto del espacio entre las 4 columnas (suman 1); la columna con el cursor gana espacio
+    const SHARES    = [0, 0.55, 0.30, 0.15];
+    const STRETCHED = [0, 0.65, 0.37, 0.28];
+    const SQUEEZED  = [0, 0.50, 0.22, 0.13];
+
+    const DURATION = 1000;
+    const reducedQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const getMs = () => (reducedQuery.matches ? 0 : DURATION);
+
+    const slats = Math.min(3, Math.max(1, count - 4));  // menos piezas, cola más corta
+    const visible = 4 + slats;
+    const wrap = (i) => ((i % count) + count) % count;
+
+    const data = items.map((item) => {
+      const title = item.querySelector('.sq-title');
+      const desc = item.querySelector('.sq-desc');
+      const pic = item.querySelector('.sq-pic');
+      // proporción real de cada pieza (ancho / alto): la pieza abierta se muestra completa, sin recortar
+      const pw = pic ? (parseFloat(pic.getAttribute('width')) || 1) : 1;
+      const ph = pic ? (parseFloat(pic.getAttribute('height')) || 1) : 1;
+      return {
+        ar: pw / ph,
+        pic: pic,
+        title: title ? title.textContent.trim() : '',
+        desc: desc ? desc.textContent.trim() : ''
+      };
+    });
+
+    /* ---------- estructura ---------- */
+    const uid = 'sq' + Math.random().toString(36).slice(2, 8);
+    const label = root.getAttribute('aria-label') || 'Galería';
+
+    const ui = document.createElement('div');
+    ui.className = 'sq-ui';
+    ui.style.setProperty('--sq-n', slats);
+
+    const ARROW_BACK = 'M9.6 2.6 5.1 7.1h9.1v1.8H5.1l4.5 4.5-1.2 1.2-6-6L1.8 8l.6-.6 6-6 1.2 1.2Z';
+    const ARROW_NEXT = 'M6.4 2.6l4.5 4.5H1.8v1.8h9.1l-4.5 4.5 1.2 1.2 6-6 .6-.6-.6-.6-6-6-1.2 1.2Z';
+    function makeArrow(text, path, by){
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'sq-arrow';
+      b.setAttribute('aria-label', text);
+      b.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="' + path + '"/></svg>';
+      b.addEventListener('click', () => step(by));
+      return b;
+    }
+
+    if (count > 1){
+      const controls = document.createElement('div');
+      controls.className = 'sq-controls';
+      controls.appendChild(makeArrow('Anterior', ARROW_BACK, -1));
+      controls.appendChild(makeArrow('Siguiente', ARROW_NEXT, 1));
+      ui.appendChild(controls);
+    }
+
+    const viewport = document.createElement('div');
+    viewport.className = 'sq-viewport';
+    const strip = document.createElement('div');
+    strip.className = 'sq-strip';
+    strip.setAttribute('role', 'tablist');
+    strip.setAttribute('aria-orientation', 'horizontal');
+    strip.setAttribute('aria-label', label);
+    viewport.appendChild(strip);
+    ui.appendChild(viewport);
+
+    const panel = document.createElement('div');
+    panel.className = 'sq-panel';
+    panel.id = uid + '-panel';
+    panel.setAttribute('role', 'tabpanel');
+    panel.setAttribute('aria-live', 'polite');
+    const caps = data.map((d) => {
+      const cap = document.createElement('div');
+      cap.className = 'sq-cap';
+      cap.setAttribute('aria-hidden', 'true');
+      const text = document.createElement('div');
+      text.className = 'sq-cap-text';
+      const t = document.createElement('span');
+      t.className = 'sq-cap-title';
+      t.textContent = d.title;
+      text.appendChild(t);
+      if (d.desc){
+        const s = document.createElement('span');
+        s.className = 'sq-cap-desc';
+        s.textContent = ' ' + d.desc;
+        text.appendChild(s);
+      }
+      cap.appendChild(text);
+      panel.appendChild(cap);
+      return cap;
+    });
+    ui.appendChild(panel);
+
+    /* ---------- estado ---------- */
+    // La fila es una tira que se desliza, no un anillo que gira. Cada tarjeta ocupa una
+    // columna = su lugar en la tira + `column`. La pieza abierta es la de la columna 0,
+    // o sea la que está en el lugar -column. Las que salen por la izquierda son tiras (col < 0).
+    let cards = [];
+    let column = 0;
+    let hover = -1;
+    let timer = null;
+    let seed = 0;
+
+    function makeCard(slide){
+      const el = document.createElement('button');
+      el.type = 'button';
+      el.className = 'sq-card';
+      el.setAttribute('role', 'tab');
+      el.id = uid + '-tab-' + (seed++);
+      el.setAttribute('aria-controls', panel.id);
+      el.setAttribute('aria-label', data[slide].title || ('Pieza ' + (slide + 1)));
+      if (data[slide].pic){
+        const pic = data[slide].pic.cloneNode(true);
+        if (pic.tagName === 'IMG'){ pic.draggable = false; pic.decoding = 'async'; }
+        el.appendChild(pic);
+      }
+      el.style.setProperty('--ar', data[slide].ar.toFixed(4));
+      const card = { el: el, slide: slide, col: 0, ar: data[slide].ar };
+      el.addEventListener('click', () => {
+        if (swiped){ swiped = false; return; }
+        if (card.col > 0) step(card.col);
+      });
+      return card;
+    }
+    function appendCard(slide){
+      const c = makeCard(slide);
+      cards.push(c);
+      strip.appendChild(c.el);
+    }
+    function prependCard(slide){
+      const c = makeCard(slide);
+      cards.unshift(c);
+      strip.insertBefore(c.el, strip.firstChild);
+    }
+
+    /* ---------- geometría (todo en CSS, nada se mide) ---------- */
+    function shareOf(col){
+      const growing = hover >= 1 && hover <= 3 && !reducedQuery.matches;
+      if (!growing) return SHARES[col];
+      return hover === col ? STRETCHED[col] : SQUEEZED[col];
+    }
+    function widthOf(col, c){
+      if (col < 0 || col > 3) return 'var(--sq-slat)';
+      // la pieza abierta mide exactamente alto x proporción: ni se recorta ni se deforma
+      if (col === 0) return 'calc(var(--sq-h) * ' + c.ar.toFixed(4) + ')';
+      return 'calc(var(--sq-room) * ' + shareOf(col) + ')';
+    }
+
+    function layout(){
+      // el espacio que queda para las otras columnas depende de qué tan ancha es la pieza abierta
+      const openCard = cards[-column];
+      const openAr = openCard ? openCard.ar : 1;
+      ui.style.setProperty('--sq-room', 'max(0px, calc(100cqi - var(--sq-h) * ' + openAr.toFixed(4) + ' - var(--sq-n) * var(--sq-slat-gap) - 3 * var(--sq-gap) - var(--sq-n) * var(--sq-slat)))');
+      strip.style.transform = 'translateX(calc(' + column + ' * (var(--sq-slat) + var(--sq-gap))))';
+      cards.forEach((c, place) => {
+        const col = place + column;
+        const w = widthOf(col, c);
+        const front = col === 0;
+        c.col = col;
+        c.el.style.width = w;
+        c.el.style.marginLeft = place === 0 ? '0' : (col < 4 ? 'var(--sq-gap)' : 'var(--sq-slat-gap)');
+        c.el.style.borderRadius = 'min(var(--sq-radius), calc((' + w + ') / 2))';
+        c.el.classList.toggle('is-front', front);
+        c.el.setAttribute('aria-selected', front ? 'true' : 'false');
+        c.el.tabIndex = front ? 0 : -1;
+      });
+      const open = cards[-column] ? cards[-column].slide : 0;
+      caps.forEach((cap, i) => {
+        cap.classList.toggle('is-shown', i === open);
+        cap.setAttribute('aria-hidden', i === open ? 'false' : 'true');
+      });
+    }
+
+    function setStill(on){ strip.classList.toggle('still', on); }
+
+    /* ---------- movimiento ---------- */
+    // Tras animar, la tira queda más larga de lo necesario: se recorta a las tarjetas
+    // visibles y los números vuelven a cero. Es la misma imagen, así que nada debe animarse.
+    function settle(){
+      const openPlace = -column;
+      const hadFocus = strip.contains(document.activeElement);
+      const keep = cards.slice(openPlace, openPlace + visible);
+      cards.forEach((c) => { if (keep.indexOf(c) === -1) c.el.remove(); });
+      cards = keep;
+      column = 0;
+      setStill(true);
+      layout();
+      void strip.offsetWidth;
+      setStill(false);
+      if (hadFocus && cards[0]) cards[0].el.focus({ preventScroll: true });
+    }
+
+    function step(by){
+      if (count < 2 || !by) return;
+      clearTimeout(timer);
+
+      let target = -column + by;  // lugar que pasará a ser la pieza abierta
+      if (by > 0){
+        // la tarjeta que entra se une a la cola a tamaño completo antes de que nada se mueva
+        const need = target + visible - cards.length;
+        for (let k = 0; k < need; k++) appendCard(wrap(cards[cards.length - 1].slide + 1));
+      } else if (target < 0){
+        // para ir atrás la tira crece por delante: se corre a la izquierda lo mismo, sin animar,
+        // y luego se deja volver a su sitio con la transición
+        const k = -target;
+        for (let j = 0; j < k; j++) prependCard(wrap(cards[0].slide - 1));
+        setStill(true);
+        column = -(-column + k);
+        layout();
+        void strip.offsetWidth;
+        setStill(false);
+        target += k;  // queda en 0
+      }
+      column = -target;
+      layout();
+      timer = setTimeout(settle, getMs() + 20);
+    }
+
+    /* ---------- entradas ---------- */
+    strip.addEventListener('keydown', (e) => {
+      const by = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (!by) return;
+      e.preventDefault();
+      step(by);
+    });
+
+    // la columna bajo el cursor se ensancha (solo con mouse, no al tocar)
+    strip.addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      const el = e.target.closest ? e.target.closest('.sq-card') : null;
+      const card = el && cards.find((c) => c.el === el);
+      if (!card || card.col === hover) return;
+      hover = card.col;
+      layout();
+    });
+    ui.addEventListener('mouseleave', () => {
+      if (hover === -1) return;
+      hover = -1;
+      layout();
+    });
+
+    // deslizar con el dedo (o arrastrar) cambia de pieza
+    let startX = 0, startY = 0, tracking = false, swiped = false;
+    viewport.addEventListener('pointerdown', (e) => {
+      tracking = true; swiped = false;
+      startX = e.clientX; startY = e.clientY;
+    });
+    viewport.addEventListener('pointerup', (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5){
+        swiped = true;
+        step(dx < 0 ? 1 : -1);
+      }
+    });
+    viewport.addEventListener('pointercancel', () => { tracking = false; });
+
+    function applyMotion(){
+      ui.style.setProperty('--sq-ms', getMs() + 'ms');
+      if (reducedQuery.matches) hover = -1;
+      layout();
+    }
+    if (reducedQuery.addEventListener) reducedQuery.addEventListener('change', applyMotion);
+
+    /* ---------- arranque ---------- */
+    for (let p = 0; p < visible; p++) appendCard(wrap(p));
+    root.appendChild(ui);
+    applyMotion();
+    root.classList.add('is-ready');
+  })();
+
+
+</script>
+
+
+<script>
+// ---------- Pausar GIF animados: un solo control para toda la página (WCAG 2.2.2) ----------
+(function(){
+  var imgs = function(){ return Array.prototype.slice.call(document.querySelectorAll('img')).filter(function(i){
+    return /\.gif(\?|$)/i.test(i.getAttribute('data-gif-src') || i.getAttribute('src') || ''); }); };
+  if (!imgs().length) return;
+  var en = (document.documentElement.lang || '').indexOf('en') === 0;
+  var TXT = en ? {pause: 'Pause animations', play: 'Play animations'} : {pause: 'Pausar animaciones', play: 'Reproducir animaciones'};
+  var paused = false;
+
+  function freeze(img){
+    if (img.getAttribute('data-gif-src')) return;
+    var src = img.getAttribute('src');
+    function doFreeze(){
+      try{
+        var c = document.createElement('canvas');
+        c.width = img.naturalWidth; c.height = img.naturalHeight;
+        c.getContext('2d').drawImage(img, 0, 0);
+        var still = c.toDataURL('image/png');
+        img.setAttribute('data-gif-src', src);
+        img.setAttribute('src', still);
+      }catch(e){}
+    }
+    if (img.complete && img.naturalWidth) doFreeze(); else img.addEventListener('load', function once(){ img.removeEventListener('load', once); if (paused) doFreeze(); });
+  }
+  function unfreeze(img){
+    var src = img.getAttribute('data-gif-src');
+    if (!src) return;
+    img.setAttribute('src', src); img.removeAttribute('data-gif-src');
+  }
+
+  var btn = document.createElement('button');
+  btn.type = 'button'; btn.className = 'anim-toggle';
+  btn.innerHTML = '<svg class="ico-pause" width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><rect x="2.5" y="2" width="3" height="10" rx="0.6"/><rect x="8.5" y="2" width="3" height="10" rx="0.6"/></svg>' +
+                  '<svg class="ico-play" width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3.5 1.8v10.4L12 7z"/></svg><span></span>';
+  function sync(){
+    btn.setAttribute('aria-pressed', paused ? 'true' : 'false');
+    btn.lastChild.textContent = paused ? TXT.play : TXT.pause;
+  }
+  function apply(){ imgs().forEach(function(i){ paused ? freeze(i) : unfreeze(i); }); sync(); }
+  btn.addEventListener('click', function(){ paused = !paused; apply(); });
+  document.body.appendChild(btn);
+
+  // las fotos apiladas se clonan después de cargar: las nuevas copias también se congelan
+  new MutationObserver(function(){ if (paused) imgs().forEach(freeze); }).observe(document.body, {childList: true, subtree: true});
+
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){ paused = true; window.addEventListener('load', apply); }
+  sync();
+})();
+</script>
+
+</body>
+</html>
